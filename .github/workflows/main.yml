@@ -41,7 +41,7 @@ jobs:
         if: env.is_new_version == 'true'
         run: |
           if [ ! -d "codigo-fonte-backend" ]; then mkdir codigo-fonte-backend; fi
-          unzip codigo-fonte-backend.zip -d codigo-fonte-backend
+          unzip -o codigo-fonte-backend.zip -d codigo-fonte-backend
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add codigo-fonte-backend codigo-fonte-backend.md5
