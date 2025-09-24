@@ -1,0 +1,159 @@
+application:
+  module: api-regime-geral
+  timezone: GMT-03:00
+  locale: pt-BR
+  dateTimeFormat: yyyy-MM-dd'T'HH:mm:ss.SSSZ
+  dateTimeFormatBanco: yyyy-MM-dd
+  ibs:
+    enabled: true
+
+spring:
+  application:
+    name: api-regime-geral
+  config:
+    activate:
+      on-profile: testes
+  threads:
+    virtual:
+      enabled: true
+  datasource:
+    url: jdbc:sqlite:file:./calculadora/db/calculadora.db?date_class=TEXT&date_string_format=${application.date-time-format-banco}
+    username: sa
+    password: 
+    driverClassName: org.sqlite.JDBC
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    defer-datasource-initialization: true
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        "[format_sql]": false
+  sql:
+    init:
+      mode: embedded
+  codec:
+    max-in-memory-size: 500KB
+  devtools:
+    add-properties: false
+  jackson:
+    time-zone: ${application.timezone}
+    locale: ${application.locale}
+    serialization:
+      write-dates-as-timestamps: false
+                  
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+  compression:
+    enabled: true
+    mime-types: application/json
+    min-response-size: 1024
+    
+springdoc:
+  version: '@springdoc.version@'
+  api-docs:
+    path: /api-docs
+    version: openapi-3-1
+  swagger-ui:
+    display-request-duration: true
+    groups-order: DESC
+    operationsSorter: method
+    disable-swagger-default-url: true
+    use-root-path: true
+  show-actuator: false
+  cache:
+    disabled: true
+
+cache:
+  specs:
+    - name: AliquotaAdRemProdutoRepository.buscarAliquotaAdRem
+      expireAfterWrite: "P1D"
+      initialCapacity: 100
+    - name: AliquotaAdValoremProdutoRepository.buscarAliquotaAdValorem
+      expireAfterWrite: "P1D"
+      initialCapacity: 100
+    - name: AliquotaPadraoRepository.buscarAliquotaUniao
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: AliquotaPadraoRepository.buscarAliquotaUf
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: AliquotaPadraoRepository.buscarAliquotaMunicipio
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: AliquotaReferenciaRepository.buscar
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: ClassificacaoTributariaRepository.buscarClassificacaoTributariaCbsIbs
+      expireAfterWrite: "P1D"
+      initialCapacity: 100
+    - name: ClassificacaoTributariaRepository.buscarClassificacaoTributariaImpostoSeletivo
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: FundamentacaoClassificacaoRepository.buscar
+      expireAfterWrite: "P1D"
+      initialCapacity: 200
+    - name: NbsAplicavelRepository.temNbsAplicavel
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: NbsAplicavelRepository.temExcecaoNbsAplicavel
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: NbsAplicavelRepository.temNbsAplicavelSemExcecao
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: NbsAplicavelRepository.tem
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: NbsRepository.existeNbs
+      expireAfterWrite: "P1D"
+      initialCapacity: 500
+    - name: NcmAplicavelRepository.temNcmAplicavel
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: NcmAplicavelRepository.temExcecaoNcmAplicavel
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: NcmAplicavelRepository.temNcmAplicavelSemExcecao
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: NcmAplicavelRepository.tem
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: NcmRepository.existeNcm
+      expireAfterWrite: "P1D"
+      initialCapacity: 500
+    - name: PercentualReducaoRepository.buscar
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: SituacaoTributariaRepository.existeCst
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: TratamentoClassificacaoRepository.buscarTratamentoClassificacao
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: UfRepository.consultarPorSigla
+      expireAfterWrite: "P1D"
+      initialCapacity: 50
+    - name: UfRepository.existeUf
+      expireAfterWrite: "P1D"
+      initialCapacity: 30
+    - name: TemplateTokenizerService.tokenize
+      expireAfterWrite: "P1D"
+      initialCapacity: 100
+    - name: TokenCacheService.get
+      expireAfterWrite: "P1D"
+      initialCapacity: 100
+          
+management:
+  server:
+    port: 9101
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus, caches
+      base-path: "/"
+      path-mapping:
+        prometheus: "metrics"

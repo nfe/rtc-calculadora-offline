@@ -1,0 +1,292 @@
+<cteProc xmlns="http://www.portalfiscal.inf.br/cte" versao="4.00">
+  <CTe xmlns="http://www.portalfiscal.inf.br/cte">
+    <infCte versao="4.00" Id="CTe26250100680933001491570100000000841000008495">
+      <ide>
+        <cUF>26</cUF>
+        <cCT>00000849</cCT>
+        <CFOP>6932</CFOP>
+        <natOp>PRESTACAO DE SERVICO DE TRANSPORTE</natOp>
+        <mod>57</mod>
+        <serie>10</serie>
+        <nCT>84</nCT>
+        <dhEmi>2025-05-15T22:06:56-03:00</dhEmi>
+        <tpImp>1</tpImp>
+        <tpEmis>1</tpEmis>
+        <cDV>5</cDV>
+        <tpAmb>2</tpAmb>
+        <tpCTe>0</tpCTe>
+        <procEmi>0</procEmi>
+        <verProc>MultiCTe 4.0</verProc>
+        <cMunEnv>2607901</cMunEnv>
+        <xMunEnv>JABOATAO DOS GUARARAPES</xMunEnv>
+        <UFEnv>PE</UFEnv>
+        <modal>01</modal>
+        <tpServ>0</tpServ>
+        <cMunIni>2704302</cMunIni>
+        <xMunIni>MACEIO</xMunIni>
+        <UFIni>AL</UFIni>
+        <cMunFim>3515004</cMunFim>
+        <xMunFim>EMBU DAS ARTES</xMunFim>
+        <UFFim>SP</UFFim>
+        <retira>1</retira>
+        <indIEToma>1</indIEToma>
+        <toma3>
+          <toma>0</toma>
+        </toma3>
+        <gCompraGov>
+          <tpEnteGov>1</tpEnteGov>
+          <pRedutor>10.99</pRedutor>
+        </gCompraGov>
+      </ide>
+      <compl>
+        <Entrega>
+          <comData>
+            <tpPer>2</tpPer>
+            <dProg>2024-09-29</dProg>
+          </comData>
+          <semHora>
+            <tpHor>0</tpHor>
+          </semHora>
+        </Entrega>
+        <origCalc>MACEIO</origCalc>
+        <destCalc>EMBU DAS ARTES</destCalc>
+        <xObs>TESTE</xObs>
+        <ObsCont xCampo="Ctrl">
+          <xTexto>Num Ctrl: 2989</xTexto>
+        </ObsCont>
+      </compl>
+      <emit>
+        <CNPJ>33411843000130</CNPJ>
+        <IE>041052730</IE>
+        <xNome>COOPERATIVA DOS TRANSPORTADORES DO VALE - COOTRAVALE</xNome>
+        <xFant>COOTRAVALE - JABOATAO DOS GUARARAPES - PE</xFant>
+        <enderEmit>
+          <xLgr>RODOVIA BR 101 SUL</xLgr>
+          <nro>S/N</nro>
+          <xCpl>KM 82 7</xCpl>
+          <xBairro>PRAZERES</xBairro>
+          <cMun>2607901</cMun>
+          <xMun>JABOATAO DOS GUARARAPES</xMun>
+          <CEP>54335000</CEP>
+          <UF>PE</UF>
+          <fone>8134791852</fone>
+        </enderEmit>
+        <CRT>3</CRT>
+      </emit>
+      <rem>
+        <CNPJ>00130583000175</CNPJ>
+        <IE>240004167</IE>
+        <xNome>CTE EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL</xNome>
+        <xFant>SOCOCO S.A. INDUSTRIAS ALIMENTICIAS</xFant>
+        <fone>8221235656</fone>
+        <enderReme>
+          <xLgr>AV COMENDADOR GUSTAVO PAIVA</xLgr>
+          <nro>2541</nro>
+          <xBairro>MANGABEIRAS</xBairro>
+          <cMun>2704302</cMun>
+          <xMun>MACEIO</xMun>
+          <CEP>57037532</CEP>
+          <UF>AL</UF>
+          <cPais>1058</cPais>
+          <xPais>BRASIL</xPais>
+        </enderReme>
+        <email>cte@sococo.com.br</email>
+      </rem>
+      <dest>
+        <CNPJ>00135935000185</CNPJ>
+        <IE>132275308116</IE>
+        <xNome>CTE EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL</xNome>
+        <fone>1128897600</fone>
+        <enderDest>
+          <xLgr>AVENIDA PEREIRA BARRETO</xLgr>
+          <nro>600</nro>
+          <xCpl>FUNDOS ENTRADA CARLOS MAGNO</xCpl>
+          <xBairro>PARAISO</xBairro>
+          <cMun>3547809</cMun>
+          <xMun>SANTO ANDRE</xMun>
+          <CEP>09190210</CEP>
+          <UF>SP</UF>
+          <cPais>1058</cPais>
+          <xPais>BRASIL</xPais>
+        </enderDest>
+      </dest>
+      <vPrest>
+        <vTPrest>6268.60</vTPrest>
+        <vRec>5829.80</vRec>
+        <Comp>
+          <xNome>AD VALOREM</xNome>
+          <vComp>118.54</vComp>
+        </Comp>
+        <Comp>
+          <xNome>FRETE VALOR</xNome>
+          <vComp>5414.90</vComp>
+        </Comp>
+        <Comp>
+          <xNome>GRIS - BAUDUCCO</xNome>
+          <vComp>296.36</vComp>
+        </Comp>
+        <Comp>
+          <xNome>IMPOSTOS</xNome>
+          <vComp>438.80</vComp>
+        </Comp>
+      </vPrest>
+      <imp>
+        <ICMS>
+          <ICMS90>
+            <CST>90</CST>
+            <vBC>6268.60</vBC>
+            <pICMS>7.00</pICMS>
+            <vICMS>438.80</vICMS>
+          </ICMS90>
+        </ICMS>
+        <vTotTrib>1156.56</vTotTrib>
+        <infAdFisco>O valor aproximado de tributos incidentes sobre o valor deste servico e de R$ 313,43 (5,00% Municipal), R$ 0,00 (0,00% Estadual), R$ 843,13 (13,45% Federal). Fonte: IBPT.</infAdFisco>
+        <IBSCBS>
+          <CST>000</CST>
+          <cClassTrib>000001</cClassTrib>
+          <gIBSCBS>
+            <vBC>23513.53</vBC>
+            <gIBSUF>
+              <pIBSUF>21.1323</pIBSUF>
+              <gDif>
+                <pDif>1.9999</pDif>
+                <vDif>98231498.12</vDif>
+              </gDif>
+              <gDevTrib>
+                <vDevTrib>765365.44</vDevTrib>
+              </gDevTrib>
+              <gRed>
+                <pRedAliq>12.12</pRedAliq>
+                <pAliqEfet>43.12</pAliqEfet>
+              </gRed>
+              <vIBSUF>431634.11</vIBSUF>
+            </gIBSUF>
+            <gIBSMun>
+              <pIBSMun>12.2123</pIBSMun>
+              <gDif>
+                <pDif>7.10</pDif>
+                <vDif>544.10</vDif>
+              </gDif>
+              <gDevTrib>
+                <vDevTrib>12.10</vDevTrib>
+              </gDevTrib>
+              <gRed>
+                <pRedAliq>1.10</pRedAliq>
+                <pAliqEfet>1.20</pAliqEfet>
+              </gRed>
+              <vIBSMun>554678.21</vIBSMun>
+            </gIBSMun>
+            <gCBS>
+              <pCBS>21.20</pCBS>
+              <gDif>
+                <pDif>6.60</pDif>
+                <vDif>56565.50</vDif>
+              </gDif>
+              <gDevTrib>
+                <vDevTrib>44356221.10</vDevTrib>
+              </gDevTrib>
+              <gRed>
+                <pRedAliq>1.20</pRedAliq>
+                <pAliqEfet>1.50</pAliqEfet>
+              </gRed>
+              <vCBS>100.00</vCBS>
+            </gCBS>
+            <gTribRegular>
+              <CSTReg>200</CSTReg>
+              <cClassTribReg>123459</cClassTribReg>
+              <pAliqEfetRegIBSUF>0.90</pAliqEfetRegIBSUF>
+              <vTribRegIBSUF>256.12</vTribRegIBSUF>
+              <pAliqEfetRegIBSMun>0.80</pAliqEfetRegIBSMun>
+              <vTribRegIBSMun>256.13</vTribRegIBSMun>
+              <pAliqEfetRegCBS>0.70</pAliqEfetRegCBS>
+              <vTribRegCBS>256.14</vTribRegCBS>
+            </gTribRegular>
+            <gIBSCredPres>
+              <cCredPres>1</cCredPres>
+              <pCredPres>12.56</pCredPres>
+              <vCredPres>88776254.10</vCredPres>
+            </gIBSCredPres>
+            <gCBSCredPres>
+              <cCredPres>2</cCredPres>
+              <pCredPres>3.21</pCredPres>
+              <vCredPresCondSus>2645368.70</vCredPresCondSus>
+            </gCBSCredPres>
+          </gIBSCBS>
+        </IBSCBS>
+        <vTotDFe>600.00</vTotDFe>
+      </imp>
+      <infCTeNorm>
+        <infCarga>
+          <vCarga>592710.52</vCarga>
+          <proPred>DIVERSOS</proPred>
+          <infQ>
+            <cUnid>03</cUnid>
+            <tpMed>Unidade</tpMed>
+            <qCarga>4167.0000</qCarga>
+          </infQ>
+          <vCargaAverb>592710.52</vCargaAverb>
+        </infCarga>
+        <infDoc>
+          <infOutros>
+            <tpDoc>99</tpDoc>
+            <descOutros>TESTE HOMOLOGACAO</descOutros>
+            <nDoc>653431</nDoc>
+            <dEmi>2024-02-07</dEmi>
+            <vDocFisc>592710.52</vDocFisc>
+          </infOutros>
+        </infDoc>
+        <infModal versaoModal="4.00">
+          <aquav>
+            <vPrest>123.12</vPrest>
+            <vAFRMM>2221.45</vAFRMM>
+            <xNavio>12alksnn23n25988J</xNavio>
+          </aquav>
+        </infModal>
+      </infCTeNorm>
+      <autXML>
+        <CNPJ>13969629000196</CNPJ>
+      </autXML>
+      <infRespTec>
+        <CNPJ>13969629000196</CNPJ>
+        <xContato>TECCHAPECO SISTEMAS LTDA</xContato>
+        <email>tech@multisoftware.com.br</email>
+        <fone>04930259500</fone>
+      </infRespTec>
+    </infCte>
+    <infCTeSupl>
+      <qrCodCTe>https://homologacao.nfe.fazenda.sp.gov.br/CTeConsulta/qrCode?chCTe=26250100680933001491570100000000841000008495&amp;tpAmb=2</qrCodCTe>
+    </infCTeSupl>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+      <SignedInfo>
+        <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+        <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+        <Reference URI="#CTe26250100680933001491570100000000841000008495">
+          <Transforms>
+            <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+            <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+          </Transforms>
+          <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+          <DigestValue>Gp2bZYYiYtCNUkt5lDkq6uzQvpc=</DigestValue>
+        </Reference>
+      </SignedInfo>
+      <SignatureValue>xh93DoBpolTY/pXDlsjrwZ9vRZ+zDKShnI2//vQUznqc/FI4jZ0UWl+GAE9Fo6MJts2SWpkK4GMfqLcoqMjIYWKC3wqAAuEPL3hkOgxOI14vwzEt2mxG1m8xEWrqiP7vB2o+caHYc85LTFSaCTcnNb94YhMpljubWqNixDFbiuD4b8T8uJEOWhMB7T0Fk67QGHtEXIpPi4LBZfEhwgCDfaeYeT6CTMDWduYnYmMRnUCjM59rO4AfYVmI/AHkQWtfw/16s0VOwlGCSx5vM3vpaz9gSVzwZNyU5R64aOMfNVYkSmj5NTbv7W/uj3LEH/HIlABDXjxTBNUdtyuDJxFnVQ==</SignatureValue>
+      <KeyInfo>
+        <X509Data>
+          <X509Certificate>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</X509Certificate>
+        </X509Data>
+      </KeyInfo>
+    </Signature>
+  </CTe>
+  <protCTe versao="4.00">
+    <infProt>
+      <tpAmb>2</tpAmb>
+      <verAplic>SP-CTe-2024-12-26-1</verAplic>
+      <chCTe>26250100680933001491570100000000841000008495</chCTe>
+      <dhRecbto>2025-01-15T22:07:02-03:00</dhRecbto>
+      <nProt>526250000411223</nProt>
+      <digVal>Gp2bZYYiYtCNUkt5lDkq6uzQvpc=</digVal>
+      <cStat>100</cStat>
+      <xMotivo>Autorizado o uso do CT-e</xMotivo>
+    </infProt>
+  </protCTe>
+</cteProc>

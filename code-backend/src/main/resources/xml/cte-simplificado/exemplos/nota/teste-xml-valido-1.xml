@@ -1,0 +1,243 @@
+<cteSimpProc xmlns="http://www.portalfiscal.inf.br/cte" versao="4.00">
+  <CTeSimp xmlns="http://www.portalfiscal.inf.br/cte"
+    xmlns:ns2="http://www.w3.org/2000/09/xmldsig#">
+    <infCte Id="CTe35250335725519000200570020000028931304800973" versao="4.00">
+      <ide>
+        <cUF>35</cUF>
+        <cCT>30480097</cCT>
+        <CFOP>6932</CFOP>
+        <natOp>Prestacao de servico de transporte iniciada em unidade da...</natOp>
+        <mod>57</mod>
+        <serie>2</serie>
+        <nCT>2893</nCT>
+        <dhEmi>2025-05-06T17:26:19-03:00</dhEmi>
+        <tpImp>1</tpImp>
+        <tpEmis>1</tpEmis>
+        <cDV>3</cDV>
+        <tpAmb>2</tpAmb>
+        <tpCTe>5</tpCTe>
+        <procEmi>0</procEmi>
+        <verProc>0.0.1-Snapshot</verProc>
+        <cMunEnv>3505708</cMunEnv>
+        <xMunEnv>BARUERI</xMunEnv>
+        <UFEnv>SP</UFEnv>
+        <modal>01</modal>
+        <tpServ>1</tpServ>
+        <UFIni>RJ</UFIni>
+        <UFFim>CE</UFFim>
+        <retira>1</retira>
+        <gCompraGov>
+          <tpEnteGov>1</tpEnteGov>
+          <pRedutor>10.99</pRedutor>
+        </gCompraGov>
+      </ide>
+      <compl>
+        <xCaracAd>Subcontratacao</xCaracAd>
+        <xObs>Transporte realizado por subcontratacao referente ao CTe N 2893 e Serie 2, da Transportadora 16784574000138 - CTE EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL</xObs>
+      </compl>
+      <emit>
+        <CNPJ>35725519000200</CNPJ>
+        <IE>206875241116</IE>
+        <xNome>CTE EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL</xNome>
+        <xFant>CTE EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL</xFant>
+        <enderEmit>
+          <xLgr>Rua Adelino Cardana</xLgr>
+          <nro>180</nro>
+          <xBairro>Centro</xBairro>
+          <cMun>3505708</cMun>
+          <xMun>BARUERI</xMun>
+          <CEP>06401147</CEP>
+          <UF>SP</UF>
+          <fone>1120000000</fone>
+        </enderEmit>
+        <CRT>3</CRT>
+      </emit>
+      <toma>
+        <toma>4</toma>
+        <indIEToma>1</indIEToma>
+        <CNPJ>16784574000138</CNPJ>
+        <IE>206867921110</IE>
+        <xNome>CTE EMITIDO EM AMBIENTE DE HOMOLOGACAO - SEM VALOR FISCAL</xNome>
+        <enderToma>
+          <xLgr>Rua Adelino Cardana</xLgr>
+          <nro>293</nro>
+          <xCpl>SALA  205                 BLOCO C</xCpl>
+          <xBairro>Centro</xBairro>
+          <cMun>3505708</cMun>
+          <xMun>BARUERI</xMun>
+          <CEP>06401147</CEP>
+          <UF>SP</UF>
+        </enderToma>
+      </toma>
+      <infCarga>
+        <vCarga>34.40</vCarga>
+        <proPred>caixa</proPred>
+        <infQ>
+          <cUnid>01</cUnid>
+          <tpMed>02</tpMed>
+          <qCarga>7.2000</qCarga>
+        </infQ>
+      </infCarga>
+      <det nItem="1">
+        <cMunIni>3305109</cMunIni>
+        <xMunIni>Sao Joao De Meriti</xMunIni>
+        <cMunFim>2304400</cMunFim>
+        <xMunFim>FORTALEZA</xMunFim>
+        <vPrest>1074.19</vPrest>
+        <vRec>1074.19</vRec>
+        <infDocAnt>
+          <chCTe>35250116784574000138570250000297721297637390</chCTe>
+          <tpPrest>1</tpPrest>
+        </infDocAnt>
+        <infDocAnt>
+          <chCTe>35250116784574000138570250000297731485487097</chCTe>
+          <tpPrest>1</tpPrest>
+        </infDocAnt>
+        <infDocAnt>
+          <chCTe>35250116784574000138570250000297681077262076</chCTe>
+          <tpPrest>1</tpPrest>
+        </infDocAnt>
+        <infDocAnt>
+          <chCTe>35250116784574000138570250000297671451892358</chCTe>
+          <tpPrest>1</tpPrest>
+        </infDocAnt>
+      </det>
+      <infModal versaoModal="4.00">
+        <rodo>
+          <RNTRC>99999999</RNTRC>
+        </rodo>
+      </infModal>
+      <imp>
+        <ICMS>
+          <ICMS90>
+            <CST>90</CST>
+            <vBC>1074.19</vBC>
+            <pICMS>7.00</pICMS>
+            <vICMS>75.19</vICMS>
+            <vCred>15.04</vCred>
+          </ICMS90>
+        </ICMS>
+        <IBSCBS>
+          <CST>123</CST>
+          <cClassTrib>123456</cClassTrib>
+          <gIBSCBS>
+            <vBC>23513.53</vBC>
+            <gIBSUF>
+              <pIBSUF>21.1323</pIBSUF>
+              <gDif>
+                <pDif>1.9999</pDif>
+                <vDif>98231498.12</vDif>
+              </gDif>
+              <gDevTrib>
+                <vDevTrib>765365.44</vDevTrib>
+              </gDevTrib>
+              <gRed>
+                <pRedAliq>12.12</pRedAliq>
+                <pAliqEfet>43.12</pAliqEfet>
+              </gRed>
+              <vIBSUF>431634.11</vIBSUF>
+            </gIBSUF>
+            <gIBSMun>
+              <pIBSMun>12.2123</pIBSMun>
+              <gDif>
+                <pDif>7.10</pDif>
+                <vDif>544.10</vDif>
+              </gDif>
+              <gDevTrib>
+                <vDevTrib>12.10</vDevTrib>
+              </gDevTrib>
+              <gRed>
+                <pRedAliq>1.10</pRedAliq>
+                <pAliqEfet>1.20</pAliqEfet>
+              </gRed>
+              <vIBSMun>554678.21</vIBSMun>
+            </gIBSMun>
+            <gCBS>
+              <pCBS>21.20</pCBS>
+              <gDif>
+                <pDif>6.60</pDif>
+                <vDif>56565.50</vDif>
+              </gDif>
+              <gDevTrib>
+                <vDevTrib>44356221.10</vDevTrib>
+              </gDevTrib>
+              <gRed>
+                <pRedAliq>1.20</pRedAliq>
+                <pAliqEfet>1.50</pAliqEfet>
+              </gRed>
+              <vCBS>8.00</vCBS>
+            </gCBS>
+            <gTribRegular>
+              <CSTReg>200</CSTReg>
+              <cClassTribReg>123459</cClassTribReg>
+              <pAliqEfetRegIBSUF>0.90</pAliqEfetRegIBSUF>
+              <vTribRegIBSUF>256.12</vTribRegIBSUF>
+              <pAliqEfetRegIBSMun>0.80</pAliqEfetRegIBSMun>
+              <vTribRegIBSMun>256.13</vTribRegIBSMun>
+              <pAliqEfetRegCBS>0.70</pAliqEfetRegCBS>
+              <vTribRegCBS>256.14</vTribRegCBS>
+            </gTribRegular>
+            <gIBSCredPres>
+              <cCredPres>1</cCredPres>
+              <pCredPres>12.56</pCredPres>
+              <vCredPres>88776254.10</vCredPres>
+            </gIBSCredPres>
+            <gCBSCredPres>
+              <cCredPres>2</cCredPres>
+              <pCredPres>3.21</pCredPres>
+              <vCredPresCondSus>2645368.70</vCredPresCondSus>
+            </gCBSCredPres>
+          </gIBSCBS>
+        </IBSCBS>
+      </imp>
+      <total>
+        <vTPrest>1074.19</vTPrest>
+        <vTRec>1074.19</vTRec>
+        <vTotDFe>1070.20</vTotDFe>
+      </total>
+      <infRespTec>
+        <CNPJ>38306492000110</CNPJ>
+        <xContato>Comercial EmiteAI</xContato>
+        <email>comercial@emiteai.com.br</email>
+        <fone>47991257422</fone>
+      </infRespTec>
+    </infCte>
+    <infCTeSupl>
+      <qrCodCTe>https://homologacao.nfe.fazenda.sp.gov.br/CTeConsulta/qrCode?chCTe=35250335725519000200570020000028931304800973&amp;tpAmb=2</qrCodCTe>
+    </infCTeSupl>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+      <SignedInfo>
+        <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+        <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+        <Reference URI="#CTe35250335725519000200570020000028931304800973">
+          <Transforms>
+            <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+            <Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+          </Transforms>
+          <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+          <DigestValue>Ah6Eo2RnbKyj2xCR5GP6ENTxDNg=</DigestValue>
+        </Reference>
+      </SignedInfo>
+      <SignatureValue> kmvfV4LUicizYZ5xxJfX94lMfL9SxElYNKbaclXAZ07sFgZTQPajdY6ub6dZcDJS4AoGwZqndx+M 78eB1novwO+QGEu27HfT8k0mkrrqA8iWPhlQ2fkpWtvTzSFbSXwHxOcZKmNT86q7fJ3mR6ObXxMe w1UgtGwdAwYSGBnsJfpapw9gnON+OBDQhSa7sYciHhF5L2rprRHZvmaCqng+2FL5JyWN2g5SnNhb C+jUnkjMdY3TrnrgazhSpdMmo6bbnksVAOaLYwCBMENTJAa1ayn5rtlLJ1mYtHRJ4bwyXgsPbifk /lluzqwbBTarpgaoiDkDnww/IO2igPIXl2aFxQ==
+      </SignatureValue>
+      <KeyInfo>
+        <X509Data>
+          <X509Certificate> MIIH/zCCBeegAwIBAgIISVrldHM6vekwDQYJKoZIhvcNAQELBQAwdjELMAkGA1UEBhMCQlIxEzAR BgNVBAoTCklDUC1CcmFzaWwxNjA0BgNVBAsTLVNlY3JldGFyaWEgZGEgUmVjZWl0YSBGZWRlcmFs IGRvIEJyYXNpbCAtIFJGQjEaMBgGA1UEAxMRQUMgU0FGRVdFQiBSRkIgdjUwHhcNMjQxMjIzMTM0 NzAzWhcNMjUxMjIzMTM0NzAzWjCCARAxCzAJBgNVBAYTAkJSMRMwEQYDVQQKEwpJQ1AtQnJhc2ls MQswCQYDVQQIEwJTUDEeMBwGA1UEBxMVU0FPIEJFUk5BUkRPIERPIENBTVBPMTYwNAYDVQQLEy1T ZWNyZXRhcmlhIGRhIFJlY2VpdGEgRmVkZXJhbCBkbyBCcmFzaWwgLSBSRkIxFjAUBgNVBAsTDVJG QiBlLUNOUEogQTExFzAVBgNVBAsTDjQzNDczNDk0MDAwMTM0MRkwFwYDVQQLExB2aWRlb2NvbmZl cmVuY2lhMTswOQYDVQQDEzJGTFlQQUNLIFRSQU5TUE9SVEUgRSBMT0dJU1RJQ0EgTFREQTozNTcy NTUxOTAwMDExMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBALJM82EY1plpwGZ3V095 Cl4636H2ksfPUUqM3puLBlgEktqi7SqIX2xOZN0zg/bLQ5Iz6lFgIp3GtQTmH0HTGa0jx0Hq85cC Hc8Qwgu8VoEiZatUy4L7QMJ6Zh0L3R3s5VUXw6wxdiSktoMWYFKbC4etP3Co3HkxiKyJMynaJtQG nNWszpdr1a0AhI/RD8LmimPPHDi6FAJiO8ABQm4pG+m+3j16GWKkXdIDsNmw57dHSIlStohX+0ZL ZPGiAnGrjbNowLOd7r6mZax3GMfBAAXeJPqLe2XerGLGaGhT9blpzaFuFl3soaGqewd+hsBSsbbc pB0dxzo+7/8LE0OOn/ECAwEAAaOCAvMwggLvMB8GA1UdIwQYMBaAFCleS9VGTLv+FqdjwR3EJvLd 2PMFMA4GA1UdDwEB/wQEAwIF4DBpBgNVHSAEYjBgMF4GBmBMAQIBMzBUMFIGCCsGAQUFBwIBFkZo dHRwOi8vcmVwb3NpdG9yaW8uYWNzYWZld2ViLmNvbS5ici9hYy1zYWZld2VicmZiL2RwYy1hY3Nh ZmV3ZWJyZmIucGRmMIGuBgNVHR8EgaYwgaMwT6BNoEuGSWh0dHA6Ly9yZXBvc2l0b3Jpby5hY3Nh ZmV3ZWIuY29tLmJyL2FjLXNhZmV3ZWJyZmIvbGNyLWFjLXNhZmV3ZWJyZmJ2NS5jcmwwUKBOoEyG Smh0dHA6Ly9yZXBvc2l0b3JpbzIuYWNzYWZld2ViLmNvbS5ici9hYy1zYWZld2VicmZiL2xjci1h Yy1zYWZld2VicmZidjUuY3JsMIG3BggrBgEFBQcBAQSBqjCBpzBRBggrBgEFBQcwAoZFaHR0cDov L3JlcG9zaXRvcmlvLmFjc2FmZXdlYi5jb20uYnIvYWMtc2FmZXdlYnJmYi9hYy1zYWZld2VicmZi djUucDdiMFIGCCsGAQUFBzAChkZodHRwOi8vcmVwb3NpdG9yaW8yLmFjc2FmZXdlYi5jb20uYnIv YWMtc2FmZXdlYnJmYi9hYy1zYWZld2VicmZidjUucDdiMIG7BgNVHREEgbMwgbCBH0NPTlRBVE9A RkxZUEFDS0xPR0lTVElDQS5DT00uQlKgHwYFYEwBAwKgFhMUTUFSQ0VMIEFORFJBREUgVklET1Kg GQYFYEwBAwOgEBMOMzU3MjU1MTkwMDAxMTGgOAYFYEwBAwSgLxMtMDEwNTE5ODMzMTI2Mzc2MTg1 MjAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwoBcGBWBMAQMHoA4TDDAwMDAwMDAwMDAwMDAdBgNV HSUEFjAUBggrBgEFBQcDAgYIKwYBBQUHAwQwCQYDVR0TBAIwADANBgkqhkiG9w0BAQsFAAOCAgEA k7I3LF26fUu6WSm4JWST3z5/jE5rGzglk7bnwgy3s3jjYZBWis9tFAJjr62rpwj3Jezs+HZoHpqX sXNFlvsaEkUQSsLcctu3N1e0Mr7ds9FWpt7WaxnOECBjfvnPGRSYPuJz0qQl+M+Ti6H4W8pcQPUa D8qSasN4Jaw/b2L7YXeN/B/qHo1lzxquw2GZjwOFRVAdHJoJl8tO20au0B86/CU5DjfzTpdkoRhk iIIS01/jIcc/Zn7NInXwzNW7vFZBtql5VbAdrS6N4YsXmylu0XbI/D1pBCcAUgkuYn+NCrjKHSpY WI+2YITxQw2cNRvDL6ml69PHauN+m5CWLambSH+D2VXTc+4EuGX1UgkD2t5Uuj7kDUpKnksx5mQe BDCj+nQBFKZzh69VQONBzLaAhYGGZaazt3SJoKx1OvuyYEhjVrGzV+wCf3M1Z+MVtIzbe9cZ/mrL wGn3DXHYej6tQbcpw6NeZopsOA3JxIFMC+D7vD2x6XgH8sLdOu5UxAXBTxbkbaHVQb+CyRe3r6Ze DzqXbREUuqfTKfOUOoqNaeH0Dco9mzGAnUbguKo7qFi2YCZJgPgdiT7rSkmCz8OpfRppbwilG96q TqYy5eVAb/AZPeRT8cmGLdTY4lShggALgTmMphvAa/Wbr818jMmg8/iTk4MecIFZzvrjCkqxKiM=
+          </X509Certificate>
+        </X509Data>
+      </KeyInfo>
+    </Signature>
+  </CTeSimp>
+  <protCTe versao="4.00">
+    <infProt>
+      <tpAmb>2</tpAmb>
+      <verAplic>SP-CTe-2024-12-26-1</verAplic>
+      <chCTe>35250335725519000200570020000028931304800973</chCTe>
+      <dhRecbto>2025-03-06T17:26:19-03:00</dhRecbto>
+      <nProt>135250001295583</nProt>
+      <digVal>Ah6Eo2RnbKyj2xCR5GP6ENTxDNg=</digVal>
+      <cStat>100</cStat>
+      <xMotivo>Autorizado o uso do CT-e</xMotivo>
+    </infProt>
+  </protCTe>
+</cteSimpProc>

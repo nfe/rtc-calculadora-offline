@@ -1,0 +1,18 @@
+{
+  "id": "6194602ea71cbf9431c236de4409d920",
+  "versao": "0.0.1",
+  "dataHoraEmissao": "2026-01-01T09:50:05-03:00",
+  "municipio": 4314902,
+  "uf": "RX",
+  "itens": [
+    {
+      "numero": 1,
+      "ncm": "24021000",
+      "cst": "000",
+      "cClassTrib": "000001",
+      "baseCalculo": 200,
+      "quantidade": 1,
+      "unidade": "LT"
+    }
+  ]
+}

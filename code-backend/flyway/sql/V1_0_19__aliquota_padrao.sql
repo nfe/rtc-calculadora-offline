@@ -1,0 +1,30 @@
+INSERT INTO ALIQUOTA_PADRAO (
+    ALPA_ID,
+    ALPA_VALOR,
+    ALPA_MUNI_CD,
+    ALPA_UF_CD,
+    ALPA_ALRE_ID,
+    ALPA_FORMA_APLICACAO,
+    ALPA_INICIO_VIGENCIA,
+    ALPA_FIM_VIGENCIA
+) VALUES
+(
+    1,
+    1.50,
+    NULL,
+    43,
+    8,
+    'SUBSTITUICAO',
+    '2028-01-01',
+    NULL
+),
+(
+    2,
+    1.00,
+    4314902,
+    NULL,
+    9,
+    'ACRESCIMO',
+    '2028-01-01',
+    NULL
+);

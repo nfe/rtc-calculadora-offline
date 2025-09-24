@@ -1,0 +1,21 @@
+{
+    "id": "507f1f77bcf86cd799439011",
+    "versao": "1.0.0",
+    "dataHoraEmissao": "2027-01-01T03:00:00.000Z",
+    "municipio": 4314902,
+    "uf": "RS",
+    "itens": [
+        {
+            "numero": 1,
+            "ncm": "24021000",
+            "nbs": null,
+            "quantidade": 1,
+            "unidade": "vintena",
+            "cst": "000",
+            "baseCalculo": 200,
+            "cClassTrib": "000010",
+            "suspensao": null,
+            "impostoSeletivo": null
+        }
+    ]
+}
