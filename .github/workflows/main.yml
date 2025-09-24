@@ -55,8 +55,8 @@ jobs:
         if: env.is_new_version == 'true'
         uses: actions/create-release@v1
         with:
-          tag_name: v$(date +'%Y-%m-%d')
-          release_name: Release $(date +'%Y-%m-%d')
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
           body: New version of the backend source code.
           draft: false
           prerelease: false
