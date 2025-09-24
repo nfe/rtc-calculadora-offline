@@ -1,12 +1,16 @@
-name: Build and Publish
+# This is a basic workflow to help you get started with Actions
+name: Download and Update Código Fonte da Calculadora da Reforma Tributária
 
+# Controls when the workflow will run
 on:
-  push:
-    branches:
-      - main
+  schedule:
+    - cron: '0 0 * * *' # Runs every day at midnight UTC
+  workflow_dispatch: # Allows manual triggering of the workflow
 
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  build:
+  # This workflow contains a one job
+  main:
     runs-on: ubuntu-latest
     # Job-level permissions configuration starts here
     permissions:                
