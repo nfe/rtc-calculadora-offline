@@ -1,4 +1,3 @@
-
 name: Build and Publish
 
 on:
@@ -46,7 +45,31 @@ jobs:
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
           git add code-backend codigo-fonte-backend.md5
-          git commit -m "Update backend source code"
+          git commit -m "Update backend source code - $(date +'%Y-%m-%d')"
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Release
+        id: create_release
+        if: env.is_new_version == 'true'
+        uses: actions/create-release@v1
+        with:
+          tag_name: v$(date +'%Y-%m-%d')
+          release_name: Release $(date +'%Y-%m-%d')
+          body: New version of the backend source code.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Release Asset
+        if: env.is_new_version == 'true'
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./codigo-fonte-backend.zip
+          asset_name: codigo-fonte-backend.zip
+          asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
