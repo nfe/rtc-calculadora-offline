@@ -9,6 +9,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Job-level permissions configuration starts here
+    permissions:                
+      contents: write           # 'write' access to repository contents
 
     steps:
       - name: Checkout repository
@@ -17,18 +20,33 @@ jobs:
       - name: Download application
         run: curl -L -o calculadora.zip https://s3.i02.estaleiro.serpro.gov.br/rtccalc-repo-apr/calculadora.zip
 
-      - name: Unzip application
+      - name: Unzip application and check for new version
+        id: check_version
         run: |
           unzip calculadora.zip
+          NEW_HASH=$(md5sum codigo-fonte-backend.zip | awk '{print $1}')
+          OLD_HASH=""
+          if [ -f code-last-version.md5 ]; then
+            OLD_HASH=$(cat code-last-version.md5)
+          fi
+          if [ "$NEW_HASH" != "$OLD_HASH" ]; then
+            echo "New version found. Updating files."
+            echo "is_new_version=true" >> $GITHUB_ENV
+            echo $NEW_HASH > code-last-version.md5
+          else
+            echo "No new version found."
+            echo "is_new_version=false" >> $GITHUB_ENV
+          fi
+
+      - name: Unzip and commit if new version
+        if: env.is_new_version == 'true'
+        run: |
           mkdir src
           unzip codigo-fonte-backend.zip -d src
-
-      - name: Commit and push changes
-        run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add src
-          git commit -m "Add backend source code"
+          git add src code-last-version.md5
+          git commit -m "Update backend source code"
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
