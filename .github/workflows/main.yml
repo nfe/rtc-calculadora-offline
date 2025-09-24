@@ -40,7 +40,7 @@ jobs:
       - name: Unzip and commit if new version
         if: env.is_new_version == 'true'
         run: |
-          mkdir codigo-fonte-backend
+          if [ ! -d "codigo-fonte-backend" ]; then mkdir codigo-fonte-backend; fi
           unzip codigo-fonte-backend.zip -d codigo-fonte-backend
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
