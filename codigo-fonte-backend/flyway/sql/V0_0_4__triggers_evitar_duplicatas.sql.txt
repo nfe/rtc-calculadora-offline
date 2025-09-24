@@ -1,0 +1,617 @@
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de AAVP_NCM_CD dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_ALIQUOTA_AD_VALOREM_PRODUTO_DUPLICATAS
+BEFORE INSERT ON ALIQUOTA_AD_VALOREM_PRODUTO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais AAVP_NCM_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTA_AD_VALOREM_PRODUTO
+        WHERE AAVP_NCM_CD = NEW.AAVP_NCM_CD
+        AND (
+            (NEW.AAVP_INICIO_VIGENCIA BETWEEN AAVP_INICIO_VIGENCIA AND IFNULL(AAVP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.AAVP_FIM_VIGENCIA BETWEEN AAVP_INICIO_VIGENCIA AND IFNULL(AAVP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (AAVP_INICIO_VIGENCIA BETWEEN NEW.AAVP_INICIO_VIGENCIA AND IFNULL(NEW.AAVP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de AAVP_NCM_CD dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_ALIQUOTA_AD_VALOREM_PRODUTO_DUPLICATAS
+BEFORE UPDATE ON ALIQUOTA_AD_VALOREM_PRODUTO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais AAVP_NCM_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTA_AD_VALOREM_PRODUTO
+        WHERE AAVP_NCM_CD = NEW.AAVP_NCM_CD
+        AND AAVP_ID != NEW.AAVP_ID
+        AND (
+            (NEW.AAVP_INICIO_VIGENCIA BETWEEN AAVP_INICIO_VIGENCIA AND IFNULL(AAVP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.AAVP_FIM_VIGENCIA BETWEEN AAVP_INICIO_VIGENCIA AND IFNULL(AAVP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (AAVP_INICIO_VIGENCIA BETWEEN NEW.AAVP_INICIO_VIGENCIA AND IFNULL(NEW.AAVP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de EAVP_NCM_CD dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_EXCECOES_AD_VALOREM_PRODUTO_DUPLICATAS
+BEFORE INSERT ON EXCECOES_AD_VALOREM_PRODUTO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais EAVP_NCM_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM EXCECOES_AD_VALOREM_PRODUTO
+        WHERE EAVP_NCM_CD = NEW.EAVP_NCM_CD
+        AND (
+            (NEW.EAVP_INICIO_VIGENCIA BETWEEN EAVP_INICIO_VIGENCIA AND IFNULL(EAVP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.EAVP_FIM_VIGENCIA BETWEEN EAVP_INICIO_VIGENCIA AND IFNULL(EAVP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (EAVP_INICIO_VIGENCIA BETWEEN NEW.EAVP_INICIO_VIGENCIA AND IFNULL(NEW.EAVP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de EAVP_NCM_CD dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_EXCECOES_AD_VALOREM_PRODUTO_DUPLICATAS
+BEFORE UPDATE ON EXCECOES_AD_VALOREM_PRODUTO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais EAVP_NCM_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM EXCECOES_AD_VALOREM_PRODUTO
+        WHERE EAVP_NCM_CD = NEW.EAVP_NCM_CD
+        AND EAVP_ID != NEW.EAVP_ID
+        AND (
+            (NEW.EAVP_INICIO_VIGENCIA BETWEEN EAVP_INICIO_VIGENCIA AND IFNULL(EAVP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.EAVP_FIM_VIGENCIA BETWEEN EAVP_INICIO_VIGENCIA AND IFNULL(EAVP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (EAVP_INICIO_VIGENCIA BETWEEN NEW.EAVP_INICIO_VIGENCIA AND IFNULL(NEW.EAVP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de AARP_NCM_CD dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_ALIQUOTA_AD_REM_PRODUTO_DUPLICATAS
+BEFORE INSERT ON ALIQUOTA_AD_REM_PRODUTO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais AARP_NCM_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTA_AD_REM_PRODUTO
+        WHERE AARP_NCM_CD = NEW.AARP_NCM_CD
+        AND (
+            (NEW.AARP_INICIO_VIGENCIA BETWEEN AARP_INICIO_VIGENCIA AND IFNULL(AARP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.AARP_FIM_VIGENCIA BETWEEN AARP_INICIO_VIGENCIA AND IFNULL(AARP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (AARP_INICIO_VIGENCIA BETWEEN NEW.AARP_INICIO_VIGENCIA AND IFNULL(NEW.AARP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de AARP_NCM_CD dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_ALIQUOTA_AD_REM_PRODUTO_DUPLICATAS
+BEFORE UPDATE ON ALIQUOTA_AD_REM_PRODUTO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais AARP_NCM_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTA_AD_REM_PRODUTO
+        WHERE AARP_NCM_CD = NEW.AARP_NCM_CD
+        AND AARP_ID != NEW.AARP_ID
+        AND (
+            (NEW.AARP_INICIO_VIGENCIA BETWEEN AARP_INICIO_VIGENCIA AND IFNULL(AARP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.AARP_FIM_VIGENCIA BETWEEN AARP_INICIO_VIGENCIA AND IFNULL(AARP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (AARP_INICIO_VIGENCIA BETWEEN NEW.AARP_INICIO_VIGENCIA AND IFNULL(NEW.AARP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de EARP_NCM_CD dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_EXCECOES_AD_REM_PRODUTO_DUPLICATAS
+BEFORE INSERT ON EXCECOES_AD_REM_PRODUTO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais EARP_NCM_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM EXCECOES_AD_REM_PRODUTO
+        WHERE EARP_NCM_CD = NEW.EARP_NCM_CD
+        AND (
+            (NEW.EARP_INICIO_VIGENCIA BETWEEN EARP_INICIO_VIGENCIA AND IFNULL(EARP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.EARP_FIM_VIGENCIA BETWEEN EARP_INICIO_VIGENCIA AND IFNULL(EARP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (EARP_INICIO_VIGENCIA BETWEEN NEW.EARP_INICIO_VIGENCIA AND IFNULL(NEW.EARP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de EARP_NCM_CD dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_EXCECOES_AD_REM_PRODUTO_DUPLICATAS
+BEFORE UPDATE ON EXCECOES_AD_REM_PRODUTO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais EARP_NCM_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM EXCECOES_AD_REM_PRODUTO
+        WHERE EARP_NCM_CD = NEW.EARP_NCM_CD
+        AND EARP_ID != NEW.EARP_ID
+        AND (
+            (NEW.EARP_INICIO_VIGENCIA BETWEEN EARP_INICIO_VIGENCIA AND IFNULL(EARP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.EARP_FIM_VIGENCIA BETWEEN EARP_INICIO_VIGENCIA AND IFNULL(EARP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (EARP_INICIO_VIGENCIA BETWEEN NEW.EARP_INICIO_VIGENCIA AND IFNULL(NEW.EARP_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de AAVS_NBS_CD dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_ALIQUOTA_AD_VALOREM_SERVICO_DUPLICATAS
+BEFORE INSERT ON ALIQUOTA_AD_VALOREM_SERVICO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais AAVS_NBS_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTA_AD_VALOREM_SERVICO
+        WHERE AAVS_NBS_CD = NEW.AAVS_NBS_CD
+        AND (
+            (NEW.AAVS_INICIO_VIGENCIA BETWEEN AAVS_INICIO_VIGENCIA AND IFNULL(AAVS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.AAVS_FIM_VIGENCIA BETWEEN AAVS_INICIO_VIGENCIA AND IFNULL(AAVS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (AAVS_INICIO_VIGENCIA BETWEEN NEW.AAVS_INICIO_VIGENCIA AND IFNULL(NEW.AAVS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de AAVS_NBS_CD dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_ALIQUOTA_AD_VALOREM_SERVICO_DUPLICATAS
+BEFORE UPDATE ON ALIQUOTA_AD_VALOREM_SERVICO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais AAVS_NBS_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTA_AD_VALOREM_SERVICO
+        WHERE AAVS_NBS_CD = NEW.AAVS_NBS_CD
+        AND AAVS_ID != NEW.AAVS_ID
+        AND (
+            (NEW.AAVS_INICIO_VIGENCIA BETWEEN AAVS_INICIO_VIGENCIA AND IFNULL(AAVS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.AAVS_FIM_VIGENCIA BETWEEN AAVS_INICIO_VIGENCIA AND IFNULL(AAVS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (AAVS_INICIO_VIGENCIA BETWEEN NEW.AAVS_INICIO_VIGENCIA AND IFNULL(NEW.AAVS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de EAVS_NBS_CD dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_EXCECOES_AD_VALOREM_SERVICO_DUPLICATAS
+BEFORE INSERT ON EXCECOES_AD_VALOREM_SERVICO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais EAVS_NBS_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM EXCECOES_AD_VALOREM_SERVICO
+        WHERE EAVS_NBS_CD = NEW.EAVS_NBS_CD
+        AND (
+            (NEW.EAVS_INICIO_VIGENCIA BETWEEN EAVS_INICIO_VIGENCIA AND IFNULL(EAVS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.EAVS_FIM_VIGENCIA BETWEEN EAVS_INICIO_VIGENCIA AND IFNULL(EAVS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (EAVS_INICIO_VIGENCIA BETWEEN NEW.EAVS_INICIO_VIGENCIA AND IFNULL(NEW.EAVS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de EAVS_NBS_CD dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_EXCECOES_AD_VALOREM_SERVICO_DUPLICATAS
+BEFORE UPDATE ON EXCECOES_AD_VALOREM_SERVICO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais EAVS_NBS_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM EXCECOES_AD_VALOREM_SERVICO
+        WHERE EAVS_NBS_CD = NEW.EAVS_NBS_CD
+        AND EAVS_ID != NEW.EAVS_ID
+        AND (
+            (NEW.EAVS_INICIO_VIGENCIA BETWEEN EAVS_INICIO_VIGENCIA AND IFNULL(EAVS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.EAVS_FIM_VIGENCIA BETWEEN EAVS_INICIO_VIGENCIA AND IFNULL(EAVS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (EAVS_INICIO_VIGENCIA BETWEEN NEW.EAVS_INICIO_VIGENCIA AND IFNULL(NEW.EAVS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de AARS_NBS_CD dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_ALIQUOTA_AD_REM_SERVICO_DUPLICATAS
+BEFORE INSERT ON ALIQUOTA_AD_REM_SERVICO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais AARS_NBS_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTA_AD_REM_SERVICO
+        WHERE AARS_NBS_CD = NEW.AARS_NBS_CD
+        AND (
+            (NEW.AARS_INICIO_VIGENCIA BETWEEN AARS_INICIO_VIGENCIA AND IFNULL(AARS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.AARS_FIM_VIGENCIA BETWEEN AARS_INICIO_VIGENCIA AND IFNULL(AARS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (AARS_INICIO_VIGENCIA BETWEEN NEW.AARS_INICIO_VIGENCIA AND IFNULL(NEW.AARS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de AARS_NBS_CD dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_ALIQUOTA_AD_REM_SERVICO_DUPLICATAS
+BEFORE UPDATE ON ALIQUOTA_AD_REM_SERVICO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais AARS_NBS_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTA_AD_REM_SERVICO
+        WHERE AARS_NBS_CD = NEW.AARS_NBS_CD
+        AND AARS_ID != NEW.AARS_ID
+        AND (
+            (NEW.AARS_INICIO_VIGENCIA BETWEEN AARS_INICIO_VIGENCIA AND IFNULL(AARS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.AARS_FIM_VIGENCIA BETWEEN AARS_INICIO_VIGENCIA AND IFNULL(AARS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (AARS_INICIO_VIGENCIA BETWEEN NEW.AARS_INICIO_VIGENCIA AND IFNULL(NEW.AARS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de EARS_NBS_CD dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_EXCECOES_AD_REM_SERVICO_DUPLICATAS
+BEFORE INSERT ON EXCECOES_AD_REM_SERVICO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais EARS_NBS_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM EXCECOES_AD_REM_SERVICO
+        WHERE EARS_NBS_CD = NEW.EARS_NBS_CD
+        AND (
+            (NEW.EARS_INICIO_VIGENCIA BETWEEN EARS_INICIO_VIGENCIA AND IFNULL(EARS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.EARS_FIM_VIGENCIA BETWEEN EARS_INICIO_VIGENCIA AND IFNULL(EARS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (EARS_INICIO_VIGENCIA BETWEEN NEW.EARS_INICIO_VIGENCIA AND IFNULL(NEW.EARS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de EARS_NBS_CD dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_EXCECOES_AD_REM_SERVICO_DUPLICATAS
+BEFORE UPDATE ON EXCECOES_AD_REM_SERVICO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais EARS_NBS_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM EXCECOES_AD_REM_SERVICO
+        WHERE EARS_NBS_CD = NEW.EARS_NBS_CD
+        AND EARS_ID != NEW.EARS_ID
+        AND (
+            (NEW.EARS_INICIO_VIGENCIA BETWEEN EARS_INICIO_VIGENCIA AND IFNULL(EARS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.EARS_FIM_VIGENCIA BETWEEN EARS_INICIO_VIGENCIA AND IFNULL(EARS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (EARS_INICIO_VIGENCIA BETWEEN NEW.EARS_INICIO_VIGENCIA AND IFNULL(NEW.EARS_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de FDLG_CLTR_ID dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_FUNDAMENTACAO_LEGAL_DUPLICATAS
+BEFORE INSERT ON FUNDAMENTACAO_LEGAL
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais FDLG_CLTR_ID dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM FUNDAMENTACAO_LEGAL
+        WHERE FDLG_CLTR_ID = NEW.FDLG_CLTR_ID
+        AND (
+            (NEW.FDLG_INICIO_VIGENCIA BETWEEN FDLG_INICIO_VIGENCIA AND IFNULL(FDLG_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.FDLG_FIM_VIGENCIA BETWEEN FDLG_INICIO_VIGENCIA AND IFNULL(FDLG_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (FDLG_INICIO_VIGENCIA BETWEEN NEW.FDLG_INICIO_VIGENCIA AND IFNULL(NEW.FDLG_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de FDLG_CLTR_ID dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_FUNDAMENTACAO_LEGAL_DUPLICATAS
+BEFORE UPDATE ON FUNDAMENTACAO_LEGAL
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais FDLG_CLTR_ID dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM FUNDAMENTACAO_LEGAL
+        WHERE FDLG_CLTR_ID = NEW.FDLG_CLTR_ID
+        AND FDLG_ID != NEW.FDLG_ID
+        AND (
+            (NEW.FDLG_INICIO_VIGENCIA BETWEEN FDLG_INICIO_VIGENCIA AND IFNULL(FDLG_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.FDLG_FIM_VIGENCIA BETWEEN FDLG_INICIO_VIGENCIA AND IFNULL(FDLG_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (FDLG_INICIO_VIGENCIA BETWEEN NEW.FDLG_INICIO_VIGENCIA AND IFNULL(NEW.FDLG_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de pares de PERE_CLTR_ID e PERE_TBTO_ID dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_PERCENTUAL_REDUCAO_DUPLICATAS
+BEFORE INSERT ON PERCENTUAL_REDUCAO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais pares de PERE_CLTR_ID e PERE_TBTO_ID dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM PERCENTUAL_REDUCAO
+        WHERE PERE_CLTR_ID = NEW.PERE_CLTR_ID
+        AND PERE_TBTO_ID = NEW.PERE_TBTO_ID
+        AND (
+            (NEW.PERE_INICIO_VIGENCIA BETWEEN PERE_INICIO_VIGENCIA AND IFNULL(PERE_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.PERE_FIM_VIGENCIA BETWEEN PERE_INICIO_VIGENCIA AND IFNULL(PERE_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (PERE_INICIO_VIGENCIA BETWEEN NEW.PERE_INICIO_VIGENCIA AND IFNULL(NEW.PERE_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de pares de PERE_CLTR_ID e PERE_TBTO_ID dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_PERCENTUAL_REDUCAO_DUPLICATAS
+BEFORE UPDATE ON PERCENTUAL_REDUCAO
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais pares de PERE_CLTR_ID e PERE_TBTO_ID dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM PERCENTUAL_REDUCAO
+        WHERE PERE_CLTR_ID = NEW.PERE_CLTR_ID
+        AND PERE_TBTO_ID = NEW.PERE_TBTO_ID
+        AND PERE_ID != NEW.PERE_ID
+        AND (
+            (NEW.PERE_INICIO_VIGENCIA BETWEEN PERE_INICIO_VIGENCIA AND IFNULL(PERE_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.PERE_FIM_VIGENCIA BETWEEN PERE_INICIO_VIGENCIA AND IFNULL(PERE_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (PERE_INICIO_VIGENCIA BETWEEN NEW.PERE_INICIO_VIGENCIA AND IFNULL(NEW.PERE_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de pares de CLTR_CD e CLTR_SITR_ID dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_CLASSIFICACOES_TRIBUTARIAS_DUPLICATAS
+BEFORE INSERT ON CLASSIFICACOES_TRIBUTARIAS
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais pares de CLTR_CD e CLTR_SITR_ID dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM CLASSIFICACOES_TRIBUTARIAS
+        WHERE CLTR_CD = NEW.CLTR_CD
+        AND CLTR_SITR_ID = NEW.CLTR_SITR_ID
+        AND (
+            (NEW.CLTR_INICIO_VIGENCIA BETWEEN CLTR_INICIO_VIGENCIA AND IFNULL(CLTR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.CLTR_FIM_VIGENCIA BETWEEN CLTR_INICIO_VIGENCIA AND IFNULL(CLTR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (CLTR_INICIO_VIGENCIA BETWEEN NEW.CLTR_INICIO_VIGENCIA AND IFNULL(NEW.CLTR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de pares de CLTR_CD e CLTR_SITR_ID dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_CLASSIFICACOES_TRIBUTARIAS_DUPLICATAS
+BEFORE UPDATE ON CLASSIFICACOES_TRIBUTARIAS
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais pares de CLTR_CD e CLTR_SITR_ID dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM CLASSIFICACOES_TRIBUTARIAS
+        WHERE CLTR_CD = NEW.CLTR_CD
+        AND CLTR_SITR_ID = NEW.CLTR_SITR_ID
+        AND CLTR_ID != NEW.CLTR_ID
+        AND (
+            (NEW.CLTR_INICIO_VIGENCIA BETWEEN CLTR_INICIO_VIGENCIA AND IFNULL(CLTR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.CLTR_FIM_VIGENCIA BETWEEN CLTR_INICIO_VIGENCIA AND IFNULL(CLTR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (CLTR_INICIO_VIGENCIA BETWEEN NEW.CLTR_INICIO_VIGENCIA AND IFNULL(NEW.CLTR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de ALRE_TBTO_ID dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_ALIQUOTAS_REFERENCIA_DUPLICATAS
+BEFORE INSERT ON ALIQUOTAS_REFERENCIA
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais ALRE_TBTO_ID dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTAS_REFERENCIA
+        WHERE ALRE_TBTO_ID = NEW.ALRE_TBTO_ID
+        AND (
+            (NEW.ALRE_INICIO_VIGENCIA BETWEEN ALRE_INICIO_VIGENCIA AND IFNULL(ALRE_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.ALRE_FIM_VIGENCIA BETWEEN ALRE_INICIO_VIGENCIA AND IFNULL(ALRE_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (ALRE_INICIO_VIGENCIA BETWEEN NEW.ALRE_INICIO_VIGENCIA AND IFNULL(NEW.ALRE_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de ALRE_TBTO_ID dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_ALIQUOTAS_REFERENCIA_DUPLICATAS
+BEFORE UPDATE ON ALIQUOTAS_REFERENCIA
+FOR EACH ROW
+BEGIN
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais ALRE_TBTO_ID dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTAS_REFERENCIA
+        WHERE ALRE_TBTO_ID = NEW.ALRE_TBTO_ID
+        AND ALRE_ID != NEW.ALRE_ID
+        AND (
+            (NEW.ALRE_INICIO_VIGENCIA BETWEEN ALRE_INICIO_VIGENCIA AND IFNULL(ALRE_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.ALRE_FIM_VIGENCIA BETWEEN ALRE_INICIO_VIGENCIA AND IFNULL(ALRE_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (ALRE_INICIO_VIGENCIA BETWEEN NEW.ALRE_INICIO_VIGENCIA AND IFNULL(NEW.ALRE_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-------------------------------------------------------------------------
+-- Trigger para evitar inserção de duplicatas de ALPR_MUNI_CD ou ALPR_UF_CD dentro do mesmo período de vigência
+-------------------------------------------------------------------------
+
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_INSERT_ALIQUOTAS_PROPRIAS_DUPLICATAS
+BEFORE INSERT ON ALIQUOTAS_PROPRIAS
+FOR EACH ROW
+BEGIN
+    -- Verifica se ALPR_MUNI_CD e ALPR_UF_CD não são ambos não nulos
+    SELECT RAISE(ABORT, 'ALPR_MUNI_CD e ALPR_UF_CD não podem ser ambos não nulos')
+    WHERE NEW.ALPR_MUNI_CD IS NOT NULL AND NEW.ALPR_UF_CD IS NOT NULL;
+
+    -- Verifica duplicatas de ALPR_MUNI_CD
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais ALPR_MUNI_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTAS_PROPRIAS
+        WHERE ALPR_MUNI_CD = NEW.ALPR_MUNI_CD
+        AND (
+            (NEW.ALPR_INICIO_VIGENCIA BETWEEN ALPR_INICIO_VIGENCIA AND IFNULL(ALPR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.ALPR_FIM_VIGENCIA BETWEEN ALPR_INICIO_VIGENCIA AND IFNULL(ALPR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (ALPR_INICIO_VIGENCIA BETWEEN NEW.ALPR_INICIO_VIGENCIA AND IFNULL(NEW.ALPR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+
+    -- Verifica duplicatas de ALPR_UF_CD
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais ALPR_UF_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTAS_PROPRIAS
+        WHERE ALPR_UF_CD = NEW.ALPR_UF_CD
+        AND (
+            (NEW.ALPR_INICIO_VIGENCIA BETWEEN ALPR_INICIO_VIGENCIA AND IFNULL(ALPR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.ALPR_FIM_VIGENCIA BETWEEN ALPR_INICIO_VIGENCIA AND IFNULL(ALPR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (ALPR_INICIO_VIGENCIA BETWEEN NEW.ALPR_INICIO_VIGENCIA AND IFNULL(NEW.ALPR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+
+-- Trigger para evitar atualização de duplicatas de ALPR_MUNI_CD ou ALPR_UF_CD dentro do mesmo período de vigência
+CREATE TRIGGER IF NOT EXISTS TRG_BEFORE_UPDATE_ALIQUOTAS_PROPRIAS_DUPLICATAS
+BEFORE UPDATE ON ALIQUOTAS_PROPRIAS
+FOR EACH ROW
+BEGIN
+    -- Verifica se ALPR_MUNI_CD e ALPR_UF_CD não são ambos não nulos
+    SELECT RAISE(ABORT, 'ALPR_MUNI_CD e ALPR_UF_CD não podem ser ambos não nulos')
+    WHERE NEW.ALPR_MUNI_CD IS NOT NULL AND NEW.ALPR_UF_CD IS NOT NULL;
+
+    -- Verifica duplicatas de ALPR_MUNI_CD
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais ALPR_MUNI_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTAS_PROPRIAS
+        WHERE ALPR_MUNI_CD = NEW.ALPR_MUNI_CD
+        AND ALPR_ID != NEW.ALPR_ID
+        AND (
+            (NEW.ALPR_INICIO_VIGENCIA BETWEEN ALPR_INICIO_VIGENCIA AND IFNULL(ALPR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.ALPR_FIM_VIGENCIA BETWEEN ALPR_INICIO_VIGENCIA AND IFNULL(ALPR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (ALPR_INICIO_VIGENCIA BETWEEN NEW.ALPR_INICIO_VIGENCIA AND IFNULL(NEW.ALPR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+
+    -- Verifica duplicatas de ALPR_UF_CD
+    SELECT RAISE(ABORT, 'Não é permitido inserir dois ou mais ALPR_UF_CD dentro do mesmo período de vigência')
+    WHERE EXISTS (
+        SELECT 1
+        FROM ALIQUOTAS_PROPRIAS
+        WHERE ALPR_UF_CD = NEW.ALPR_UF_CD
+        AND ALPR_ID != NEW.ALPR_ID
+        AND (
+            (NEW.ALPR_INICIO_VIGENCIA BETWEEN ALPR_INICIO_VIGENCIA AND IFNULL(ALPR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (NEW.ALPR_FIM_VIGENCIA BETWEEN ALPR_INICIO_VIGENCIA AND IFNULL(ALPR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+            OR
+            (ALPR_INICIO_VIGENCIA BETWEEN NEW.ALPR_INICIO_VIGENCIA AND IFNULL(NEW.ALPR_FIM_VIGENCIA, '9999-12-31T23:59:59.999-0300'))
+        )
+    );
+END;
+

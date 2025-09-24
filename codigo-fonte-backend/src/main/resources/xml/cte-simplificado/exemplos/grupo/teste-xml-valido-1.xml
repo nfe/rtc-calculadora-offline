@@ -1,0 +1,19 @@
+<IBSCBS>
+  <CST>103</CST>
+  <cClassTrib>111111</cClassTrib>
+  <gIBSCBS>
+    <vBC>3000.00</vBC>
+    <gIBSUF>
+      <pIBSUF>3.0000</pIBSUF>
+      <vIBSUF>300.00</vIBSUF>
+    </gIBSUF>
+    <gIBSMun>
+      <pIBSMun>3.0000</pIBSMun>
+      <vIBSMun>300.00</vIBSMun>
+    </gIBSMun>
+    <gCBS>
+      <pCBS>5.0000</pCBS>
+      <vCBS>500.00</vCBS>
+    </gCBS>
+  </gIBSCBS>
+</IBSCBS>

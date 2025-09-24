@@ -1,0 +1,213 @@
+INSERT INTO NCM_APLICAVEL (
+    NCMA_ID,
+    NCMA_NCM_CD,
+    NCMA_CLTR_ID,
+    NCMA_ANXO_ID,
+    NCMA_INICIO_VIGENCIA,
+    NCMA_FIM_VIGENCIA
+) VALUES (
+    (SELECT COALESCE(MAX(NCMA_ID), 0) + 1 FROM NCM_APLICAVEL),
+    '02102000',
+    14,
+    NULL,
+    '2026-01-01',
+    NULL
+);
+
+INSERT INTO NCM_APLICAVEL (
+    NCMA_ID,
+    NCMA_NCM_CD,
+    NCMA_CLTR_ID,
+    NCMA_ANXO_ID,
+    NCMA_INICIO_VIGENCIA,
+    NCMA_FIM_VIGENCIA
+) VALUES (
+    (SELECT COALESCE(MAX(NCMA_ID), 0) + 1 FROM NCM_APLICAVEL),
+    '84718000',
+    42,
+    NULL,
+    '2026-01-01',
+    NULL
+);
+
+INSERT INTO NCM_APLICAVEL (
+    NCMA_ID,
+    NCMA_NCM_CD,
+    NCMA_CLTR_ID,
+    NCMA_ANXO_ID,
+    NCMA_INICIO_VIGENCIA,
+    NCMA_FIM_VIGENCIA
+) VALUES (
+    (SELECT COALESCE(MAX(NCMA_ID), 0) + 1 FROM NCM_APLICAVEL),
+    '84718000',
+    19,
+    NULL,
+    '2026-01-01',
+    NULL
+);
+
+-- INSERT INTO NCM (
+--     NCM_CD,
+--     NCM_DESCRICAO,
+--     NCM_INICIO_VIGENCIA,
+--     NCM_FIM_VIGENCIA
+-- ) VALUES (
+-- 	'90219089',
+--     'Outros aparelhos para compensar deficiências ou enfermidades',
+--     '2026-01-01',
+--     NULL
+-- );
+
+-- INSERT INTO NCM (
+--     NCM_CD,
+--     NCM_DESCRICAO,
+--     NCM_INICIO_VIGENCIA,
+--     NCM_FIM_VIGENCIA
+-- ) VALUES (
+-- 	'07129010',
+--     'Alho comum em pó sem qualquer outro preparo',
+--     '2026-01-01',
+--     NULL
+-- );
+
+-- INSERT INTO NCM (
+--     NCM_CD,
+--     NCM_DESCRICAO,
+--     NCM_INICIO_VIGENCIA,
+--     NCM_FIM_VIGENCIA
+-- ) VALUES (
+-- 	'28273998',
+--     'Cloreto de zinco',
+--     '2026-01-01',
+--     NULL
+-- );
+
+-- INSERT INTO NCM (
+--     NCM_CD,
+--     NCM_DESCRICAO,
+--     NCM_INICIO_VIGENCIA,
+--     NCM_FIM_VIGENCIA
+-- ) VALUES (
+-- 	'30021580',
+--     'Produtos imunológicos, apresentados em doses ou acondicionados para venda a retalho, de origem animal',
+--     '2026-01-01',
+--     NULL
+-- );
+
+-- INSERT INTO NCM (
+--     NCM_CD,
+--     NCM_DESCRICAO,
+--     NCM_INICIO_VIGENCIA,
+--     NCM_FIM_VIGENCIA
+-- ) VALUES (
+-- 	'30022032',
+--     'Vacinas para medicina humana, acondicionadas para venda a retalho',
+--     '2026-01-01',
+--     NULL
+-- );
+
+-- INSERT INTO NCM (
+--     NCM_CD,
+--     NCM_DESCRICAO,
+--     NCM_INICIO_VIGENCIA,
+--     NCM_FIM_VIGENCIA
+-- ) VALUES (
+-- 	'30043039',
+--     'Medicamentos que contenham hormônios, mas não antibióticos, preparados para fins terapêuticos ou profiláticos, apresentados em doses, destinados à medicina humana, outros',
+--     '2026-01-01',
+--     NULL
+-- );
+
+INSERT INTO NCM_APLICAVEL (
+    NCMA_ID,
+    NCMA_NCM_CD,
+    NCMA_CLTR_ID,
+    NCMA_ANXO_ID,
+    NCMA_INICIO_VIGENCIA,
+    NCMA_FIM_VIGENCIA
+) VALUES (
+    (SELECT COALESCE(MAX(NCMA_ID), 0) + 1 FROM NCM_APLICAVEL),
+    '03074900',
+    45,
+    NULL,
+    '2026-01-01',
+    NULL
+);
+
+INSERT INTO NCM_APLICAVEL (
+    NCMA_ID,
+    NCMA_NCM_CD,
+    NCMA_CLTR_ID,
+    NCMA_ANXO_ID,
+    NCMA_INICIO_VIGENCIA,
+    NCMA_FIM_VIGENCIA
+) VALUES (
+    (SELECT COALESCE(MAX(NCMA_ID), 0) + 1 FROM NCM_APLICAVEL),
+    '03074900',
+    45,
+    NULL,
+    '2026-01-01',
+    NULL
+);
+
+INSERT INTO NCM_APLICAVEL (
+    NCMA_ID,
+    NCMA_NCM_CD,
+    NCMA_CLTR_ID,
+    NCMA_ANXO_ID,
+    NCMA_INICIO_VIGENCIA,
+    NCMA_FIM_VIGENCIA
+) VALUES (
+    (SELECT COALESCE(MAX(NCMA_ID), 0) + 1 FROM NCM_APLICAVEL),
+    '90181990',
+    15,
+    NULL,
+    '2026-01-01',
+    NULL
+);
+
+INSERT INTO NCM_APLICAVEL (
+    NCMA_ID,
+    NCMA_NCM_CD,
+    NCMA_CLTR_ID,
+    NCMA_ANXO_ID,
+    NCMA_INICIO_VIGENCIA,
+    NCMA_FIM_VIGENCIA
+) VALUES (
+    (SELECT COALESCE(MAX(NCMA_ID), 0) + 1 FROM NCM_APLICAVEL),
+    '90181990',
+    17,
+    NULL,
+    '2026-01-01',
+    NULL
+);
+
+
+INSERT INTO NBS_APLICAVEL (
+    NBSA_ID,
+    NBSA_NBS_CD,
+    NBSA_CLTR_ID,
+    NBSA_ANXO_ID,
+    NBSA_INICIO_VIGENCIA,
+    NBSA_FIM_VIGENCIA
+) VALUES (
+    (SELECT COALESCE(MAX(NBSA_ID), 0) + 1 FROM NBS_APLICAVEL),
+    '123019900',
+    40,
+    NULL,
+    '2026-01-01',
+    NULL
+);
+
+INSERT INTO EXCECAO_NCM_APLICAVEL
+VALUES (71, '07141000', 362, '2026-01-01', NULL);
+INSERT INTO EXCECAO_NCM_APLICAVEL
+VALUES (72, '07142000', 362, '2026-01-01', NULL);
+INSERT INTO EXCECAO_NCM_APLICAVEL
+VALUES (73, '07143000', 362, '2026-01-01', NULL);
+INSERT INTO EXCECAO_NCM_APLICAVEL
+VALUES (74, '07144000', 362, '2026-01-01', NULL);
+INSERT INTO EXCECAO_NCM_APLICAVEL
+VALUES (75, '07145000', 362, '2026-01-01', NULL);
+INSERT INTO EXCECAO_NCM_APLICAVEL
+VALUES (76, '07149000', 362, '2026-01-01', NULL);

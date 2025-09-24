@@ -1,0 +1,23 @@
+<infCTe>
+    <imp>
+      <IBSCBS>
+        <CST>000</CST>
+        <cClassTrib>000001</cClassTrib>
+        <gIBSCBS>
+          <vBC>200</vBC>
+          <gIBSUF>
+            <pIBSUF>0.05</pIBSUF>
+            <vIBSUF>0.10</vIBSUF>
+          </gIBSUF>
+          <gIBSMun>
+            <pIBSMun>0.05</pIBSMun>
+            <vIBSMun>0.10</vIBSMun>
+          </gIBSMun>
+          <gCBS>
+            <pCBS>0.90</pCBS>
+            <vCBS>1.80</vCBS>
+          </gCBS>
+        </gIBSCBS>
+      </IBSCBS>
+    </imp>
+</infCTe>
