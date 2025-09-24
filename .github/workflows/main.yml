@@ -57,5 +57,6 @@ jobs:
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           title: New version of the backend source code.
+          automatic_release_tag: "latest"
           files: |
             codigo-fonte-backend.zip
