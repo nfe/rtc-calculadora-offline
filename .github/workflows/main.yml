@@ -26,13 +26,13 @@ jobs:
           unzip calculadora.zip
           NEW_HASH=$(md5sum codigo-fonte-backend.zip | awk '{print $1}')
           OLD_HASH=""
-          if [ -f code-last-version.md5 ]; then
-            OLD_HASH=$(cat code-last-version.md5)
+          if [ -f codigo-fonte-backend.md5 ]; then
+            OLD_HASH=$(cat codigo-fonte-backend.md5)
           fi
           if [ "$NEW_HASH" != "$OLD_HASH" ]; then
             echo "New version found. Updating files."
             echo "is_new_version=true" >> $GITHUB_ENV
-            echo $NEW_HASH > code-last-version.md5
+            echo $NEW_HASH > codigo-fonte-backend.md5
           else
             echo "No new version found."
             echo "is_new_version=false" >> $GITHUB_ENV
@@ -41,11 +41,11 @@ jobs:
       - name: Unzip and commit if new version
         if: env.is_new_version == 'true'
         run: |
-          mkdir src
-          unzip codigo-fonte-backend.zip -d src
+          mkdir code-backend
+          unzip codigo-fonte-backend.zip -d code-backend
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add src code-last-version.md5
+          git add code-backend codigo-fonte-backend.md5
           git commit -m "Update backend source code"
           git push
         env:
