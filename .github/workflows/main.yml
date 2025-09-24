@@ -40,11 +40,11 @@ jobs:
       - name: Unzip and commit if new version
         if: env.is_new_version == 'true'
         run: |
-          mkdir code-backend
-          unzip codigo-fonte-backend.zip -d code-backend
+          mkdir codigo-fonte-backend
+          unzip codigo-fonte-backend.zip -d codigo-fonte-backend
           git config --global user.name 'github-actions[bot]'
           git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add code-backend codigo-fonte-backend.md5
+          git add codigo-fonte-backend codigo-fonte-backend.md5
           git commit -m "Update backend source code - $(date +'%Y-%m-%d')"
           git push
         env:
