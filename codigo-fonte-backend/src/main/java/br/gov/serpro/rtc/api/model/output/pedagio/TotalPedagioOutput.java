@@ -13,6 +13,7 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Value;
@@ -20,25 +21,24 @@ import lombok.Value;
 @Value
 @Builder
 @JsonInclude(Include.NON_NULL)
-public final class TotalPedagioOutput {
+public final class TotalPedagioOutput implements SerializationVisibility {
 
-        @Schema(name = "cbsTotal", description = "Total de CBS apurado")
-        private final TributoTotalPedagioOutput cbsTotal;
+    @Schema(name = "cbsTotal", description = "Total de CBS apurado")
+    private final TributoTotalPedagioOutput cbsTotal;
 
-        @Schema(name = "ibsEstadualTotal", description = "Total de IBS Estadual apurado")
-        private final TributoTotalPedagioOutput ibsEstadualTotal;
+    @Schema(name = "ibsEstadualTotal", description = "Total de IBS Estadual apurado")
+    private final TributoTotalPedagioOutput ibsEstadualTotal;
 
-        @Schema(name = "ibsMunicipalTotal", description = "Total de IBS Municipal apurado")
-        private final TributoTotalPedagioOutput ibsMunicipalTotal;
+    @Schema(name = "ibsMunicipalTotal", description = "Total de IBS Municipal apurado")
+    private final TributoTotalPedagioOutput ibsMunicipalTotal;
 
-        public static TotalPedagioOutput getTotal(List<TrechoPedagioOutput> trechosPedagio) {
-                final BigDecimal totalBaseCalculo = trechosPedagio.get(0).getBaseCalculo();
-                return TotalPedagioOutput
-                                .builder()
-                                .cbsTotal(totalizaCbs(trechosPedagio, totalBaseCalculo))
-                                .ibsEstadualTotal(totalizaIbsEstadual(trechosPedagio, totalBaseCalculo))
-                                .ibsMunicipalTotal(totalizaIbsMunicipal(trechosPedagio, totalBaseCalculo))
-                                .build();
-        }
+    public static TotalPedagioOutput getTotal(List<TrechoPedagioOutput> trechosPedagio) {
+        final BigDecimal totalBaseCalculo = trechosPedagio.getFirst().getBaseCalculo();
+        return TotalPedagioOutput.builder()
+                .cbsTotal(totalizaCbs(trechosPedagio, totalBaseCalculo))
+                .ibsEstadualTotal(totalizaIbsEstadual(trechosPedagio, totalBaseCalculo))
+                .ibsMunicipalTotal(totalizaIbsMunicipal(trechosPedagio, totalBaseCalculo))
+                .build();
+    }
 
 }

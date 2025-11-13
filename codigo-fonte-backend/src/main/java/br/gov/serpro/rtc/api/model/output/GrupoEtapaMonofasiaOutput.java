@@ -9,10 +9,6 @@ import static java.util.Objects.requireNonNullElse;
 
 import java.math.BigDecimal;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,16 +18,10 @@ import lombok.ToString;
 @Getter
 @Setter
 @Builder
-@JsonInclude(Include.NON_NULL)
 public class GrupoEtapaMonofasiaOutput {
     
-    @Schema(name = "quantidade", description = "Valor da quantidade tributada", example = "0.8")
     private BigDecimal quantidade;
-
-    @Schema(name = "aliquotaAdRem", description = "Alíquota ad rem do tributo", example = "0.5")
     private BigDecimal aliquotaAdRem;
-
-    @Schema(name = "valor", description = "Valor do tributo", example = "0.5")
     private BigDecimal valor;
     
     public static GrupoEtapaMonofasiaOutput merge(GrupoEtapaMonofasiaOutput g1, GrupoEtapaMonofasiaOutput g2) {

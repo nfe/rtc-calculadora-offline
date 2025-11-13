@@ -8,8 +8,6 @@ import static br.gov.serpro.rtc.api.model.output.pedagio.TotalPedagioOutput.getT
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -32,9 +30,6 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Service
 public class PedagioService {
-
-    private static final DateTimeFormatter FORMATO_DATA_HORA = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
-    public static final String NUMERO_VERSAO = "1.0.0(" + LocalDateTime.now().format(FORMATO_DATA_HORA) + ")";
 
     private final AliquotaReferenciaService aliquotaReferenciaService;
     private final AliquotaPadraoService aliquotaPadraoService;

@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
 import br.gov.serpro.rtc.domain.model.enumeration.FormaAplicacaoEnum;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,7 +20,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @JsonInclude(Include.NON_NULL)
-public class AliquotaDadosAbertosOutput {
+public class AliquotaDadosAbertosOutput implements SerializationVisibility {
 
     @Schema(name = "aliquotaReferencia", description = "Alíquota de referência", example = "0")
     @JsonProperty("aliquotaReferencia")

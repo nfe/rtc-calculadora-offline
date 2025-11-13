@@ -9,10 +9,6 @@ import static java.util.Objects.requireNonNullElse;
 
 import java.math.BigDecimal;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,13 +18,9 @@ import lombok.ToString;
 @Getter
 @Setter
 @Builder
-@JsonInclude(Include.NON_NULL)
 public class GrupoDiferimentoMonofasiaOutput {
     
-    @Schema(name = "valorDiferimento", description = "Valor do diferimento do tributo monofásico", example = "0.8")
     private BigDecimal valorDiferimento;
-
-    @Schema(name = "percentualDiferimento", description = "Percentual do diferimento do tributo monofásico", example = "0.5")
     private BigDecimal percentualDiferimento;
     
     public static GrupoDiferimentoMonofasiaOutput merge(GrupoDiferimentoMonofasiaOutput g1, GrupoDiferimentoMonofasiaOutput g2) {

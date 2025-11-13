@@ -4,10 +4,12 @@
 package br.gov.serpro.rtc.api.model.output.dadosabertos;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +19,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @JsonInclude(Include.NON_NULL)
-public class ClassificacaoTributariaDadosAbertosOutput {
+public class ClassificacaoTributariaDadosAbertosOutput implements SerializationVisibility {
 
     @Schema(name = "codigo", description = "Código da classificação tributária", example = "000001")
     private String codigo;
@@ -66,5 +68,8 @@ public class ClassificacaoTributariaDadosAbertosOutput {
 
     @Schema(name = "percentualReducaoIbsMun", description = "", example = "")
     private BigDecimal percentualReducaoIbsMun;
+
+    @Schema(name = "tiposDfeClassificacao", description = "", example = "")
+    private List<TipoDfeClassificacaoDadosAbertosOutput> tiposDfeClassificacao;
 
 }

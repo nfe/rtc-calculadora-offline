@@ -3,6 +3,7 @@
  */
 package br.gov.serpro.rtc.api.model.input.pedagio;
 
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static java.math.BigDecimal.ZERO;
 
 import java.math.BigDecimal;
@@ -10,6 +11,7 @@ import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -31,6 +33,7 @@ import lombok.Setter;
 public final class PedagioInput {
 
     @NotNull
+    @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     @Schema(name = "dataHoraEmissao", description = "Data e hora de emissão do documento no formato UTC", example = "2027-01-01T09:50:05-03:00")
     private OffsetDateTime dataHoraEmissao;
 

@@ -9,19 +9,18 @@ import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 
-import br.gov.serpro.rtc.api.model.roc.CBS;
-import br.gov.serpro.rtc.api.model.roc.CBSTotal;
-import br.gov.serpro.rtc.api.model.roc.CreditoPresumido;
-import br.gov.serpro.rtc.api.model.roc.DevolucaoTributos;
-import br.gov.serpro.rtc.api.model.roc.Diferimento;
-import br.gov.serpro.rtc.api.model.roc.reduce.CBSTotalAccumulator;
+import br.gov.serpro.rtc.api.model.roc.CBSDomain;
+import br.gov.serpro.rtc.api.model.roc.CBSTotalDomain;
+import br.gov.serpro.rtc.api.model.roc.DevolucaoTributosDomain;
+import br.gov.serpro.rtc.api.model.roc.DiferimentoDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSCBSCreditoPresumidoDomain;
 
 class CBSTotalAccumulatorTest {
 
     @Test
     void testDefaultConstructor() {
         CBSTotalAccumulator acc = new CBSTotalAccumulator();
-        CBSTotal total = acc.toCBSTotal();
+        CBSTotalDomain total = acc.toCBSTotal();
         isEqualByComparingTo(ZERO, total.getVDif());
         isEqualByComparingTo(ZERO, total.getVDevTrib());
         isEqualByComparingTo(ZERO, total.getVCBS());
@@ -33,7 +32,7 @@ class CBSTotalAccumulatorTest {
     void testParameterizedConstructor() {
         BigDecimal v1 = ONE;
         CBSTotalAccumulator acc = new CBSTotalAccumulator(v1, v1, v1, v1, v1);
-        CBSTotal total = acc.toCBSTotal();
+        CBSTotalDomain total = acc.toCBSTotal();
         isEqualByComparingTo(v1, total.getVDif());
         isEqualByComparingTo(v1, total.getVDevTrib());
         isEqualByComparingTo(v1, total.getVCBS());
@@ -44,7 +43,7 @@ class CBSTotalAccumulatorTest {
     @Test
     void testFromMethodWithNulls() {
         CBSTotalAccumulator acc = CBSTotalAccumulator.from(null, null);
-        CBSTotal total = acc.toCBSTotal();
+        CBSTotalDomain total = acc.toCBSTotal();
         isEqualByComparingTo(ZERO, total.getVDif());
         isEqualByComparingTo(ZERO, total.getVDevTrib());
         isEqualByComparingTo(ZERO, total.getVCBS());
@@ -54,26 +53,25 @@ class CBSTotalAccumulatorTest {
 
     @Test
     void testFromMethodWithValues() {
-        Diferimento gDif = Diferimento.builder()
+        DiferimentoDomain gDif = DiferimentoDomain.builder()
                 .vDif(TEN)
                 .build();
-        DevolucaoTributos gDevTrib = DevolucaoTributos.builder()
+        DevolucaoTributosDomain gDevTrib = DevolucaoTributosDomain.builder()
                 .vDevTrib(ONE)
                 .build();
-        CBS cbs = new CBS();
+        CBSDomain cbs = new CBSDomain();
         cbs.setGDif(gDif);
         cbs.setGDevTrib(gDevTrib);
         final var valorImposto = new BigDecimal("5.00");
-        cbs.setValorImposto(valorImposto);
+        cbs.setVCBS(valorImposto);
         
         final var vCredPres = TWO;
         final var vCredPresCondSus = new BigDecimal("3.97");
-        CreditoPresumido cred = CreditoPresumido.builder()
-                .vCredPres(vCredPres)
-                .vCredPresCondSus(vCredPresCondSus)
-                .build();
+        IBSCBSCreditoPresumidoDomain cred = new IBSCBSCreditoPresumidoDomain();
+        cred.setVCredPres(vCredPres);
+        cred.setVCredPresCondSus(vCredPresCondSus);
         CBSTotalAccumulator acc = CBSTotalAccumulator.from(cbs, cred);
-        CBSTotal total = acc.toCBSTotal();
+        CBSTotalDomain total = acc.toCBSTotal();
         isEqualByComparingTo(TEN, total.getVDif());
         isEqualByComparingTo(ONE, total.getVDevTrib());
         isEqualByComparingTo(valorImposto, total.getVCBS());
@@ -86,7 +84,7 @@ class CBSTotalAccumulatorTest {
         CBSTotalAccumulator acc1 = new CBSTotalAccumulator(ONE, ONE, ONE, ONE, ONE);
         CBSTotalAccumulator acc2 = new CBSTotalAccumulator(TEN, TEN, TEN, TEN, TEN);
         CBSTotalAccumulator result = acc1.add(acc2);
-        CBSTotal total = result.toCBSTotal();
+        CBSTotalDomain total = result.toCBSTotal();
         final var onze = new BigDecimal("11.00");
         isEqualByComparingTo(onze, total.getVDif());
         isEqualByComparingTo(onze, total.getVDevTrib());
@@ -99,7 +97,7 @@ class CBSTotalAccumulatorTest {
     void testAddWithNull() {
         CBSTotalAccumulator acc1 = new CBSTotalAccumulator(ONE, ONE, ONE, ONE, ONE);
         CBSTotalAccumulator result = acc1.add(null);
-        CBSTotal total = result.toCBSTotal();
+        CBSTotalDomain total = result.toCBSTotal();
         isEqualByComparingTo(ONE, total.getVDif());
         isEqualByComparingTo(ONE, total.getVDevTrib());
         isEqualByComparingTo(ONE, total.getVCBS());

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<NFSe versao="1.01" xmlns="http://www.sped.fazenda.gov.br/nfse">
+    <infNFSe Id="NFS33061562200000000000191000000000006525113016040220">
+        <xLocEmi>Varre-Sai</xLocEmi>
+        <xLocPrestacao>Varre-Sai</xLocPrestacao>
+        <nNFSe>65</nNFSe>
+        <cLocIncid>3306156</cLocIncid>
+        <xLocIncid>Varre-Sai</xLocIncid>
+        <xTribNac>AnÃ¡lise e desenvolvimento de sistemas.</xTribNac>
+        <xTribMun>anÃ¡lise de sistemas</xTribMun>
+        <verAplic>EmissorWeb_1.4.0</verAplic>
+        <ambGer>2</ambGer>
+        <tpEmis>1</tpEmis>
+        <procEmi>2</procEmi>
+        <cStat>102</cStat>
+        <dhProc>2025-11-05T15:29:33-03:00</dhProc>
+        <nDFSe>65</nDFSe>
+        <emit>
+            <CNPJ>00000000000191</CNPJ>
+            <IM>22222111</IM>
+            <xNome>OWMKX NX OIWUQD UWW DO.</xNome>
+            <enderNac>
+                <xLgr>Av teste</xLgr>
+                <nro>21</nro>
+                <xBairro>Centro</xBairro>
+                <cMun>3306156</cMun>
+                <UF>RJ</UF>
+                <CEP>28375000</CEP>
+            </enderNac>
+            <fone>6134939002</fone>
+            <email>TESTESDESENVOLVIMENTO@SERPRO.GOV.BR</email>
+        </emit>
+        <valores>
+            <vCalcDR>0.00</vCalcDR>
+            <vBC>0.00</vBC>
+            <pAliqAplic>0.00</pAliqAplic>
+            <vISSQN>0.00</vISSQN>
+            <vTotalRet>0.00</vTotalRet>
+            <vLiq>0.00</vLiq>
+        </valores>
+        <DPS versao="1.01" xmlns="http://www.sped.fazenda.gov.br/nfse">
+            <infDPS Id="DPS330615620000000000019100900000000000000151">
+                <tpAmb>2</tpAmb>
+                <dhEmi>2025-11-05T15:29:32-03:00</dhEmi>
+                <verAplic>EmissorWeb_1.4.0.26</verAplic>
+                <serie>900</serie>
+                <nDPS>151</nDPS>
+                <dCompet>2025-11-05</dCompet>
+                <tpEmit>1</tpEmit>
+                <cLocEmi>3306156</cLocEmi>
+                <prest>
+                    <CNPJ>00000000000191</CNPJ>
+                    <IM>22222111</IM>
+                    <fone>6134939002</fone>
+                    <email>TESTESDESENVOLVIMENTO@SERPRO.GOV.BR</email>
+                    <regTrib>
+                        <opSimpNac>1</opSimpNac>
+                        <regEspTrib>0</regEspTrib>
+                    </regTrib>
+                </prest>
+                <serv>
+                    <locPrest>
+                        <cLocPrestacao>3306156</cLocPrestacao>
+                    </locPrest>
+                    <cServ>
+                        <cTribNac>010101</cTribNac>
+                        <cTribMun>001</cTribMun>
+                        <xDescServ>TESTE</xDescServ>
+                        <cNBS>123456789</cNBS>
+                    </cServ>
+                </serv>
+                <valores>
+                    <vServPrest>
+                        <vServ>25000.00</vServ>
+                    </vServPrest>
+                    <trib>
+                        <tribMun>
+                            <tribISSQN>1</tribISSQN>
+                            <tpRetISSQN>1</tpRetISSQN>
+                        </tribMun>
+                        <totTrib>
+                            <pTotTrib>
+                                <pTotTribFed>0.22</pTotTribFed>
+                                <pTotTribEst>2.30</pTotTribEst>
+                                <pTotTribMun>0.01</pTotTribMun>
+                            </pTotTrib>
+                        </totTrib>
+                    </trib>
+                </valores>
+            </infDPS>
+        </DPS>
+    </infNFSe>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#WithComments" />
+            <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
+            <Reference URI="#NFS33061562200000000000191000000000006525113016040220">
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                    <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#WithComments" />
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+                <DigestValue>kL6GoR+ZuthKxvCXSa/VvB08utWpzngrl3u7cAC6pE4=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>
+            hWWA4PQxM/fDptB+XqyjrMAMhBYMrVnQCSeRO/28OC9ye7UYWqqGOUBrH3cnnEZ9SlJhxYOdBYYHW7ewySJ1zJ6obLG5upQpbwPVcnGJiljW8d9wyZuhFAvgix6Rrq1braN9P4ydYOgj6HzenFcMWtrC0k4KciCa6VsjKMr1d7J9c51hL2J0rG0O9tJJOlqHXm9oYGxbZ8LaUx37A7fe0WQsbuMpS+jNftMMdTdOZ5ZIz7cPfyP8mt3Zf+ET8TWW8hA/7TAQEwnS8VY8YZOl8BMNQldyuNq9pgPa5rNb7UDbzYxz7PZbvphb2WUOy73R+kkZi4zsD6XoDqQIl9ywRw==</SignatureValue>
+        <KeyInfo>
+            <X509Data>
+                <X509Certificate>
+                    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</X509Certificate>
+            </X509Data>
+        </KeyInfo>
+    </Signature>
+</NFSe>

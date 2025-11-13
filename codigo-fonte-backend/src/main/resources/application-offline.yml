@@ -1,29 +1,22 @@
 info:
   app:
-    version: '0.0.0-SNAPSHOT'
+    version: '@project.version@'
 
 application:
-  module: api-regime-geral
-  timezone: GMT-03:00
-  locale: pt-BR
-  dateTimeFormat: yyyy-MM-dd'T'HH:mm:ss.SSSZ
-  dateTimeFormatBanco: yyyy-MM-dd
+  module: ${MODULE_NAME:api-regime-geral}
   ibs:
     enabled: true
-    
+
 spring:
   application:
     name: api-regime-geral
   config:
     activate:
       on-profile: offline
-  threads:
-    virtual:
-      enabled: true
   datasource:
-    url: jdbc:sqlite:file:./calculadora/db/calculadora.db?date_class=TEXT&date_string_format=${application.date-time-format-banco}
+    url: jdbc:sqlite:file:./calculadora/db/calculadora.db?date_class=TEXT&date_string_format=yyyy-MM-dd
     username: sa
-    password: 
+    password:
     driverClassName: org.sqlite.JDBC
   jpa:
     database-platform: org.hibernate.community.dialect.SQLiteDialect
@@ -36,16 +29,27 @@ spring:
   sql:
     init:
       mode: embedded
-  codec:
-    max-in-memory-size: 500KB
+  task:
+    execution:
+      pool:
+        max-size: 16
+        queue-capacity: 100
+        keep-alive: "10s"
   devtools:
     add-properties: false
   jackson:
-    time-zone: ${application.timezone}
-    locale: ${application.locale}
+    date-format: yyyy-MM-dd'T'HH:mm:ssXXX       # Formato de data/hora padrão (ISO 8601 com offset)
     serialization:
-      write-dates-as-timestamps: false
-        
+      write-dates-as-timestamps: false          # Escrever datas como strings ao invés de timestamps
+    deserialization:
+      adjust-dates-to-context-time-zone: false  # Ajustar datas para o timezone configurado
+      fail-on-unknown-properties: false         # Falhar se propriedade desconhecida for encontrada
+    property-naming-strategy: LOWER_CAMEL_CASE  # Estratégia de nomenclatura de propriedades
+    default-property-inclusion: NON_NULL
+  http:
+    codecs:
+      max-in-memory-size: 500KB
+
 logging:
   level:
     root: INFO
@@ -65,23 +69,25 @@ logging:
         type: INFO
     com:
       zaxxer:
-        hikari: 
+        hikari:
           HikariConfig: INFO
-    '[com.zaxxer.hikari]': INFO
     br:
       gov:
         serpro:
           rtc: INFO
-          
+
 server:
   port: 8080
   servlet:
     context-path: /api
+  tomcat:
+    threads:
+      max: 250
   compression:
     enabled: true
     mime-types: application/json
     min-response-size: 1024
-    
+
 springdoc:
   version: '@springdoc.version@'
   api-docs:
@@ -94,11 +100,11 @@ springdoc:
     operationsSorter: method
     disable-swagger-default-url: true
     use-root-path: true
-    supported-submit-methods: ["get", "post", "put", "delete", "patch", "head", "options"]
+    supported-submit-methods: ["get", "post"]
   show-actuator: false
   cache:
     disabled: true
-    
+
 cache:
   specs:
     - name: AliquotaAdRemProdutoRepository.buscarAliquotaAdRem
@@ -182,14 +188,18 @@ cache:
     - name: VersaoBaseDadosService.getUltimaVersao
       expireAfterWrite: "PT1M"
       initialCapacity: 1
-          
+
+
 management:
   server:
     port: 9101
   endpoints:
     web:
       exposure:
-        include: health, prometheus, caches
+        include: health, prometheus
       base-path: "/"
       path-mapping:
         prometheus: "metrics"
+
+versao:
+  url: ${VERSAO_OFFLINE_URL:https://piloto-cbs.tributos.gov.br/servico/calculadora-consumo/api/calculadora/dados-abertos/versao}

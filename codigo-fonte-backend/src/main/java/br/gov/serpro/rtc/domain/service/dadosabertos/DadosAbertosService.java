@@ -11,17 +11,22 @@ import org.springframework.stereotype.Service;
 
 import br.gov.serpro.rtc.api.model.output.dadosabertos.AliquotaDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.ClassificacaoTributariaDadosAbertosOutput;
+import br.gov.serpro.rtc.api.model.output.dadosabertos.ValidadeDfeClassificacaoTributariaDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.FundamentacaoClassificacaoDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.MunicipioDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.NbsDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.NcmDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.SituacaoTributariaDadosAbertosOutput;
+import br.gov.serpro.rtc.api.model.output.dadosabertos.TipoDfeClassificacaoDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.UfDadosAbertosOutput;
+import br.gov.serpro.rtc.domain.model.entity.AliquotaAdRem;
 import br.gov.serpro.rtc.domain.model.entity.AliquotaPadrao;
 import br.gov.serpro.rtc.domain.model.entity.AliquotaReferencia;
 import br.gov.serpro.rtc.domain.model.entity.ClassificacaoTributaria;
 import br.gov.serpro.rtc.domain.model.entity.FundamentacaoLegal;
 import br.gov.serpro.rtc.domain.model.entity.SituacaoTributaria;
+import br.gov.serpro.rtc.domain.model.entity.TipoDfeClassificacao;
+import br.gov.serpro.rtc.domain.model.enumeration.SiglasDFeEnum;
 import br.gov.serpro.rtc.domain.repository.NbsRepository;
 import br.gov.serpro.rtc.domain.repository.NcmRepository;
 import br.gov.serpro.rtc.domain.repository.SituacaoTributariaRepository;
@@ -33,10 +38,11 @@ import br.gov.serpro.rtc.domain.service.AliquotaPadraoService;
 import br.gov.serpro.rtc.domain.service.AliquotaReferenciaService;
 import br.gov.serpro.rtc.domain.service.FundamentacaoClassificacaoService;
 import br.gov.serpro.rtc.domain.service.MunicipioService;
+import br.gov.serpro.rtc.domain.service.TipoDfeClassificacaoService;
 import br.gov.serpro.rtc.domain.service.TributoSituacaoTributariaService;
 import br.gov.serpro.rtc.domain.service.UfService;
-import br.gov.serpro.rtc.domain.service.exception.NbsNaoEncontradaException;
-import br.gov.serpro.rtc.domain.service.exception.NcmNaoEncontradaException;
+import br.gov.serpro.rtc.domain.service.exception.ClassificacaoTributariaNaoEncontradaException;
+import br.gov.serpro.rtc.domain.service.exception.ErroGenericoValidacaoException;
 import jakarta.validation.ValidationException;
 import lombok.RequiredArgsConstructor;
 
@@ -55,6 +61,7 @@ public class DadosAbertosService {
     private final AliquotaAdRemProdutoService aliquotaAdRemProdutoService;
     private final FundamentacaoClassificacaoService fundamentacaoClassificacaoService;
     private final TributoSituacaoTributariaService tributoSituacaoTributariaService;
+    private final TipoDfeClassificacaoService tipoDfeClassificacaoService;
 
     private final AliquotaReferenciaService aliquotaReferenciaService;
     private final AliquotaPadraoService aliquotaPadraoService;
@@ -94,19 +101,29 @@ public class DadosAbertosService {
 
     public List<ClassificacaoTributariaDadosAbertosOutput> consultarClassificacoesTributariasPorIdSituacaoTributaria(
             Long idSituacaoTributaria, LocalDate data) {
+
         return tratamentoClassificacaoRepository
                 .consultarTratamentoClassificacaoPorIdSituacaoTributaria(idSituacaoTributaria, data).stream()
-                .map(m -> ClassificacaoTributariaDadosAbertosOutput
-                        .builder()
-                        .codigo((String) m[0])
-                        .descricao((String) m[1])
-                        .tipoAliquota((String) m[2])
-                        .nomenclatura((String) m[3])
-                        .descricaoTratamentoTributario((String) m[4])
-                        .incompativelComSuspensao(m[5] != null && ((Integer) m[5]) != 0)
-                        .exigeGrupoDesoneracao(m[6] != null && ((Integer) m[6]) != 0)
-                        .possuiPercentualReducao(m[7] != null && ((Integer) m[7]) != 0)
-                        .build())
+                .map(
+                        m -> {
+                            Long idClassificacaoTributaria = ((Number) m[8]).longValue();
+
+                            List<TipoDfeClassificacaoDadosAbertosOutput> tiposDfeClassificacaoOutput = 
+                                    obterListaDfeClassificacaoTributaria(idClassificacaoTributaria, data);
+
+                            return ClassificacaoTributariaDadosAbertosOutput
+                                    .builder()
+                                    .codigo((String) m[0])
+                                    .descricao((String) m[1])
+                                    .tipoAliquota((String) m[2])
+                                    .nomenclatura((String) m[3])
+                                    .descricaoTratamentoTributario((String) m[4])
+                                    .incompativelComSuspensao(m[5] != null && ((Integer) m[5]) != 0)
+                                    .exigeGrupoDesoneracao(m[6] != null && ((Integer) m[6]) != 0)
+                                    .possuiPercentualReducao(m[7] != null && ((Integer) m[7]) != 0)
+                                    .tiposDfeClassificacao(tiposDfeClassificacaoOutput)
+                                    .build();
+                        })
                 .toList();
     }
 
@@ -116,22 +133,24 @@ public class DadosAbertosService {
 
         // Verifica se o NCM existe
         if (!ncmRepository.existeNcm(ncm, data)) {
-            throw new NcmNaoEncontradaException(ncm, data);
+            //throw new NcmNaoEncontradaException(ncm, data);
+            return null;
         }
 
         BigDecimal aliquotaAdValorem = aliquotaAdValoremProdutoService.buscarAliquotaAdValorem(ncm, 1L, data);
-        BigDecimal aliquotaAdRem = aliquotaAdRemProdutoService.buscarAliquotaAdRem(ncm, 1L, data);
+        AliquotaAdRem aliquotaAdRem = aliquotaAdRemProdutoService.buscarEntidadeAliquotaAdRem(ncm, 1L, data);
 
         return NcmDadosAbertosOutput
                 .builder()
                 .tributadoPeloImpostoSeletivo(aliquotaAdValorem != null || aliquotaAdRem != null)
                 .aliquotaAdValorem(aliquotaAdValorem)
-                .aliquotaAdRem(aliquotaAdRem)
+                .aliquotaAdRem(aliquotaAdRem != null ? aliquotaAdRem.getValor() : null)
                 .capitulo(ncmRepository.buscarDescricaoNcm(ncm, 2, data).orElse(null))
                 .posicao(ncmRepository.buscarDescricaoNcm(ncm, 4, data).orElse(null))
                 .subposicao(ncmRepository.buscarDescricaoNcm(ncm, 6, data).orElse(null))
                 .item(ncmRepository.buscarDescricaoNcm(ncm, 7, data).orElse(null))
                 .subitem(ncmRepository.buscarDescricaoNcm(ncm, 8, data).orElse(null))
+                .unidade(aliquotaAdRem != null ? aliquotaAdRem.getUnidadeMedida().getSigla() : null)
                 .build();
                 
     }
@@ -154,10 +173,11 @@ public class DadosAbertosService {
 
         // Verifica se a NBS existe
         if (!nbsRepository.existeNbs(nbs, data)) {
-            throw new NbsNaoEncontradaException(nbs, data);
+            //throw new NbsNaoEncontradaException(nbs, data);
+            return null;
         }
 
-        BigDecimal aliquotaAdValorem = aliquotaAdValoremServicoService.buscarAliquotaAdValorem(nbs, 1L, data);
+        BigDecimal aliquotaAdValorem = aliquotaAdValoremServicoService.buscarAliquotaAdValorem(nbs, 1L, null, data);
         //BigDecimal aliquotaAdRem = aliquotaAdRemProdutoService.buscarAliquotaAdRem(ncm, 1L, data);
         BigDecimal aliquotaAdRem = null;
 
@@ -213,25 +233,34 @@ public class DadosAbertosService {
     public List<ClassificacaoTributariaDadosAbertosOutput> consultarClassificacoesTributariasCbsIbs(LocalDate data) {
         return tratamentoClassificacaoRepository
                 .consultarTratamentoClassificacaoCbsIbs(data).stream()
-                .map(m -> ClassificacaoTributariaDadosAbertosOutput
-                        .builder()
-                        .codigo((String) m[0])
-                        .descricao((String) m[1])
-                        .tipoAliquota((String) m[2])
-                        .nomenclatura((String) m[3])
-                        .descricaoTratamentoTributario((String) m[4])
-                        .incompativelComSuspensao(m[5] != null && ((Integer) m[5]) != 0)
-                        .exigeGrupoDesoneracao(m[6] != null && ((Integer) m[6]) != 0)
-                        .possuiPercentualReducao(m[7] != null && ((Integer) m[7]) != 0)
-                        .indicaApropriacaoCreditoAdquirenteCbs(m[8] != null && ((Integer) m[8]) != 0)
-                        .indicaApropriacaoCreditoAdquirenteIbs(m[9] != null && ((Integer) m[9]) != 0)
-                        .indicaCreditoPresumidoFornecedor(m[10] != null && ((Integer) m[10]) != 0)
-                        .indicaCreditoPresumidoAdquirente(m[11] != null && ((Integer) m[11]) != 0)
-                        .creditoOperacaoAntecedente((String) m[12])
-                        .percentualReducaoCbs(m[13] != null ? convertToBigDecimal(m[13]) : null)
-                        .percentualReducaoIbsUf(m[14] != null ? convertToBigDecimal(m[14]) : null)
-                        .percentualReducaoIbsMun(m[15] != null ? convertToBigDecimal(m[15]) : null)
-                        .build())
+                .map(
+                        m -> {
+                            Long idClassificacaoTributaria = ((Number) m[0]).longValue();
+
+                            List<TipoDfeClassificacaoDadosAbertosOutput> tiposDfeClassificacaoOutput = 
+                                    obterListaDfeClassificacaoTributaria(idClassificacaoTributaria, data);
+
+                            return ClassificacaoTributariaDadosAbertosOutput
+                                    .builder()
+                                    .codigo((String) m[1])
+                                    .descricao((String) m[2])
+                                    .tipoAliquota((String) m[3])
+                                    .nomenclatura((String) m[4])
+                                    .descricaoTratamentoTributario((String) m[5])
+                                    .incompativelComSuspensao(m[6] != null && ((Integer) m[6]) != 0)
+                                    .exigeGrupoDesoneracao(m[7] != null && ((Integer) m[7]) != 0)
+                                    .possuiPercentualReducao(m[8] != null && ((Integer) m[8]) != 0)
+                                    .indicaApropriacaoCreditoAdquirenteCbs(m[9] != null && ((Integer) m[9]) != 0)
+                                    .indicaApropriacaoCreditoAdquirenteIbs(m[10] != null && ((Integer) m[10]) != 0)
+                                    .indicaCreditoPresumidoFornecedor(m[11] != null && ((Integer) m[11]) != 0)
+                                    .indicaCreditoPresumidoAdquirente(m[12] != null && ((Integer) m[12]) != 0)
+                                    .creditoOperacaoAntecedente((String) m[13])
+                                    .percentualReducaoCbs(m[14] != null ? convertToBigDecimal(m[14]) : null)
+                                    .percentualReducaoIbsUf(m[15] != null ? convertToBigDecimal(m[15]) : null)
+                                    .percentualReducaoIbsMun(m[16] != null ? convertToBigDecimal(m[16]) : null)
+                                    .tiposDfeClassificacao(tiposDfeClassificacaoOutput)
+                                    .build();
+                        })
                 .toList();
     }
 
@@ -304,4 +333,55 @@ public class DadosAbertosService {
         }
     }
 
+    public ValidadeDfeClassificacaoTributariaDadosAbertosOutput consultarValidadeDfeClassificacaoTributaria(String siglaDfe, String cClassTrib, LocalDate data) {
+        Object[] resultado = tratamentoClassificacaoRepository.consultarValidadeDfeClassificacaoTributaria(cClassTrib, data);
+        
+        if (resultado == null || resultado.length == 0) {
+            throw new ClassificacaoTributariaNaoEncontradaException(
+                cClassTrib, siglaDfe, data
+            );
+        }
+
+        if (resultado[0] instanceof Object[]) {
+            resultado = (Object[]) resultado[0];
+        }
+
+        if (!(resultado[0] instanceof Number)) {
+            throw new ErroGenericoValidacaoException("ID da classificação tributária inválido.");
+        }
+
+        Long idClassificacaoTributaria = ((Number) resultado[0]).longValue();
+
+        List<TipoDfeClassificacaoDadosAbertosOutput> tiposDfeClassificacaoOutput = 
+                obterListaDfeClassificacaoTributaria(idClassificacaoTributaria, data);
+
+        String siglaBanco = SiglasDFeEnum.getPorSiglaNormalizada(siglaDfe).getSigla();
+        boolean siglaDfeValida = tiposDfeClassificacaoOutput.stream()
+            .anyMatch(t -> t.getSigla().equals(siglaBanco));
+
+        return ValidadeDfeClassificacaoTributariaDadosAbertosOutput
+                .builder()
+                .siglaDfeInformado(siglaDfe)
+                .validoParaSiglaDfeInformado(siglaDfeValida)
+                .nomenclatura((String) resultado[1])
+                .exigeGrupoTributacaoRegular(resultado[2] != null && ((Number) resultado[2]).intValue() != 0)
+                .permiteDiferimento(resultado[3] != null && ((Number) resultado[3]).intValue() != 0)
+                .build();
+    }
+
+    private List<TipoDfeClassificacaoDadosAbertosOutput> obterListaDfeClassificacaoTributaria(Long idClassificacaoTributaria, LocalDate data) {
+        List<TipoDfeClassificacao> tiposDfeClassificacaoEntity = tipoDfeClassificacaoService
+                .buscar(idClassificacaoTributaria, data);
+
+        return tiposDfeClassificacaoEntity
+                .stream()
+                .map(t -> TipoDfeClassificacaoDadosAbertosOutput
+                        .builder()
+                        .tipo(t.getTipoDfe().getTipo())
+                        .sigla(t.getTipoDfe().getSigla())
+                        .descricao(t.getTipoDfe().getDescricao())
+                        .build())
+                .toList();
+    }
 }
+

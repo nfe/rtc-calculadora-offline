@@ -11,25 +11,27 @@ import org.springframework.stereotype.Service;
 
 import br.gov.serpro.rtc.api.model.input.ItemOperacaoInput;
 import br.gov.serpro.rtc.api.model.output.CbsIbsOutput;
-import br.gov.serpro.rtc.api.model.output.GrupoDiferimentoMonofasiaOutput;
-import br.gov.serpro.rtc.api.model.output.GrupoEtapaMonofasiaOutput;
-import br.gov.serpro.rtc.api.model.output.GrupoMonofasiaOutput;
-import br.gov.serpro.rtc.api.model.roc.CBS;
-import br.gov.serpro.rtc.api.model.roc.TributacaoCompraGovernamental;
-import br.gov.serpro.rtc.api.model.roc.CreditoPresumido;
-import br.gov.serpro.rtc.api.model.roc.CreditoPresumidoIBSZFM;
-import br.gov.serpro.rtc.api.model.roc.DevolucaoTributos;
-import br.gov.serpro.rtc.api.model.roc.GrupoIBSCBS;
-import br.gov.serpro.rtc.api.model.roc.IBSCBS;
-import br.gov.serpro.rtc.api.model.roc.IBSMun;
-import br.gov.serpro.rtc.api.model.roc.IBSUF;
-import br.gov.serpro.rtc.api.model.roc.ImpostoSeletivo;
-import br.gov.serpro.rtc.api.model.roc.Monofasia;
-import br.gov.serpro.rtc.api.model.roc.TransferenciaCredito;
-import br.gov.serpro.rtc.api.model.roc.TributacaoRegular;
-import br.gov.serpro.rtc.api.model.roc.Tributos;
-import br.gov.serpro.rtc.api.model.roc.Monofasia.MonofasiaBuilder;
-import br.gov.serpro.rtc.api.model.roc.TributacaoRegular.TributacaoRegularBuilder;
+import br.gov.serpro.rtc.api.model.roc.AjusteCompetenciaDomain;
+import br.gov.serpro.rtc.api.model.roc.CBSDomain;
+import br.gov.serpro.rtc.api.model.roc.CreditoPresumidoIBSZFMDomain;
+import br.gov.serpro.rtc.api.model.roc.CreditoPresumidoOperacaoDomain;
+import br.gov.serpro.rtc.api.model.roc.DevolucaoTributosDomain;
+import br.gov.serpro.rtc.api.model.roc.EstornoCreditoDomain;
+import br.gov.serpro.rtc.api.model.roc.GrupoIBSCBSDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSCBSDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSMunDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSUFDomain;
+import br.gov.serpro.rtc.api.model.roc.ImpostoSeletivoDomain;
+import br.gov.serpro.rtc.api.model.roc.MonofasiaDiferimentoDomain;
+import br.gov.serpro.rtc.api.model.roc.MonofasiaDomain;
+import br.gov.serpro.rtc.api.model.roc.MonofasiaPadraoDomain;
+import br.gov.serpro.rtc.api.model.roc.MonofasiaRetencaoDomain;
+import br.gov.serpro.rtc.api.model.roc.MonofasiaRetidoAnteriormenteDomain;
+import br.gov.serpro.rtc.api.model.roc.TransferenciaCreditoDomain;
+import br.gov.serpro.rtc.api.model.roc.TributacaoCompraGovernamentalDomain;
+import br.gov.serpro.rtc.api.model.roc.TributacaoRegularDomain;
+import br.gov.serpro.rtc.api.model.roc.TributacaoRegularDomain.TributacaoRegularDomainBuilder;
+import br.gov.serpro.rtc.api.model.roc.TributosDomain;
 import br.gov.serpro.rtc.domain.model.entity.TratamentoClassificacao;
 import br.gov.serpro.rtc.domain.service.MemoriaCalculoService;
 import br.gov.serpro.rtc.domain.service.calculotributo.model.AliquotaImpostoSeletivoModel;
@@ -47,7 +49,7 @@ public class CalculoTributoService {
     @Value("${application.ibs.enabled}")
     private boolean calculoIbsHabilitado;
 
-	public Tributos calcular(OperacaoModel operacao) {
+	public TributosDomain calcular(OperacaoModel operacao) {
 		ItemOperacaoInput item = operacao.getItem();
 		LocalDate data = operacao.getData().toLocalDate();
 		String ncm = item.getNcm();
@@ -66,7 +68,7 @@ public class CalculoTributoService {
 				.getTratamentoClassificacao().getTratamentoClassificacaoCbsIbsDesoneracao();
 		}
 
-		ImpostoSeletivo impostoSeletivo = null;
+		ImpostoSeletivoDomain impostoSeletivo = null;
 		CbsIbsOutput cbs = null;
 		CbsIbsOutput ibsEstadual = null;
 		CbsIbsOutput ibsMunicipal = null;
@@ -141,44 +143,51 @@ public class CalculoTributoService {
 			}
 		}
 		
-		return Tributos
+		return TributosDomain
 				.builder()
 				.IS(impostoSeletivo)
 				.IBSCBS(getIBSCBS(item, cbs, ibsEstadual, ibsMunicipal))
 				.build();
 	}
 
-    private static IBSCBS getIBSCBS(ItemOperacaoInput item, CbsIbsOutput cbs, CbsIbsOutput ibsEstadual,
+    private static IBSCBSDomain getIBSCBS(ItemOperacaoInput item, CbsIbsOutput cbs, CbsIbsOutput ibsEstadual,
             CbsIbsOutput ibsMunicipal) {
         final var monofasia = getMonofasia(cbs, ibsEstadual, ibsMunicipal);
-        return IBSCBS.builder()
-                .CST(Integer.valueOf(item.getCst()))
+        return IBSCBSDomain.builder()
+                .CST(item.getCst())
                 .cClassTrib(item.getCClassTrib())
                 .gIBSCBS(monofasia == null ? getGIBSCBS(cbs, ibsEstadual, ibsMunicipal) : null) // FIXME somente se não for monofásico
                 .gIBSCBSMono(monofasia)
                 .gTransfCred(getTransferenciaCredito(cbs, ibsEstadual, ibsMunicipal))
+                .gAjusteCompet(getAjusteCompetencia(cbs, ibsEstadual, ibsMunicipal))
+                .gEstornoCred(getEstornoCredito(cbs, ibsEstadual, ibsMunicipal))
+                .gCredPresOper(getCreditoPresumidoOperacao(cbs, ibsEstadual, ibsMunicipal))
                 .gCredPresIBSZFM(getCreditoPresumidoIBSZFM(ibsEstadual, ibsMunicipal))
                 .build();
     }
 
-    private static GrupoIBSCBS getGIBSCBS(CbsIbsOutput cbs, CbsIbsOutput ibsEstadual, CbsIbsOutput ibsMunicipal) {
+    private static GrupoIBSCBSDomain getGIBSCBS(CbsIbsOutput cbs, CbsIbsOutput ibsEstadual, CbsIbsOutput ibsMunicipal) {
         final var vBC = getVBC(ibsMunicipal, getVBC(ibsEstadual, getVBC(cbs, null)));
         final var ibsUF = getIBSUF(ibsEstadual);
         final var ibsMun = getIBSMun(ibsMunicipal);
+        final var vIBS = getVIbs(ibsUF, ibsMun);
         final var tributacaoRegular = getTributacaoRegular(cbs, ibsEstadual, ibsMunicipal);
-        final var creditoPresumidoIBS = getCreditoPresumidoIBS(ibsEstadual, ibsMunicipal);
-        final var creditoPresumidoCBS = getCreditoPresumidoCBS(cbs);
         final var compraGovernamental = getCompraGovernamental(cbs, ibsEstadual, ibsMunicipal);
-        return GrupoIBSCBS.builder()
+        return GrupoIBSCBSDomain.builder()
 		        .vBC(vBC)
                 .gIBSUF(ibsUF)
                 .gIBSMun(ibsMun)
+                .vIBS(vIBS)
 		        .gCBS(getCbs(cbs))
 		        .gTribRegular(tributacaoRegular)
-		        .gIBSCredPres(creditoPresumidoIBS)
-		        .gCBSCredPres(creditoPresumidoCBS)
 		        .gTribCompraGov(compraGovernamental)
 		        .build();
+    }
+
+    private static BigDecimal getVIbs(IBSUFDomain ibsUF, IBSMunDomain ibsMun) {
+        final var vIbsUF = ibsUF != null ? ibsUF.getVIBSUF() : BigDecimal.ZERO;
+        final var vIbsMun = ibsMun != null ? ibsMun.getVIBSMun() : BigDecimal.ZERO;
+        return vIbsUF.add(vIbsMun);
     }
 	
     private static BigDecimal getVBC(CbsIbsOutput c, BigDecimal valor) {
@@ -191,54 +200,54 @@ public class CalculoTributoService {
         return null;
     }
 	
-    private static IBSUF getIBSUF(CbsIbsOutput ibsEstadual) {
+    private static IBSUFDomain getIBSUF(CbsIbsOutput ibsEstadual) {
         if (ibsEstadual == null) {
             return null;
         }
-        final IBSUF ibsUF = new IBSUF();
-        ibsUF.setAliquota(ibsEstadual.getAliquota());
+        final IBSUFDomain ibsUF = new IBSUFDomain();
+        ibsUF.setPIBSUF(ibsEstadual.getAliquota());
         ibsUF.setGDif(ibsEstadual.getGrupoDiferimento());
         ibsUF.setGDevTrib(getDevolucaoTributos(ibsEstadual));
         ibsUF.setGRed(ibsEstadual.getGrupoReducao());
-        ibsUF.setValorImposto(ibsEstadual.getTributoDevido());
+        ibsUF.setVIBSUF(ibsEstadual.getTributoDevido());
         ibsUF.setMemoriaCalculo(ibsEstadual.getMemoriaCalculo());
         return ibsUF;
     }
 	
-	private static IBSMun getIBSMun(CbsIbsOutput ibsMunicipal) {
+	private static IBSMunDomain getIBSMun(CbsIbsOutput ibsMunicipal) {
 	    if (ibsMunicipal == null) {
             return null;
         }
-        final IBSMun ibsMun = new IBSMun();
-        ibsMun.setAliquota(ibsMunicipal.getAliquota());
+        final IBSMunDomain ibsMun = new IBSMunDomain();
+        ibsMun.setPIBSMun(ibsMunicipal.getAliquota());
         ibsMun.setGDif(ibsMunicipal.getGrupoDiferimento());
         ibsMun.setGDevTrib(getDevolucaoTributos(ibsMunicipal));
         ibsMun.setGRed(ibsMunicipal.getGrupoReducao());
-        ibsMun.setValorImposto(ibsMunicipal.getTributoDevido());
+        ibsMun.setVIBSMun(ibsMunicipal.getTributoDevido());
         ibsMun.setMemoriaCalculo(ibsMunicipal.getMemoriaCalculo());
         return ibsMun;
 	}
 
-    private static CBS getCbs(CbsIbsOutput cbsOut) {
+    private static CBSDomain getCbs(CbsIbsOutput cbsOut) {
         if (cbsOut == null) {
             return null;
         }
-        final CBS cbs = new CBS();
-        cbs.setAliquota(cbsOut.getAliquota());
+        final CBSDomain cbs = new CBSDomain();
+        cbs.setPCBS(cbsOut.getAliquota());
         cbs.setGDif(cbsOut.getGrupoDiferimento());
         cbs.setGDevTrib(getDevolucaoTributos(cbsOut));
         cbs.setGRed(cbsOut.getGrupoReducao());
-        cbs.setValorImposto(cbsOut.getTributoDevido());
+        cbs.setVCBS(cbsOut.getTributoDevido());
         cbs.setMemoriaCalculo(cbsOut.getMemoriaCalculo());
         return cbs;
     }
     
     // TODO: Implementar devolução de tributos
-    private static DevolucaoTributos getDevolucaoTributos(CbsIbsOutput d) {
+    private static DevolucaoTributosDomain getDevolucaoTributos(CbsIbsOutput d) {
         return null;
     }
     
-    private static TributacaoRegular getTributacaoRegular(CbsIbsOutput cbs, CbsIbsOutput ibsEstadual,
+    private static TributacaoRegularDomain getTributacaoRegular(CbsIbsOutput cbs, CbsIbsOutput ibsEstadual,
             CbsIbsOutput ibsMunicipal) {
         var builder = getTributacaoRegularCBS(cbs, null);
         builder = getTributacaoRegularIBSUF(ibsEstadual, builder);
@@ -249,12 +258,12 @@ public class CalculoTributoService {
         return null;
     }
     
-    private static TributacaoRegularBuilder getTributacaoRegularIBSUF(CbsIbsOutput ibsUF, TributacaoRegularBuilder builder) {
+    private static TributacaoRegularDomainBuilder getTributacaoRegularIBSUF(CbsIbsOutput ibsUF, TributacaoRegularDomainBuilder builder) {
         if (ibsUF != null && ibsUF.getTributacaoRegular() != null) {
             var tr = ibsUF.getTributacaoRegular();
             if (builder == null) {
-                builder = TributacaoRegular.builder();
-                builder.CSTReg(Integer.valueOf(tr.getCst()))
+                builder = TributacaoRegularDomain.builder();
+                builder.CSTReg(tr.getCst())
                     .cClassTribReg(tr.getCClassTrib());
             }
             builder.pAliqEfetRegIBSUF(tr.getAliquotaEfetiva())
@@ -264,12 +273,12 @@ public class CalculoTributoService {
         return null;
     }
     
-    private static TributacaoRegularBuilder getTributacaoRegularIBSMun(CbsIbsOutput ibsMun, TributacaoRegularBuilder builder) {
+    private static TributacaoRegularDomainBuilder getTributacaoRegularIBSMun(CbsIbsOutput ibsMun, TributacaoRegularDomainBuilder builder) {
         if (ibsMun != null && ibsMun.getTributacaoRegular() != null) {
             var tr = ibsMun.getTributacaoRegular();
             if (builder == null) {
-                builder = TributacaoRegular.builder();
-                builder.CSTReg(Integer.valueOf(tr.getCst()))
+                builder = TributacaoRegularDomain.builder();
+                builder.CSTReg(tr.getCst())
                     .cClassTribReg(tr.getCClassTrib());
             }
             builder.pAliqEfetRegIBSMun(tr.getAliquotaEfetiva())
@@ -279,12 +288,12 @@ public class CalculoTributoService {
         return null;
     }
     
-    private static TributacaoRegularBuilder getTributacaoRegularCBS(CbsIbsOutput cbs, TributacaoRegularBuilder builder) {
+    private static TributacaoRegularDomainBuilder getTributacaoRegularCBS(CbsIbsOutput cbs, TributacaoRegularDomainBuilder builder) {
         if (cbs != null && cbs.getTributacaoRegular() != null) {
             var tr = cbs.getTributacaoRegular();
             if (builder == null) {
-                builder = TributacaoRegular.builder();
-                builder.CSTReg(Integer.valueOf(tr.getCst()))
+                builder = TributacaoRegularDomain.builder();
+                builder.CSTReg(tr.getCst())
                     .cClassTribReg(tr.getCClassTrib());
             }
             builder.pAliqEfetRegCBS(tr.getAliquotaEfetiva())
@@ -294,141 +303,77 @@ public class CalculoTributoService {
         return null;
     }
     
-    // TODO - Implementar crédito presumido para IBS
-    private static CreditoPresumido getCreditoPresumidoIBS(CbsIbsOutput ibsEstadual, CbsIbsOutput ibsMunicipal) {
-        return null;
-    }
-
-    // TODO - Implementar crédito presumido para CBS
-    private static CreditoPresumido getCreditoPresumidoCBS(CbsIbsOutput cbs) {
-        return null;
-    }
-
     // TODO - Implementar compra governamental
-    private static TributacaoCompraGovernamental getCompraGovernamental(CbsIbsOutput cbs, 
+    private static TributacaoCompraGovernamentalDomain getCompraGovernamental(CbsIbsOutput cbs, 
             CbsIbsOutput ibsEstadual, CbsIbsOutput ibsMunicipal) {
         return null;        
     }
     
     // TODO - Implementar transferência de crédito
-    private static TransferenciaCredito getTransferenciaCredito(CbsIbsOutput cbs, 
+    private static TransferenciaCreditoDomain getTransferenciaCredito(CbsIbsOutput cbs, 
             CbsIbsOutput ibsEstadual, CbsIbsOutput ibsMunicipal) {
         return null;
     }
     
-    // TODO - Implementar crédito presumido para IBS Zona Franca de Manaus
-    private static CreditoPresumidoIBSZFM getCreditoPresumidoIBSZFM(CbsIbsOutput ibsEstadual, 
+    // TODO - Implementar ajuste de competência
+    private static AjusteCompetenciaDomain getAjusteCompetencia(CbsIbsOutput cbs, CbsIbsOutput ibsEstadual, 
             CbsIbsOutput ibsMunicipal) {
         return null;
     }
     
-    private static Monofasia getMonofasia(CbsIbsOutput cbs, CbsIbsOutput ibsEstadual, CbsIbsOutput ibsMunicipal) {
-        var builder = getMonofasiaCBS(cbs, null);
-        builder = getMonofasiaIBS(ibsEstadual, ibsMunicipal, builder);
-        if (builder != null) {
-            return builder.build();
-        }
+    // TODO - Implementar estorno de crédito
+    private static EstornoCreditoDomain getEstornoCredito(CbsIbsOutput cbs, CbsIbsOutput ibsEstadual, 
+            CbsIbsOutput ibsMunicipal) {
         return null;
     }
     
-    private static MonofasiaBuilder getMonofasiaCBS(CbsIbsOutput cbs, MonofasiaBuilder builder) {
-        if (cbs != null && cbs.getGrupoMonofasia() != null) {
-            if (builder == null) {
-                builder = Monofasia.builder();
-            }
-            var mono = cbs.getGrupoMonofasia();
-            
-            var tributoMonofasico = mono.getTributoMonofasico();
-            if (tributoMonofasico != null) {
-                builder.qBCMono(tributoMonofasico.getQuantidade());
-                builder.adRemCBS(tributoMonofasico.getAliquotaAdRem());
-                builder.vCBSMono(tributoMonofasico.getValor());
-            }
-            
-            var tributoRetido = mono.getTributoRetido();
-            if (tributoRetido != null) {
-                builder.qBCMonoRet(tributoRetido.getQuantidade());
-                builder.adRemCBSRet(tributoRetido.getAliquotaAdRem());
-                builder.vCBSMonoRet(tributoRetido.getValor());
-            }
-            
-            var tributoSujeitoRetencao = mono.getTributoSujeitoRetencao();
-            if (tributoSujeitoRetencao != null) {
-                builder.qBCMonoReten(tributoSujeitoRetencao.getQuantidade());
-                builder.adRemCBSReten(tributoSujeitoRetencao.getAliquotaAdRem());
-                builder.vCBSMonoReten(tributoSujeitoRetencao.getValor());
-            }
-
-            var tributoDiferido = mono.getTributoDiferido();
-            if (tributoDiferido != null) {
-                builder.pDifCBS(tributoDiferido.getPercentualDiferimento());
-                builder.vCBSMonoDif(tributoDiferido.getValorDiferimento());
-            }
-            
-            /** 
-             * FIXME aqui falta totalizar - nao esta especificado como fazer isso.
-             * Na NT da NFe, consta:
-             * 
-             * vCBSMono + vCBSMonoReten - vCBSMonoDif
-             *  
-             * builder.vTotCBSMonoItem(vCBSMono + vCBSMonoReten - vCBSMonoDif);
-             */
-            return builder;
-        }
+    // TODO - Implementar estorno de crédito
+    private static CreditoPresumidoOperacaoDomain getCreditoPresumidoOperacao(CbsIbsOutput cbs, CbsIbsOutput ibsEstadual, 
+            CbsIbsOutput ibsMunicipal) {
         return null;
     }
     
-    private static MonofasiaBuilder getMonofasiaIBS(CbsIbsOutput ibsUF, CbsIbsOutput ibsMun, MonofasiaBuilder builder) {
-        var monoUF = ibsUF != null ? ibsUF.getGrupoMonofasia() : null;
-        var monoMun = ibsMun != null ? ibsMun.getGrupoMonofasia() : null;
-        if (monoUF != null || monoMun != null) {
-            if (builder == null) {
-                builder = Monofasia.builder();
-            }
-            
-            // pra garantir que não seja nulo
-            monoUF = monoUF != null ? monoUF : GrupoMonofasiaOutput.builder().build();
-            monoMun = monoMun != null ? monoMun : GrupoMonofasiaOutput.builder().build();
-
-            var tributoMonofasico = GrupoEtapaMonofasiaOutput.merge(monoUF.getTributoMonofasico(), monoMun.getTributoMonofasico());
-            if (tributoMonofasico != null) {
-                builder.qBCMono(tributoMonofasico.getQuantidade());
-                builder.adRemIBS(tributoMonofasico.getAliquotaAdRem());
-                builder.vIBSMono(tributoMonofasico.getValor());
-            }
-            
-            var tributoRetido = GrupoEtapaMonofasiaOutput.merge(monoUF.getTributoRetido(), monoMun.getTributoRetido());
-            if (tributoRetido != null) {
-                builder.qBCMonoRet(tributoRetido.getQuantidade());
-                builder.adRemIBSRet(tributoRetido.getAliquotaAdRem());
-                builder.vIBSMonoRet(tributoRetido.getValor());
-            }
-            
-            var tributoSujeitoRetencao = GrupoEtapaMonofasiaOutput.merge(monoUF.getTributoSujeitoRetencao(), monoMun.getTributoSujeitoRetencao());
-            if (tributoSujeitoRetencao != null) {
-                builder.qBCMonoReten(tributoSujeitoRetencao.getQuantidade());
-                builder.adRemIBSReten(tributoSujeitoRetencao.getAliquotaAdRem());
-                builder.vIBSMonoReten(tributoSujeitoRetencao.getValor());
-            }
-            
-            var tributoDiferido = GrupoDiferimentoMonofasiaOutput.merge(monoUF.getTributoDiferido(), monoMun.getTributoDiferido());
-            if (tributoDiferido != null) {
-                builder.pDifIBS(tributoDiferido.getPercentualDiferimento());
-                builder.vIBSMonoDif(tributoDiferido.getValorDiferimento());
-            }
-            
-            /** 
-             * FIXME aqui falta totalizar - nao esta especificado como fazer isso.
-             * Na NT da NFe, consta:
-             * 
-             * vIBSMono + vIBSMonoReten - vIBSMonoDif 
-             * 
-             * builder.vTotIBSMonoItem(vIBSMono + vIBSMonoReten - vIBSMonoDif);
-             */
-            
-            return builder;
-        }
-
+    // TODO - Implementar crédito presumido para IBS Zona Franca de Manaus
+    private static CreditoPresumidoIBSZFMDomain getCreditoPresumidoIBSZFM(CbsIbsOutput ibsEstadual, 
+            CbsIbsOutput ibsMunicipal) {
         return null;
     }
+    
+    private static MonofasiaDomain getMonofasia(CbsIbsOutput cbs, CbsIbsOutput ibsEstadual, CbsIbsOutput ibsMunicipal) {
+        var monoPadrao = MonofasiaPadraoDomain.create(cbs, ibsEstadual, ibsMunicipal);
+        var monoReten = MonofasiaRetencaoDomain.create(cbs, ibsEstadual, ibsMunicipal);
+        var monoRet = MonofasiaRetidoAnteriormenteDomain.create(cbs, ibsEstadual, ibsMunicipal);
+        var monoDif = MonofasiaDiferimentoDomain.create(cbs, ibsEstadual, ibsMunicipal);
+        if (monoPadrao != null || monoReten != null || monoRet != null
+                || monoDif != null) {
+            /** 
+             * Cálculo dos totalizadores conforme NT da NFe 1.30:
+             * vTotIBSMonoItem = vIBSMono + vIBSMonoReten - vIBSMonoDif
+             * vTotCBSMonoItem = vCBSMono + vCBSMonoReten - vCBSMonoDif
+             */
+            var monofasiaBuilder = MonofasiaDomain.builder()
+                    .gMonoPadrao(monoPadrao)
+                    .gMonoReten(monoReten)
+                    .gMonoRet(monoRet)
+                    .gMonoDif(monoDif);
+            
+            // Calcular totalizadores
+            var vIBSMono = monoPadrao != null ? monoPadrao.getVIBSMono() : BigDecimal.ZERO;
+            var vCBSMono = monoPadrao != null ? monoPadrao.getVCBSMono() : BigDecimal.ZERO;
+            var vIBSMonoReten = monoReten != null ? monoReten.getVIBSMonoReten() : BigDecimal.ZERO;
+            var vCBSMonoReten = monoReten != null ? monoReten.getVCBSMonoReten() : BigDecimal.ZERO;
+            var vIBSMonoDif = monoDif != null ? monoDif.getVIBSMonoDif() : BigDecimal.ZERO;
+            var vCBSMonoDif = monoDif != null ? monoDif.getVCBSMonoDif() : BigDecimal.ZERO;
+            
+            var vTotIBSMonoItem = vIBSMono.add(vIBSMonoReten).subtract(vIBSMonoDif);
+            var vTotCBSMonoItem = vCBSMono.add(vCBSMonoReten).subtract(vCBSMonoDif);
+            
+            return monofasiaBuilder
+                    .vTotIBSMonoItem(vTotIBSMonoItem)
+                    .vTotCBSMonoItem(vTotCBSMonoItem)
+                    .build();
+        }
+        return null;
+    }
+
 }

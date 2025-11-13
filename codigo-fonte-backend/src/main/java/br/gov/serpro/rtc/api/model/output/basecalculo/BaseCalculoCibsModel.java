@@ -9,9 +9,11 @@ import lombok.Value;
 
 import java.math.BigDecimal;
 
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
+
 @Value
 @Builder
-public class BaseCalculoCibsModel {
+public class BaseCalculoCibsModel implements SerializationVisibility {
 
     @Schema(name = "baseCalculo", description = "Base de cálculo da operação", example = "100.55")
     private final BigDecimal baseCalculo;

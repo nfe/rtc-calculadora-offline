@@ -17,8 +17,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import br.gov.serpro.rtc.api.model.input.OperacaoInput;
-import br.gov.serpro.rtc.api.model.roc.IBSCBSTotal;
-import br.gov.serpro.rtc.api.model.roc.TributosTotais;
+import br.gov.serpro.rtc.api.model.roc.IBSCBSTotalDomain;
+import br.gov.serpro.rtc.api.model.roc.TributosTotaisDomain;
 import br.gov.serpro.rtc.domain.service.CalculadoraService;
 import br.gov.serpro.rtc.util.JsonResourceObjectMapper;
 
@@ -50,7 +50,7 @@ class Teste_totais_1 {
         final var total = resultado.getTotal();
         assertThat(total).isNotNull();
         
-        TributosTotais tribCalc = total.getTribCalc();
+        TributosTotaisDomain tribCalc = total.getTribCalc();
         assertThat(tribCalc).isNotNull();
 
         final var isTot = tribCalc.getISTot();
@@ -66,7 +66,7 @@ class Teste_totais_1 {
         assertMonofasiaTotal(tribCalc);
     }
 
-    private void assertCbsTotal(IBSCBSTotal ibscbsTot) {
+    private void assertCbsTotal(IBSCBSTotalDomain ibscbsTot) {
         final var gcbs = ibscbsTot.getGCBS();
         assertThat(gcbs).isNotNull();
         
@@ -78,7 +78,7 @@ class Teste_totais_1 {
         assertThat(gcbs.getVCredPresCondSus()).isEqualByComparingTo("0.00");
     }
 
-    private void assertIbsTotal(IBSCBSTotal ibscbsTot) {
+    private void assertIbsTotal(IBSCBSTotalDomain ibscbsTot) {
         final var gibs = ibscbsTot.getGIBS();
         assertThat(gibs).isNotNull();
         
@@ -99,7 +99,7 @@ class Teste_totais_1 {
         assertThat(gibs.getVCredPresCondSus()).isEqualByComparingTo("0.00");
     }
 
-    private void assertMonofasiaTotal(final TributosTotais total) {
+    private void assertMonofasiaTotal(final TributosTotaisDomain total) {
         final var tributoMonofasicoTotal = total.getIBSCBSTot().getGMono();
         assertThat(tributoMonofasicoTotal).isNotNull();
         

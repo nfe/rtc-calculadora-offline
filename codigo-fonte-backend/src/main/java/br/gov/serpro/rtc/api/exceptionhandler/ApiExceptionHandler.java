@@ -5,7 +5,6 @@ package br.gov.serpro.rtc.api.exceptionhandler;
 
 import java.time.Instant;
 
-import br.gov.serpro.rtc.domain.service.exception.*;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -17,8 +16,15 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import br.gov.serpro.rtc.domain.service.exception.CampoInvalidoException;
+import br.gov.serpro.rtc.domain.service.exception.CaptchaException;
+import br.gov.serpro.rtc.domain.service.exception.EntidadeNaoEncontradaException;
+import br.gov.serpro.rtc.domain.service.exception.ErroInternoSistemaException;
+import br.gov.serpro.rtc.domain.service.exception.EstruturaInconsistenteException;
+import br.gov.serpro.rtc.domain.service.exception.ValidacaoException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -43,6 +49,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         }
         
         return super.handleExceptionInternal(ex, body, headers, statusCode, request);
+    }
+    
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<Object> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, WebRequest request) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        ProblemDetail problemDetail = createProblem(ex, status);
+        problemDetail.setDetail(String.format("Parâmetro inválido [%s: %s] ", ex.getPropertyName(), ex.getValue()));        
+        return handleExceptionInternal(ex, problemDetail, new HttpHeaders(), status, request);
     }
 
     @Override

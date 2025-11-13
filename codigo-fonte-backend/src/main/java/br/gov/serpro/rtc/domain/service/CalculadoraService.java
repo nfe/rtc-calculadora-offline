@@ -14,10 +14,11 @@ import org.springframework.stereotype.Service;
 
 import br.gov.serpro.rtc.api.model.input.ItemOperacaoInput;
 import br.gov.serpro.rtc.api.model.input.OperacaoInput;
-import br.gov.serpro.rtc.api.model.roc.Objeto;
-import br.gov.serpro.rtc.api.model.roc.ROC;
-import br.gov.serpro.rtc.api.model.roc.Tributos;
-import br.gov.serpro.rtc.api.model.roc.ValoresTotais;
+import br.gov.serpro.rtc.api.model.roc.ObjetoDomain;
+import br.gov.serpro.rtc.api.model.roc.ROCDomain;
+import br.gov.serpro.rtc.api.model.roc.TributosDomain;
+import br.gov.serpro.rtc.api.model.roc.ValoresTotaisDomain;
+import br.gov.serpro.rtc.domain.model.entity.AliquotaAdRem;
 import br.gov.serpro.rtc.domain.model.entity.ClassificacaoTributaria;
 import br.gov.serpro.rtc.domain.model.entity.TratamentoClassificacao;
 import br.gov.serpro.rtc.domain.service.calculotributo.CalculoTributoService;
@@ -25,7 +26,8 @@ import br.gov.serpro.rtc.domain.service.calculotributo.model.AliquotaImpostoSele
 import br.gov.serpro.rtc.domain.service.calculotributo.model.OperacaoModel;
 import br.gov.serpro.rtc.domain.service.calculotributo.model.TratamentoClassificacaoModel;
 import br.gov.serpro.rtc.domain.service.exception.ClassificacaoTributariaNaoVinculadaSituacaoTributariaException;
-import br.gov.serpro.rtc.domain.service.exception.DesoneracaoNaoInformadaException;
+import br.gov.serpro.rtc.domain.service.exception.TributacaoRegularNaoInformadaException;
+import br.gov.serpro.rtc.domain.service.exception.ErroGenericoValidacaoException;
 import br.gov.serpro.rtc.domain.service.exception.ImpostoSeletivoNaoInformadoException;
 import br.gov.serpro.rtc.domain.service.exception.IncompatibilidadeSuspensaoException;
 import br.gov.serpro.rtc.domain.service.exception.ItemDuplicadoException;
@@ -53,20 +55,23 @@ public class CalculadoraService {
     private final MunicipioService municipioService;
     private final SituacaoTributariaService situacaoTributariaService;
     
-    public ROC calcularTributos(OperacaoInput operacao) {
+    public ROCDomain calcularTributos(OperacaoInput operacao) {
         // Validar UF e Município
+        if (operacao.getUf() == null) {
+            operacao.setUf(municipioService.buscarUfPorMunicipio(operacao.getMunicipio()));
+        }
         ufService.validarUf(operacao.getUf());
         municipioService.validarMunicipio(operacao.getMunicipio(), operacao.getUf());
         
-        final List<Objeto> detalhes = getDetalhesImposto(operacao);
+        final List<ObjetoDomain> detalhes = getDetalhesImposto(operacao);
         
-        return ROC.builder()
+        return ROCDomain.builder()
             .objetos(detalhes)
-            .total(ValoresTotais.create(detalhes))
+            .total(ValoresTotaisDomain.create(detalhes))
         .build();
     }
 
-    private List<Objeto> getDetalhesImposto(OperacaoInput operacao) {
+    private List<ObjetoDomain> getDetalhesImposto(OperacaoInput operacao) {
         final LocalDate data = operacao.getDataHoraEmissao().toLocalDate();
         
         // para checar se existe item duplicado
@@ -79,7 +84,7 @@ public class CalculadoraService {
         
         return operacao.getItens()
                 .parallelStream()
-                .map(item -> Objeto.builder()
+                .map(item -> ObjetoDomain.builder()
                         .nObj(item.getNumero())
                         .tribCalc(getImposto(operacao, item, data))
                         .build())
@@ -87,7 +92,7 @@ public class CalculadoraService {
                 .toList();
     }
 
-    private Tributos getImposto(OperacaoInput operacao, ItemOperacaoInput item, LocalDate data) {
+    private TributosDomain getImposto(OperacaoInput operacao, ItemOperacaoInput item, LocalDate data) {
         // sob demanda da plataforma
         if (item.getQuantidade() == null) {
             item.setQuantidade(BigDecimal.ONE);
@@ -150,7 +155,7 @@ public class CalculadoraService {
 
         if (tratamentoClassificacaoCbsIbs.getTratamentoTributario().isInExigeGrupoDesoneracao()) {
             if (item.getTributacaoRegular() == null) {
-                throw new DesoneracaoNaoInformadaException(cClassTrib, cst);
+                throw new TributacaoRegularNaoInformadaException(cClassTrib, cst);
             }
             cst = item.getTributacaoRegular().getCst();
             cClassTrib = item.getTributacaoRegular().getCClassTrib();
@@ -189,8 +194,9 @@ public class CalculadoraService {
 
         if (aliquotaImpostoSeletivo != null) {
             if (item.getImpostoSeletivo() == null) {
-                throw new ImpostoSeletivoNaoInformadoException(ncm, data);
+                throw new ImpostoSeletivoNaoInformadoException(ncm != null ? "NCM" : "NBS", ncm != null ? ncm : nbs, data);
             }
+            validarQuantidadeEUnidade(item, aliquotaImpostoSeletivo);
             // Validar CST do Imposto Seletivo
             situacaoTributariaService.validarCst(item.getImpostoSeletivo().getCst(), 1L, data);
             classificacaoTributariaImpostoSeletivo = classificacaoTributariaService
@@ -232,39 +238,59 @@ public class CalculadoraService {
                 .temDesoneracao(temDesoneracao)
                 .build();
     }
+    
+    protected void validarQuantidadeEUnidade(ItemOperacaoInput item, AliquotaImpostoSeletivoModel aliquotaImpostoSeletivo) {
+        if (aliquotaImpostoSeletivo.getAliquotaAdRem() != null) {
+            if (item.getQuantidade() == null) { 
+                throw new ErroGenericoValidacaoException("A quantidade não foi informada.");
+            }
+            if (item.getQuantidade().compareTo(BigDecimal.ZERO) <= 0) {
+                throw new ErroGenericoValidacaoException("A quantidade deve ser maior do que zero.");
+            }
+            if (item.getUnidade() == null) {
+                throw new ErroGenericoValidacaoException("A unidade de medida do item não foi informada.");
+            }
+            if (!item.getUnidade().equals(aliquotaImpostoSeletivo.getUnidadeMedida())) {
+                throw new ErroGenericoValidacaoException("A unidade de medida informada " + item.getUnidade() + " é diferente da unidade de medida da alíquota " + aliquotaImpostoSeletivo.getUnidadeMedida());
+            }
+        }
+    }
 
-private AliquotaImpostoSeletivoModel analisarAliquotaImpostoSeletivo(
+    private AliquotaImpostoSeletivoModel analisarAliquotaImpostoSeletivo(
             ItemOperacaoInput item, LocalDate data) {
-        
+
         final String ncm = item.getNcm();
         final String nbs = item.getNbs();
 
         // preparação do imposto seletivo
         // sob demanda da plataforma
         if (StringUtils.length(ncm) == 8) { // NCM Completo
-                BigDecimal aliquotaAdValorem = aliquotaAdValoremProdutoService
-                        .buscarAliquotaAdValorem(ncm, 1L, data);
-                
-                BigDecimal aliquotaAdRem = aliquotaAdRemProdutoService
-                        .buscarAliquotaAdRem(ncm, 1L, data);
-                if (aliquotaAdValorem != null || aliquotaAdRem != null) {
-                    return AliquotaImpostoSeletivoModel
-                            .builder()
-                            .aliquotaAdValorem(aliquotaAdValorem)
-                            .aliquotaAdRem(aliquotaAdRem)
-                            .build();
-                }
-            } else if (StringUtils.length(nbs) == 9) { // NBS Completo
-                BigDecimal aliquotaAdValorem = aliquotaAdValoremServicoService
-                        .buscarAliquotaAdValorem(nbs, 1L, data);
-                if (aliquotaAdValorem != null) {
-                    return AliquotaImpostoSeletivoModel
-                            .builder()
-                            .aliquotaAdValorem(aliquotaAdValorem)
-                            .aliquotaAdRem(null)
-                            .build();
-                }
+            BigDecimal aliquotaAdValorem = aliquotaAdValoremProdutoService
+                    .buscarAliquotaAdValorem(ncm, 1L, data);
+
+            AliquotaAdRem aliquotaAdRem = aliquotaAdRemProdutoService
+                    .buscarEntidadeAliquotaAdRem(ncm, 1L, data);
+            if (aliquotaAdValorem != null) {
+                return AliquotaImpostoSeletivoModel
+                        .builder()
+                        .aliquotaAdValorem(aliquotaAdValorem)
+                        .aliquotaAdRem(aliquotaAdRem != null ? aliquotaAdRem.getValor() : null)
+                        .unidadeMedida(aliquotaAdRem != null && aliquotaAdRem.getUnidadeMedida() != null
+                                ? aliquotaAdRem.getUnidadeMedida().getSigla()
+                                : null)
+                        .build();
             }
+        } else if (StringUtils.length(nbs) == 9) { // NBS Completo
+            BigDecimal aliquotaAdValorem = aliquotaAdValoremServicoService
+                    .buscarAliquotaAdValorem(nbs, 1L, null, data);
+            if (aliquotaAdValorem != null) {
+                return AliquotaImpostoSeletivoModel
+                        .builder()
+                        .aliquotaAdValorem(aliquotaAdValorem)
+                        .aliquotaAdRem(null)
+                        .build();
+            }
+        }
         return null;
     }
 

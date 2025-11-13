@@ -6,6 +6,7 @@ package br.gov.serpro.rtc.api.model.output.dadosabertos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @JsonInclude(Include.NON_NULL)
-public class VersaoOutput {
+public class VersaoOutput implements SerializationVisibility {
 
     @Schema(name = "versaoApp", description = "Versão do aplicativo", example = "0.0.0-SNAPSHOT")
     private final String versaoApp;

@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpeProc versao="1.00" ipTransmissor="83.104.57.244" nPortaCon="48219" dhConexao="2001-05-19T11:22:33-03:00" xmlns="http://www.portalfiscal.inf.br/bpe" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<BPe xmlns="http://www.portalfiscal.inf.br/bpe">
+		<infBPe Id="BPe94827163501928475630240000006691214111502000" versao="1.00">
+			<ide>
+				<cUF>35</cUF>
+				<tpAmb>2</tpAmb>
+				<mod>63</mod>
+				<serie>24</serie>
+				   <nBP>91827</nBP>
+				   <cBP>83746592</cBP>
+				<cDV>2</cDV>
+				<modal>1</modal>
+				<dhEmi>2025-09-09T20:07:09-03:00</dhEmi>
+				<tpEmis>1</tpEmis>
+				<verProc>100</verProc>
+				<tpBPe>0</tpBPe>
+				<indPres>3</indPres>
+				<UFIni>SP</UFIni>
+				<cMunIni>3534401</cMunIni>
+				<UFFim>PR</UFFim>
+				<cMunFim>4106902</cMunFim>
+				<gCompraGov>
+					<tpEnteGov>1</tpEnteGov>
+					<pRedutor>1.50</pRedutor>
+				</gCompraGov>
+			</ide>
+			<emit>
+				   <CNPJ>94827163501928</CNPJ>
+				   <IE>927364581123</IE>
+				   <xNome>QJQKQKQ QJQ QJQZZQ QJQ QJQKQ - QJQKQ.</xNome>
+				   <xFant>QJQKQKQ QJQ QJQZZQ QJQ QJQKQ</xFant>
+				   <IM>QZQZQZQ</IM>
+				<CNAE>1234567</CNAE>
+				<CRT>3</CRT>
+				<enderEmit>
+					   <xLgr>Qv. Qzqy Qzqzqz</xLgr>
+					   <nro>4821</nro>
+					   <xCpl>XX.XXX.XX.XXXXXX QZQ QZQ XXX</xCpl>
+					   <xBairro>Qzqzq Qzqzq</xBairro>
+					   <cMun>1938475</cMun>
+					   <xMun>Qzqzq Qzqzq</xMun>
+					   <CEP>12345678</CEP>
+					<UF>SP</UF>
+					   <fone>9182736450</fone>
+				</enderEmit>
+				   <TAR>83746</TAR>
+			</emit>
+			<comp>
+				   <xNome>QJQKQKQ QJQ QJQZZQ QJQ QJQKQ</xNome>
+				   <CPF>83746592038</CPF>
+				<enderComp>
+					   <xLgr>QZQZQZQ QZQZ QZ QZQZQ</xLgr>
+					   <nro>S/N</nro>
+					   <xCpl>XX.XXX.XX.XXXXXX QZQ QZQ XXX</xCpl>
+					   <xBairro>QZQZ QZQZ</xBairro>
+					   <cMun>8374659</cMun>
+					   <xMun>QZQZ QZQZ</xMun>
+					   <CEP>87654321</CEP>
+					<UF>RS</UF>
+					<cPais>1058</cPais>
+					   <xPais>QZQZQZQZ</xPais>
+					   <fone>9182736450</fone>
+					   <email>abc@qzqzqzq.qz.qz</email>
+				</enderComp>
+			</comp>
+			<infPassagem>
+				   <cLocOrig>8374659</cLocOrig>
+				   <xLocOrig>QZQZQZQ</xLocOrig>
+				   <cLocDest>1928374</cLocDest>
+				   <xLocDest>QZQZQZQZQZ</xLocDest>
+				   <dhEmb>2000-01-01T01:01:01-01:00</dhEmb>
+				   <dhValidade>2000-01-02T01:01:01-01:00</dhValidade>
+				<infPassageiro>
+					   <xNome>QJQKQKQ QJQ</xNome>
+					   <CPF>83746592038</CPF>
+					<tpDoc>5</tpDoc>
+					   <nDoc>83746592038</nDoc>
+					   <dNasc>2000-01-03</dNasc>
+					   <email>abc@qzqzqzq.qz.qz</email>
+				</infPassageiro>
+			</infPassagem>
+			<infViagem>
+				   <cPercurso>9</cPercurso>
+				   <xPercurso>QZQZQZQZQZ Q QZQ QZQZQZQ</xPercurso>
+				<tpViagem>00</tpViagem>
+				<tpServ>6</tpServ>
+				<tpAcomodacao>1</tpAcomodacao>
+				<tpTrecho>1</tpTrecho>
+				   <dhViagem>2000-01-04T01:01:01-01:00</dhViagem>
+				   <prefixo>91827</prefixo>
+				   <poltrona>36</poltrona>
+			</infViagem>
+			<infValorBPe>
+				<vBP>90.00</vBP>
+				<vDesconto>0.00</vDesconto>
+				<vPgto>90.00</vPgto>
+				<vTroco>0.00</vTroco>
+				<Comp>
+					<tpComp>01</tpComp>
+					<vComp>90.00</vComp>
+				</Comp>
+			</infValorBPe>
+			<imp>
+				<ICMS>
+					<ICMS20>
+						<CST>20</CST>
+						<pRedBC>66.66</pRedBC>
+						<vBC>30.01</vBC>
+						<pICMS>0.01</pICMS>
+						<vICMS>0.00</vICMS>
+					</ICMS20>
+				</ICMS>
+				<IBSCBS>
+					<CST>000</CST>
+					<cClassTrib>000001</cClassTrib>
+					<gIBSCBS>
+						<vBC>90.00</vBC>
+						<gIBSUF>
+							<pIBSUF>0.10</pIBSUF>
+							<vIBSUF>0.09</vIBSUF>
+						</gIBSUF>
+						<gIBSMun>
+							<pIBSMun>0.00</pIBSMun>
+							<vIBSMun>0.00</vIBSMun>
+						</gIBSMun>
+						<vIBS>0.09</vIBS>
+						<gCBS>
+							<pCBS>0.90</pCBS>
+							<vCBS>0.81</vCBS>
+						</gCBS>
+					</gIBSCBS>
+				</IBSCBS>
+			</imp>
+			<pag>
+				<tPag>01</tPag>
+				<vPag>90.00</vPag>
+			</pag>
+			<autXML>
+				   <CPF>91827364509</CPF>
+			</autXML>
+			<infAdic>
+				<infCpl>ICMS:R$ 0,00 (0,01%) OUTROS TRIB:R$ 0,00 (0,00%)</infCpl>
+			</infAdic>
+			   <infRespTec>
+				   <CNPJ>91827364509182</CNPJ>
+				   <xContato>Qzqzqzq qz Qzqzqzq Qzqzqzq</xContato>
+				   <email>abc@qzqzqzq.qz.qz</email>
+				   <fone>9182736450</fone>
+			   </infRespTec>
+		</infBPe>
+		<infBPeSupl>
+			   <qrCodBPe>https://www.qzq.qz.qz/bpe/qrcode?chBPe=94827163501928475630240000006691214111502000&amp;tpAmb=2</qrCodBPe>
+			   <boardPassBPe>948271635019284756302400000066912141115020000006690000000918272001010100000000000000319882663273534401000184841069020000069100000020000101-202000-00-1-000000091827</boardPassBPe>
+		</infBPeSupl>
+		<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+			<SignedInfo>
+				<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+				<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+				   <Reference URI="#BPe94827163501928475630240000006691214111502">
+					<Transforms>
+						<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+						<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+					</Transforms>
+					<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+								<DigestValue>AAECAwQFBgcICQoLDA0ODw==</DigestValue>
+				</Reference>
+			</SignedInfo>
+			   <SignatureValue>AAECAwQFBgcICQoLDA0ODw==</SignatureValue>
+			<KeyInfo>
+				<X509Data>
+					   <X509Certificate>AAECAwQFBgcICQoLDA0ODw==</X509Certificate>
+				</X509Data>
+			</KeyInfo>
+		</Signature>
+	</BPe>
+	<protBPe versao="1.00">
+		<infProt>
+			<tpAmb>2</tpAmb>
+			   <verAplic>ANONIMOVER123</verAplic>
+			   <chBPe>94827163501928475630240000006691214111502000</chBPe>
+			<dhRecbto>2025-09-09T20:07:22-03:00</dhRecbto>
+			   <nProt>918273645091827</nProt>
+			   <digVal>AAECAwQFBgcICQoLDA0ODw==</digVal>
+			<cStat>100</cStat>
+			<xMotivo>Autorizado o uso do BP-e.</xMotivo>
+		</infProt>
+	</protBPe>
+</bpeProc>

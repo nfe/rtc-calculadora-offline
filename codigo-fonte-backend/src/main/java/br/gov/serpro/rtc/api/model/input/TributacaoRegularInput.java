@@ -5,6 +5,7 @@ package br.gov.serpro.rtc.api.model.input;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -18,7 +19,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-public final class TributacaoRegularInput {
+public final class TributacaoRegularInput implements SerializationVisibility {
 
     @NotNull
     @Pattern(regexp = "\\d+", message = "Informar somente dígitos")

@@ -5,7 +5,6 @@ package br.gov.serpro.rtc.testesintegracao.calculoscorretos.cbsibs.cclasstrib_62
 
 
 import static java.math.BigDecimal.TEN;
-import static java.math.BigDecimal.ZERO;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -66,29 +65,18 @@ class Teste_620001_1 {
         var mono = item.getGIBSCBSMono();
         assertThat(mono).isNotNull();
         
-        assertThat(mono.getQBCMono()).isEqualByComparingTo(TEN);
-        assertThat(mono.getAdRemCBS()).isEqualByComparingTo("1.47");
-        assertThat(mono.getVCBSMono()).isEqualByComparingTo("14.70");
+        final var gMonoPadrao = mono.getGMonoPadrao();
+        assertThat(gMonoPadrao).isNotNull();
+        assertThat(mono.getGMonoPadrao().getQBCMono()).isEqualByComparingTo(TEN);
+        assertThat(mono.getGMonoPadrao().getAdRemCBS()).isEqualByComparingTo("1.47");
+        assertThat(mono.getGMonoPadrao().getVCBSMono()).isEqualByComparingTo("14.70");
         //assertThat(mono.getAdRemIBS()).isEqualByComparingTo("1.47"); // FIXME problema de aliquotas diferentes para UF e Municipio
-        assertThat(mono.getVIBSMono()).isEqualByComparingTo("14.71");
+        assertThat(mono.getVIBSMono()).isEqualByComparingTo("14.7");
 
-        assertThat(mono.getQBCMonoReten()).isEqualByComparingTo(ZERO);
-        assertThat(mono.getAdRemCBSReten()).isEqualByComparingTo(ZERO);
-        assertThat(mono.getVCBSMonoReten()).isEqualByComparingTo(ZERO);
-        assertThat(mono.getAdRemIBSReten()).isEqualByComparingTo(ZERO);
-        assertThat(mono.getVIBSMonoReten()).isEqualByComparingTo(ZERO);
+        assertThat(mono.getGMonoReten()).isNull();
+        assertThat(mono.getGMonoRet()).isNull();
+        assertThat(mono.getGMonoDif()).isNull();
         
-        assertThat(mono.getQBCMonoRet()).isEqualByComparingTo(ZERO);
-        assertThat(mono.getAdRemCBSRet()).isEqualByComparingTo(ZERO);
-        assertThat(mono.getVCBSMonoRet()).isEqualByComparingTo(ZERO);
-        assertThat(mono.getAdRemIBSRet()).isEqualByComparingTo(ZERO);
-        assertThat(mono.getVIBSMonoRet()).isEqualByComparingTo(ZERO);
-        
-        assertThat(mono.getPDifCBS()).isEqualByComparingTo(ZERO);
-        assertThat(mono.getVCBSMonoDif()).isEqualByComparingTo(ZERO);
-        assertThat(mono.getPDifIBS()).isEqualByComparingTo(ZERO);
-        assertThat(mono.getVIBSMonoDif()).isEqualByComparingTo(ZERO);
-
         // TODO testar aqui totais gerais - aguardando definição de como serão consolidado os totais
         // assertThat(mono.getVTotCBSMonoItem()).isEqualByComparingTo(ZERO);
         // assertThat(mono.getVTotIBSMonoItem()).isEqualByComparingTo(ZERO);        

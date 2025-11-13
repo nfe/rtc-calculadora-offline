@@ -33,7 +33,7 @@ import java.util.Map.Entry;
 import org.springframework.stereotype.Service;
 
 import br.gov.serpro.rtc.api.model.input.ItemOperacaoInput;
-import br.gov.serpro.rtc.api.model.roc.ImpostoSeletivo;
+import br.gov.serpro.rtc.api.model.roc.ImpostoSeletivoDomain;
 import br.gov.serpro.rtc.domain.model.entity.TratamentoClassificacao;
 import br.gov.serpro.rtc.domain.model.entity.TratamentoTributario;
 import br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao;
@@ -46,7 +46,7 @@ public class CalculoImpostoSeletivoService {
     
     private final AvaliadorExpressaoAritmetica avaliador;
 
-    public ImpostoSeletivo calcularImpostoSeletivo(
+    public ImpostoSeletivoDomain calcularImpostoSeletivo(
         Long idTributo,
         ItemOperacaoInput item,
         TratamentoClassificacao tratamentoClassificacao,
@@ -190,9 +190,9 @@ public class CalculoImpostoSeletivoService {
             resultadoTributoDevido = avaliador.evaluate(expressaoTributoDevido, variaveis4, 2);
         }
 
-        return ImpostoSeletivo
+        return ImpostoSeletivoDomain
                 .builder()
-                .CSTIS(Integer.valueOf(cst))
+                .CSTIS(cst)
                 .cClassTribIS(cClassTrib)
                 .qTrib(quantidade)
                 .uTrib(unidade)

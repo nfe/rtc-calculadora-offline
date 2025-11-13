@@ -7,6 +7,10 @@ import static br.gov.serpro.rtc.core.util.CalculadoraUtils.CEM;
 import static br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao.AJUSTE;
 import static br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao.ALIQUOTA;
 import static br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao.ALIQUOTA_AD_REM;
+import static br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao.ALIQUOTA_AD_REM_PRINCIPAL;
+import static br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao.ALIQUOTA_AD_REM_SECUNDARIA;
+import static br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao.VARIACAO_PONTO_PERCENTUAL;
+import static br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao.PERCENTUAL_BIOCOMBUSTIVEL;
 import static br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao.ALIQUOTA_AD_VALOREM;
 import static br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao.ALIQUOTA_EFETIVA;
 import static br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao.ALIQUOTA_PADRAO_OU_REFERENCIA;
@@ -28,6 +32,7 @@ import static org.apache.commons.lang3.StringUtils.isNoneBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -36,11 +41,12 @@ import org.springframework.stereotype.Service;
 
 import br.gov.serpro.rtc.api.model.input.ItemOperacaoInput;
 import br.gov.serpro.rtc.api.model.output.CbsIbsOutput;
+import br.gov.serpro.rtc.api.model.output.GrupoDiferimentoMonofasiaOutput;
 import br.gov.serpro.rtc.api.model.output.GrupoEtapaMonofasiaOutput;
 import br.gov.serpro.rtc.api.model.output.GrupoMonofasiaOutput;
 import br.gov.serpro.rtc.api.model.output.TributacaoRegularOutput;
-import br.gov.serpro.rtc.api.model.roc.Diferimento;
-import br.gov.serpro.rtc.api.model.roc.ReducaoAliquota;
+import br.gov.serpro.rtc.api.model.roc.DiferimentoDomain;
+import br.gov.serpro.rtc.api.model.roc.ReducaoAliquotaDomain;
 import br.gov.serpro.rtc.domain.model.entity.AliquotaPadrao;
 import br.gov.serpro.rtc.domain.model.entity.AliquotaReferencia;
 import br.gov.serpro.rtc.domain.model.entity.ClassificacaoTributaria;
@@ -48,23 +54,30 @@ import br.gov.serpro.rtc.domain.model.entity.PercentualReducao;
 import br.gov.serpro.rtc.domain.model.entity.TratamentoClassificacao;
 import br.gov.serpro.rtc.domain.model.entity.TratamentoTributario;
 import br.gov.serpro.rtc.domain.service.AliquotaAdRemProdutoService;
+import br.gov.serpro.rtc.domain.service.AliquotaAdValoremServicoService;
 import br.gov.serpro.rtc.domain.service.AliquotaPadraoService;
 import br.gov.serpro.rtc.domain.service.AliquotaReferenciaService;
 import br.gov.serpro.rtc.domain.service.PercentualReducaoService;
 import br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao;
 import br.gov.serpro.rtc.domain.service.exception.AliquotaAdRemNaoEncontradaException;
 import br.gov.serpro.rtc.domain.service.exception.ErroFaltaImplementacaoException;
+import br.gov.serpro.rtc.domain.service.exception.ErroGenericoValidacaoException;
 import br.gov.serpro.rtc.domain.service.exception.TipoAliquotaDesconhecidoException;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Service
 public class CalculoCbsIbsService {
-
+    private static final BigDecimal PBIO = new BigDecimal("30");
+    private static final BigDecimal PDIF = new BigDecimal("100");
+    private static final BigDecimal VARIACAO_EAC = new BigDecimal("5");
+    private static final BigDecimal ALIQUOTA_EAC = new BigDecimal("0.1922");
+    private static final BigDecimal ALIQUOTA_GASOLINA_TIPO_A = new BigDecimal("0.7925");
     private final PercentualReducaoService percentualReducaoService;
     private final AliquotaReferenciaService aliquotaReferenciaService;
     private final AliquotaPadraoService aliquotaPadraoService;
     private final AliquotaAdRemProdutoService aliquotaAdRemProdutoService;
+    private final AliquotaAdValoremServicoService aliquotaAdValoremServicoService;
     private final AvaliadorExpressaoAritmetica avaliador;
 
     public CbsIbsOutput calcularCbsIbs(
@@ -130,6 +143,12 @@ public class CalculoCbsIbsService {
         BigDecimal valorAliquotaAdValorem = null;
         BigDecimal valorAliquotaAdRem = null;
         BigDecimal valorAliquota = null;
+        // para tratar a monofasia
+        BigDecimal valorAliquotaAdRemPrincipal = null;
+        BigDecimal valorAliquotaAdRemSecundaria = null;
+        BigDecimal variacaoPontoPercentual = null;
+        BigDecimal pBio = null;
+        BigDecimal pDif = null;
         /////////////////////////////////
 
         /////////////////////////////
@@ -147,7 +166,7 @@ public class CalculoCbsIbsService {
             PercentualReducao percentualReducao = percentualReducaoService
                     .buscar(classificacaoTributaria.getId(), idTributo, data);
             valorPercentualReducao = percentualReducao
-                    .getValor().divide(CEM).setScale(8, HALF_UP);
+                    .getValor().divide(CEM, 8, RoundingMode.HALF_UP);
         }
 
         String tipoAliquota = classificacaoTributaria.getTipoAliquota();
@@ -165,8 +184,21 @@ public class CalculoCbsIbsService {
                 break;
 
             case "Uniforme setorial":
-                // esse tipo de alíquota provavelmente vai exigir vínculo com cClassTrib
-                valorAliquota = new BigDecimal("0"); // fallback
+                // esse tipo de alíquota provavelmente vai exigir vínculo com cClassTrib para serviços financeiros
+                if (tratamentoTributario.isInPossuiMonofasia()) {
+                    // resolver o problema da alíquota com nova modelagem de dados, usando código ANP em vez de NCM
+                    // valorAliquota = buscarAliquotaAdRem(item.getNcm(), idTributo, data);
+                    // valorAliquotaAdRem = valorAliquota;
+                    valorAliquotaAdRemPrincipal = ALIQUOTA_GASOLINA_TIPO_A;
+                    valorAliquotaAdRemSecundaria = ALIQUOTA_EAC;
+                    pBio = PBIO.divide(CEM, 8, RoundingMode.HALF_UP);
+                    pDif = PDIF.divide(CEM, 8, RoundingMode.HALF_UP);
+                    variacaoPontoPercentual = VARIACAO_EAC;
+
+                } else {
+                    valorAliquota = buscarAliquotaUniformeSetorial(item.getNbs(), idTributo, classificacaoTributaria.getId(), data);
+                    aliquotaDivididaPorCem = true;
+                }
                 break;
 
             case "Fixa":
@@ -197,7 +229,12 @@ public class CalculoCbsIbsService {
                     entry(ALIQUOTA_AD_VALOREM, valorAliquotaAdValorem),
                     entry(ALIQUOTA_AD_REM, valorAliquotaAdRem),
                     entry(AJUSTE, valorAjuste),
-                    entry(REDUTOR, valorRedutor));
+                    entry(REDUTOR, valorRedutor),
+                    entry(ALIQUOTA_AD_REM_PRINCIPAL, valorAliquotaAdRemPrincipal),
+                    entry(ALIQUOTA_AD_REM_SECUNDARIA, valorAliquotaAdRemSecundaria),
+                    entry(VARIACAO_PONTO_PERCENTUAL, variacaoPontoPercentual),
+                    entry(PERCENTUAL_BIOCOMBUSTIVEL, pBio),
+                    entry(PERCENTUAL_DIFERIMENTO, pDif));
 
             resultadoAliquota = avaliador.evaluate(expressaoAliquota, variaveis0, 4);
         }
@@ -212,7 +249,12 @@ public class CalculoCbsIbsService {
                     entry(ALIQUOTA_AD_VALOREM, valorAliquotaAdValorem),
                     entry(ALIQUOTA_AD_REM, valorAliquotaAdRem),
                     entry(AJUSTE, valorAjuste),
-                    entry(REDUTOR, valorRedutor));
+                    entry(REDUTOR, valorRedutor),
+                    entry(ALIQUOTA_AD_REM_PRINCIPAL, valorAliquotaAdRemPrincipal),
+                    entry(ALIQUOTA_AD_REM_SECUNDARIA, valorAliquotaAdRemSecundaria),
+                    entry(VARIACAO_PONTO_PERCENTUAL, variacaoPontoPercentual),
+                    entry(PERCENTUAL_BIOCOMBUSTIVEL, pBio),
+                    entry(PERCENTUAL_DIFERIMENTO, pDif));
 
             resultadoAliquotaEfetiva = avaliador.evaluate(expressaoAliquotaEfetiva,
                     variaveis1, 4);
@@ -231,7 +273,12 @@ public class CalculoCbsIbsService {
                 entry(ALIQUOTA_AD_VALOREM, valorAliquotaAdValorem),
                 entry(ALIQUOTA_AD_REM, valorAliquotaAdRem),
                 entry(AJUSTE, valorAjuste),
-                entry(REDUTOR, valorRedutor));
+                entry(REDUTOR, valorRedutor),
+                entry(ALIQUOTA_AD_REM_PRINCIPAL, valorAliquotaAdRemPrincipal),
+                entry(ALIQUOTA_AD_REM_SECUNDARIA, valorAliquotaAdRemSecundaria),
+                entry(VARIACAO_PONTO_PERCENTUAL, variacaoPontoPercentual),
+                entry(PERCENTUAL_BIOCOMBUSTIVEL, pBio),
+                entry(PERCENTUAL_DIFERIMENTO, pDif));
 
         resultadoBaseCalculo = avaliador.evaluate(expressaoBaseCalculo, variaveis2, 2);
 
@@ -255,7 +302,12 @@ public class CalculoCbsIbsService {
                 entry(ALIQUOTA_AD_VALOREM, valorAliquotaAdValorem),
                 entry(ALIQUOTA_AD_REM, valorAliquotaAdRem),
                 entry(AJUSTE, valorAjuste),
-                entry(REDUTOR, valorRedutor));
+                entry(REDUTOR, valorRedutor),
+                entry(ALIQUOTA_AD_REM_PRINCIPAL, valorAliquotaAdRemPrincipal),
+                entry(ALIQUOTA_AD_REM_SECUNDARIA, valorAliquotaAdRemSecundaria),
+                entry(VARIACAO_PONTO_PERCENTUAL, variacaoPontoPercentual),
+                entry(PERCENTUAL_BIOCOMBUSTIVEL, pBio),
+                entry(PERCENTUAL_DIFERIMENTO, pDif));
 
         resultadoTributoCalculado = avaliador.evaluate(expressaoTributoCalculado, variaveis3, 2);
 
@@ -275,7 +327,12 @@ public class CalculoCbsIbsService {
                     entry(ALIQUOTA_AD_VALOREM, valorAliquotaAdValorem),
                     entry(ALIQUOTA_AD_REM, valorAliquotaAdRem),
                     entry(AJUSTE, valorAjuste),
-                    entry(REDUTOR, valorRedutor));
+                    entry(REDUTOR, valorRedutor),
+                    entry(ALIQUOTA_AD_REM_PRINCIPAL, valorAliquotaAdRemPrincipal),
+                    entry(ALIQUOTA_AD_REM_SECUNDARIA, valorAliquotaAdRemSecundaria),
+                    entry(VARIACAO_PONTO_PERCENTUAL, variacaoPontoPercentual),
+                    entry(PERCENTUAL_BIOCOMBUSTIVEL, pBio),
+                    entry(PERCENTUAL_DIFERIMENTO, pDif));
 
             resultadoTributoDevido = avaliador.evaluate(expressaoTributoDevido, variaveis4, 2);
         }
@@ -335,7 +392,7 @@ public class CalculoCbsIbsService {
                         possuiPercentualReducao)
                     : null)
                 .grupoDiferimento(obterGrupoDiferimento(resultadoValorDiferimento, resultadoPercentualDiferimento))
-                .grupoMonofasia(obterGrupoMonofasia(quantidade, valorAliquotaAdRem, resultadoTributoCalculado))
+                .grupoMonofasia(obterGrupoMonofasia(classificacaoTributaria, quantidade, resultadoAliquota, resultadoAliquotaEfetiva, resultadoTributoCalculado, resultadoTributoDevido, variacaoPontoPercentual))
                 .tributoCalculado(temDesoneracao ? ZERO : resultadoTributoCalculado)
                 .tributoDevido(temDesoneracao ? ZERO : resultadoTributoDevido)
                 .aliquota(aliquotaDivididaPorCem && resultadoAliquota != null ? resultadoAliquota.movePointRight(2) : resultadoAliquota)
@@ -384,11 +441,24 @@ public class CalculoCbsIbsService {
         return aliquotaAdRem;
     }
 
-    private static ReducaoAliquota obterGrupoReducao(BigDecimal aliquotaEfetiva, BigDecimal percentualReducao, boolean aliquotaDivididaPorCem) {
+    private BigDecimal buscarAliquotaUniformeSetorial(String nbs, Long idTributo, Long idClassificacaoTributaria, LocalDate data) {
+        BigDecimal aliquotaUniformeSetorial = aliquotaAdValoremServicoService.buscarAliquotaAdValorem(nbs, idTributo, idClassificacaoTributaria, data);
+        if (aliquotaUniformeSetorial == null) {
+            aliquotaUniformeSetorial = aliquotaAdValoremServicoService.buscarAliquotaAdValoremPorClassificacaoTributaria(idTributo, idClassificacaoTributaria, data);
+            if (aliquotaUniformeSetorial == null) {
+                throw new ErroGenericoValidacaoException("Alíquota uniforme setorial não encontrada em " + data);
+            }
+        }
+        return aliquotaUniformeSetorial
+                .divide(CEM)
+                .setScale(8, HALF_UP);
+    }
+
+    private static ReducaoAliquotaDomain obterGrupoReducao(BigDecimal aliquotaEfetiva, BigDecimal percentualReducao, boolean aliquotaDivididaPorCem) {
         if (anyNull(percentualReducao, aliquotaEfetiva)) {
             return null;
         }
-        return ReducaoAliquota
+        return ReducaoAliquotaDomain
             .builder()
             .pRedAliq(percentualReducao.movePointRight(2)) // para nao enviar o percentual dividido por 100
             .pAliqEfet(aliquotaDivididaPorCem ? aliquotaEfetiva.movePointRight(2) : aliquotaEfetiva) // para nao enviar a aliquota dividida por 100
@@ -420,30 +490,61 @@ public class CalculoCbsIbsService {
             .build();
     }
 
-    private static Diferimento obterGrupoDiferimento(BigDecimal valorDiferimento, BigDecimal percentualDiferimento) {
+    private static DiferimentoDomain obterGrupoDiferimento( BigDecimal valorDiferimento, BigDecimal percentualDiferimento) {
         if (anyNull(valorDiferimento, percentualDiferimento)) {
             return null;
         }
-        return Diferimento
+        return DiferimentoDomain
             .builder()
             .vDif(valorDiferimento)
             .pDif(percentualDiferimento.movePointRight(2))
             .build();
     }
 
-    private static GrupoMonofasiaOutput obterGrupoMonofasia(BigDecimal quantidade, BigDecimal aliquotaAdRem, BigDecimal valor) {
-        if (anyNull(quantidade, aliquotaAdRem, valor)) {
-            return null;
+    private static GrupoMonofasiaOutput obterGrupoMonofasia(ClassificacaoTributaria classificacaoTributaria, BigDecimal quantidade, BigDecimal aliquotaAdRemPrincipal, BigDecimal aliquotaAdRemSecundaria, BigDecimal tributoCalculado, BigDecimal tributoDevido, BigDecimal variacaoPontoPercentual) {
+
+        GrupoEtapaMonofasiaOutput grupoGMonoPadrao = null;
+        GrupoEtapaMonofasiaOutput grupoGMonoReten = null;
+        GrupoEtapaMonofasiaOutput grupoGMonoRet = null;
+        GrupoDiferimentoMonofasiaOutput grupoGMonoDiferimento = null;
+
+        if (classificacaoTributaria.getInGrupoMonofasiaPadrao()) {
+            grupoGMonoPadrao = GrupoEtapaMonofasiaOutput
+                .builder()
+                .quantidade(!classificacaoTributaria.getInGrupoMonofasiaRet() ? quantidade : quantidade.multiply(variacaoPontoPercentual).divide(CEM, 4, RoundingMode.HALF_UP).setScale(4, RoundingMode.HALF_UP))
+                .aliquotaAdRem(!classificacaoTributaria.getInGrupoMonofasiaRet() ? aliquotaAdRemPrincipal : aliquotaAdRemSecundaria)
+                .valor(tributoCalculado)
+                .build();
         }
-        GrupoEtapaMonofasiaOutput grupoEtapaMonofasia = GrupoEtapaMonofasiaOutput
-            .builder()
-            .quantidade(quantidade)
-            .aliquotaAdRem(aliquotaAdRem)
-            .valor(valor)
-            .build();
+        if (classificacaoTributaria.getInGrupoMonofasiaReten()) {
+            grupoGMonoReten = GrupoEtapaMonofasiaOutput
+                .builder()
+                .quantidade(quantidade.multiply(obterFatorBioCombustivel()).setScale(4, RoundingMode.HALF_UP))
+                .aliquotaAdRem(aliquotaAdRemSecundaria)
+                .valor(tributoDevido)
+                .build();
+        }
+        if (classificacaoTributaria.getInGrupoMonofasiaRet()) {
+            grupoGMonoRet = GrupoEtapaMonofasiaOutput
+                .builder()
+                .quantidade(quantidade)
+                .aliquotaAdRem(aliquotaAdRemPrincipal)
+                .valor(tributoDevido)
+                .build();
+        }
+        if (classificacaoTributaria.getInGrupoMonofasiaDiferimento()) {
+            grupoGMonoDiferimento = GrupoDiferimentoMonofasiaOutput
+                .builder()
+                .percentualDiferimento(tributoCalculado.subtract(tributoDevido).divide(tributoCalculado, 4, RoundingMode.HALF_UP).movePointRight(2))
+                .valorDiferimento(tributoCalculado.subtract(tributoDevido))
+                .build();
+        }
         return GrupoMonofasiaOutput
             .builder()
-            .tributoMonofasico(grupoEtapaMonofasia)
+            .tributoMonofasico(grupoGMonoPadrao)
+            .tributoSujeitoRetencao(grupoGMonoReten)
+            .tributoRetido(grupoGMonoRet)
+            .tributoDiferido(grupoGMonoDiferimento)
             .build();
     }
     
@@ -460,6 +561,10 @@ public class CalculoCbsIbsService {
             }
         }
         return false;
+    }
+
+    private static BigDecimal obterFatorBioCombustivel() {
+        return PBIO.divide(CEM.subtract(PBIO), 8, RoundingMode.HALF_UP);
     }
 
 }

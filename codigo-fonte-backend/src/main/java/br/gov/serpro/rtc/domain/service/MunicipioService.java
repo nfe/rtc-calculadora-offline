@@ -31,5 +31,11 @@ public class MunicipioService {
             throw new MunicipioNaoPertencenteException(codigoMunicipio, siglaUf);
         }
     }
+    
+    public String buscarUfPorMunicipio(Long codigoMunicipio) {
+        Municipio municipio = repository.findById(codigoMunicipio)
+            .orElseThrow(() -> new MunicipioNaoEncontradoException(codigoMunicipio));
+        return municipio.getUf().getSigla();
+    }
 
 }

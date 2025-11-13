@@ -73,6 +73,10 @@ public class TratamentoTributario {
     private boolean inPossuiRedutor;
 
     @NotNull
+    @Column(name = "TRTR_IN_POSSUI_MONOFASIA")
+    private boolean inPossuiMonofasia;
+
+    @NotNull
     @Column(name = "TRTR_INICIO_VIGENCIA")
     private LocalDate inicioVigencia;
 

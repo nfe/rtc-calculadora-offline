@@ -69,6 +69,27 @@ public class ClassificacaoTributaria {
     @Column(name = "CLTR_NOMENCLATURA")
     private String nomenclatura;
 
+    @Column(name = "CLTR_IND_GCREDPRESOPER")
+    private Boolean inGrupoCredPresOper;
+    
+    @Column(name = "CLTR_IND_GMONOPADRAO")
+    private Boolean inGrupoMonofasiaPadrao;
+
+    @Column(name = "CLTR_IND_GMONORETEN")
+    private Boolean inGrupoMonofasiaReten;
+
+    @Column(name = "CLTR_IND_GMONORET")
+    private Boolean inGrupoMonofasiaRet;
+
+    @Column(name = "CLTR_IND_GMONODIF")
+    private Boolean inGrupoMonofasiaDiferimento;
+
+    @Column(name = "CLTR_IND_GESTORNOCRED")
+    private Boolean inGrupoEstornoCredito;
+
+    @Column(name = "CLTR_ANEXO")
+    private String anexo;
+
     @NotNull
     @Column(name = "CLTR_INICIO_VIGENCIA")
     private LocalDate inicioVigencia;

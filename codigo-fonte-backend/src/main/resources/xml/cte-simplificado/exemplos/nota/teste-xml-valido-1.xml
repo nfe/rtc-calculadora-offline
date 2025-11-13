@@ -152,6 +152,7 @@
               </gRed>
               <vIBSMun>554678.21</vIBSMun>
             </gIBSMun>
+            <vIBS>99999999.99</vIBS>
             <gCBS>
               <pCBS>21.20</pCBS>
               <gDif>
@@ -177,16 +178,6 @@
               <pAliqEfetRegCBS>0.70</pAliqEfetRegCBS>
               <vTribRegCBS>256.14</vTribRegCBS>
             </gTribRegular>
-            <gIBSCredPres>
-              <cCredPres>1</cCredPres>
-              <pCredPres>12.56</pCredPres>
-              <vCredPres>88776254.10</vCredPres>
-            </gIBSCredPres>
-            <gCBSCredPres>
-              <cCredPres>2</cCredPres>
-              <pCredPres>3.21</pCredPres>
-              <vCredPresCondSus>2645368.70</vCredPresCondSus>
-            </gCBSCredPres>
           </gIBSCBS>
         </IBSCBS>
       </imp>

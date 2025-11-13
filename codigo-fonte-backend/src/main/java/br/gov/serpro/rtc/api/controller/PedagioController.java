@@ -3,6 +3,8 @@
  */
 package br.gov.serpro.rtc.api.controller;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +26,11 @@ public class PedagioController implements PedagioControllerOpenApi {
     private final PedagioService pedagioService;
 
     @Override
-    @PostMapping("pedagio")
+    @PostMapping(
+        value = "pedagio",
+        consumes = APPLICATION_JSON_VALUE,
+        produces = APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<PedagioOutput> calcularTributo(@RequestBody @Valid PedagioInput operacao) {
         return ResponseEntity.ok(pedagioService.calcularCIBS(operacao));
     }

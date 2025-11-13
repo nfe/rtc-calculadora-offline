@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -19,7 +20,7 @@ import lombok.Setter;
 @Builder
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @JsonInclude(Include.NON_NULL)
-public final class TrechoPedagioOutput implements Comparable<TrechoPedagioOutput>{
+public final class TrechoPedagioOutput implements SerializationVisibility, Comparable<TrechoPedagioOutput>{
 
     @EqualsAndHashCode.Include
     @Schema(name = "numero", description = "Número do Item", example = "1")

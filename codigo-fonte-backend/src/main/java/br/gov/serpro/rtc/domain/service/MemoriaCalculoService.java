@@ -8,12 +8,13 @@ import static org.apache.commons.lang3.StringUtils.defaultString;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
+import java.util.Objects;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import br.gov.serpro.rtc.api.model.output.CbsIbsOutput;
-import br.gov.serpro.rtc.api.model.roc.ImpostoSeletivo;
+import br.gov.serpro.rtc.api.model.roc.ImpostoSeletivoDomain;
 import br.gov.serpro.rtc.domain.model.entity.FundamentacaoClassificacao;
 import br.gov.serpro.rtc.domain.model.entity.TratamentoClassificacao;
 import br.gov.serpro.rtc.domain.service.token.TokenizerService;
@@ -97,7 +98,7 @@ public class MemoriaCalculoService {
         return tokenizerService.substituirPlaceholders(texto, valores);
     }
 
-    public String gerarMemoriaCalculoImpostoSeletivo(TratamentoClassificacao tratamentoClassificacao, ImpostoSeletivo tributo, BigDecimal quantidade, String unidade, LocalDate data) {
+    public String gerarMemoriaCalculoImpostoSeletivo(TratamentoClassificacao tratamentoClassificacao, ImpostoSeletivoDomain tributo, BigDecimal quantidade, String unidade, LocalDate data) {
         FundamentacaoClassificacao fundamentacaoClassificacao = fundamentacaoClassificacaoService
             .buscar(tratamentoClassificacao.getClassificacaoTributaria().getId(), data);
         String norma = fundamentacaoClassificacao.getFundamentacaoLegal().getTextoCurto();
@@ -111,7 +112,7 @@ public class MemoriaCalculoService {
             Map.entry("base_calculo", defaultString(baseCalculo)),
             Map.entry("aliquota_ad_valorem", defaultString(aliquotaAdValorem)),
             Map.entry("aliquota_ad_rem", defaultString(aliquotaAdRem)),
-            Map.entry("quantidade", defaultString(quantidade.toString())),
+            Map.entry("quantidade", Objects.toString(quantidade, "")),
             Map.entry("unidade", defaultString(unidade)));
         String texto = fundamentacaoClassificacao.getClassificacaoTributaria().getMemoriaCalculo();
         if (StringUtils.isBlank(texto)) {

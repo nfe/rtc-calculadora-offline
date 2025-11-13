@@ -16,5 +16,6 @@ public final class AliquotaImpostoSeletivoModel {
 
     private final BigDecimal aliquotaAdValorem;
     private final BigDecimal aliquotaAdRem;
+    private final String unidadeMedida;
 
 }

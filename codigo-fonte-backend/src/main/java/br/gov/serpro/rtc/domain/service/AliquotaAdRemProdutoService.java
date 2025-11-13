@@ -8,6 +8,7 @@ import java.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 
+import br.gov.serpro.rtc.domain.model.entity.AliquotaAdRem;
 import br.gov.serpro.rtc.domain.repository.AliquotaAdRemProdutoRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -19,6 +20,11 @@ public class AliquotaAdRemProdutoService {
 
     public BigDecimal buscarAliquotaAdRem(String ncm, Long idTributo, LocalDate data) {
         return repository.buscarAliquotaAdRem(ncm, idTributo, data)
+                .orElse(null);
+    }
+
+    public AliquotaAdRem buscarEntidadeAliquotaAdRem(String ncm, Long idTributo, LocalDate data) {
+        return repository.buscarEntidadeAliquotaAdRem(ncm, idTributo, data)
                 .orElse(null);
     }
 

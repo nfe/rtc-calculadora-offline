@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<infBPe xmlns="http://www.portalfiscal.inf.br/bpe">
+	<imp>
+		<IBSCBS>
+			<CST>000</CST>
+			<cClassTrib>000001</cClassTrib>
+			<gIBSCBS>
+				<vBC>90.00</vBC>
+				<gIBSUF>
+					<pIBSUF>0.10</pIBSUF>
+					<vIBSUF>0.09</vIBSUF>
+				</gIBSUF>
+				<gIBSMun>
+					<pIBSMun>0.00</pIBSMun>
+					<vIBSMun>0.00</vIBSMun>
+				</gIBSMun>
+				<vIBS>0.09</vIBS>
+				<gCBS>
+					<pCBS>0.90</pCBS>
+					<vCBS>0.81</vCBS>
+				</gCBS>
+			</gIBSCBS>
+		</IBSCBS>
+	</imp>
+</infBPe>

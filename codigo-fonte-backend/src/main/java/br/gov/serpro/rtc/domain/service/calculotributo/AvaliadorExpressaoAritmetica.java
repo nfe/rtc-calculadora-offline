@@ -4,10 +4,12 @@
 package br.gov.serpro.rtc.domain.service.calculotributo;
 
 import java.math.BigDecimal;
+import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.jexl3.JexlArithmetic;
 import org.apache.commons.jexl3.JexlBuilder;
 import org.apache.commons.jexl3.JexlContext;
 import org.apache.commons.jexl3.JexlEngine;
@@ -25,13 +27,50 @@ public class AvaliadorExpressaoAritmetica {
     
     @PostConstruct
     private void postConstruct() {
-        // Create a JEXL engine
+        // Create a JEXL engine with custom arithmetic that uses BigDecimal
         expressionEngine = new JexlBuilder()
                 .sandbox(new JexlSandbox()) /* Empty sandbox (no external access) */
                 .strict(true)
                 .cache(512)
                 .cacheThreshold(1024)
+                .arithmetic(new BigDecimalArithmetic(true)) /* Use BigDecimal arithmetic */
                 .create();
+    }
+    
+    /**
+     * Custom JEXL Arithmetic that converts all numbers to BigDecimal
+     * to avoid integer division issues (e.g., 5/100 = 0 in integer division)
+     */
+    private static class BigDecimalArithmetic extends JexlArithmetic {
+        
+        public BigDecimalArithmetic(boolean strict) {
+            super(strict);
+        }
+        
+        @Override
+        public Object divide(Object left, Object right) {
+            // Convert both operands to BigDecimal to ensure decimal division
+            BigDecimal leftBD = toBigDecimal(left);
+            BigDecimal rightBD = toBigDecimal(right);
+            
+            if (rightBD.compareTo(BigDecimal.ZERO) == 0) {
+                throw new ArithmeticException("Division by zero");
+            }
+            
+            // Use a high precision for intermediate calculations
+            return leftBD.divide(rightBD, MathContext.DECIMAL128);
+        }
+        
+        @Override
+        public BigDecimal toBigDecimal(Object value) {
+            if (value instanceof BigDecimal bd) {
+                return bd;
+            } else if (value instanceof Number n) {
+                return new BigDecimal(n.toString());
+            } else {
+                throw new ArithmeticException("Cannot convert to BigDecimal: " + value);
+            }
+        }
     }
     
     public BigDecimal evaluate(String expression, Map<String, BigDecimal> variables, int scale) {

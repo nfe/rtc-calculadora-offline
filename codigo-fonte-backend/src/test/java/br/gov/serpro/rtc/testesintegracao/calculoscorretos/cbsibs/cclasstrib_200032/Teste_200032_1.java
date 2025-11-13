@@ -18,10 +18,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import br.gov.serpro.rtc.api.model.input.OperacaoInput;
-import br.gov.serpro.rtc.api.model.roc.CBS;
-import br.gov.serpro.rtc.api.model.roc.IBSMun;
-import br.gov.serpro.rtc.api.model.roc.IBSUF;
-import br.gov.serpro.rtc.api.model.roc.ReducaoAliquota;
+import br.gov.serpro.rtc.api.model.roc.CBSDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSMunDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSUFDomain;
+import br.gov.serpro.rtc.api.model.roc.ReducaoAliquotaDomain;
 import br.gov.serpro.rtc.domain.service.CalculadoraService;
 import br.gov.serpro.rtc.util.JsonResourceObjectMapper;
 
@@ -65,28 +65,28 @@ class Teste_200032_1 {
         assertThat(item.getTributacaoRegular()).isNull();
     }
 
-    private void assertCbs(final CBS cbs) {
+    private void assertCbs(final CBSDomain cbs) {
         assertThat(cbs).isNotNull();
-        isEqualByComparingTo(cbs.getAliquota(), "0.90");
-        isEqualByComparingTo(cbs.getValorImposto(), "0.72");
+        isEqualByComparingTo(cbs.getPCBS(), "0.90");
+        isEqualByComparingTo(cbs.getVCBS(), "0.72");
         assertGrupoReducao(cbs.getGRed(), "0.36", "60");
     }
 
-    private void assertIbsEstadual(final IBSUF ibsEstadual) {
+    private void assertIbsEstadual(final IBSUFDomain ibsEstadual) {
         assertThat(ibsEstadual).isNotNull();
-        isEqualByComparingTo(ibsEstadual.getAliquota(), "0.10");
-        isEqualByComparingTo(ibsEstadual.getValorImposto(), "0.08");
+        isEqualByComparingTo(ibsEstadual.getPIBSUF(), "0.10");
+        isEqualByComparingTo(ibsEstadual.getVIBSUF(), "0.08");
         assertGrupoReducao(ibsEstadual.getGRed(), "0.04", "60");
     }
 
-    private void assertIbsMunicipal(final IBSMun ibsMunicipal) {
+    private void assertIbsMunicipal(final IBSMunDomain ibsMunicipal) {
         assertThat(ibsMunicipal).isNotNull();
-        isEqualByComparingTo(ibsMunicipal.getAliquota(), ZERO);
-        isEqualByComparingTo(ibsMunicipal.getValorImposto(), ZERO);
+        isEqualByComparingTo(ibsMunicipal.getPIBSMun(), ZERO);
+        isEqualByComparingTo(ibsMunicipal.getVIBSMun(), ZERO);
         assertGrupoReducao(ibsMunicipal.getGRed(), "0.00", "60");
     }
 
-    private static void assertGrupoReducao(final ReducaoAliquota grupoReducao, final String aliquotaEfetiva,
+    private static void assertGrupoReducao(final ReducaoAliquotaDomain grupoReducao, final String aliquotaEfetiva,
             final String reducao) {
         assertThat(grupoReducao).isNotNull();
         isEqualByComparingTo(grupoReducao.getPRedAliq(), reducao);

@@ -1,51 +1,81 @@
 package br.gov.serpro.rtc.domain.service.xml;
 
-import org.springframework.stereotype.Service;
-import lombok.RequiredArgsConstructor;
-import javax.xml.XMLConstants;
+import java.io.IOException;
+import java.io.StringReader;
+
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
-import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
+
+import org.springframework.stereotype.Service;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
+import br.gov.serpro.rtc.api.model.roc.ROCDomain;
+import br.gov.serpro.rtc.api.model.xml.enumeration.TipoDocumento;
+import br.gov.serpro.rtc.api.model.xml.enumeration.TipoXml;
+import br.gov.serpro.rtc.core.util.XmlUtil;
 import br.gov.serpro.rtc.domain.service.exception.ErroXmlException;
+import jakarta.xml.bind.JAXBException;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-import java.io.StringReader;
-import java.io.IOException;
-import java.net.URL;
-
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class XmlService {
 
-    public boolean validarXml(String xml, String tipo, String subtipo) {
+    private final XmlUtil xmlUtil;
+    private final NfeXmlService nfeXmlService;
+    private final NfceXmlService nfceXmlService;
+    private final CteXmlService cteXmlService;
+    private final CteSimplificadoXmlService cteSimplificadoXmlService;
+    private final BpeXmlService bpeXmlService;
+    private final BpeTMXmlService bpeTmXmlService;
+    private final Nf3eXmlService nf3eXmlService;
+
+    public boolean validarXml(String xml, TipoDocumento tipo, TipoXml subtipo) {
         try {
-            // obter o arquivo XSD como URL do classpath
-            ClassLoader classLoader = getClass().getClassLoader();
-            URL xsdUrl = classLoader.getResource("xml" + "/" + tipo + "/" + subtipo + ".xsd");
-            if (xsdUrl == null) {
-                throw new IOException("XSD file not found in classpath");
-            }
+            final Schema schema = xmlUtil.getSchema(tipo, subtipo);
 
-            // usar o caminho do arquivo para que os includes dos arquivos XSD sejam resolvidos corretamente
-            SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
-            Schema schema = factory.newSchema(new StreamSource(xsdUrl.openStream(), xsdUrl.toExternalForm()));
-
-            Validator validator = schema.newValidator();
+            final Validator validator = schema.newValidator();
             validator.validate(new StreamSource(new StringReader(xml)));
             return true; // Validation successful
         } catch (SAXParseException e) {
-            String msg = String.format("Erro na linha %d, coluna %d: %s", e.getLineNumber(), e.getColumnNumber(), e.getMessage());
-            e.printStackTrace();
+            log.error("Erro ao validar XML", e);
+            String msg = String.format("Erro na linha %d, coluna %d: %s", e.getLineNumber(), e.getColumnNumber(),
+                    e.getMessage());
             throw new ErroXmlException(msg);
         } catch (SAXException e) {
-            e.printStackTrace();
+            log.error("Erro ao validar XML", e);
             throw new ErroXmlException(e.getMessage());
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("Erro ao validar XML", e);
             throw new ErroXmlException("Erro de IO na validação de XML: " + e.getMessage());
         }
     }
+
+    public String gerarXml(ROCDomain roc, TipoDocumento tipo) throws JAXBException {
+        switch (tipo) {
+        case NFE:
+            return nfeXmlService.toXml(roc);
+        case NFCE:
+            return nfceXmlService.toXml(roc);
+        case CTE:
+            return cteXmlService.toXml(roc);
+        case CTE_SIMPLIFICADO:
+            return cteSimplificadoXmlService.toXml(roc);
+        case BPE:
+            return bpeXmlService.toXml(roc);
+        case BPE_TM:
+            return bpeTmXmlService.toXml(roc);
+        case NF3E:
+            return nf3eXmlService.toXml(roc);
+        // case NFSE:
+        // return nfseXmlService.toXml(roc);
+        default:
+            throw new IllegalArgumentException("Tipo de documento não suportado: " + tipo);
+        }
+    }
+
 }

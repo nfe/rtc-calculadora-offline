@@ -37,6 +37,11 @@ public class AliquotaAdValorem {
     private Tributo tributo;
 
     @NotNull
+    @ManyToOne
+    @JoinColumn(name = "AADV_CLTR_ID")
+    private ClassificacaoTributaria classificacaoTributaria;
+
+    @NotNull
     @Column(name = "AADV_INICIO_VIGENCIA")
     private LocalDate inicioVigencia;
 

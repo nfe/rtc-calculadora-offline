@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NFSe xmlns="http://www.sped.fazenda.gov.br/nfse" versao="1.01">
+  <infNFSe Id="NFS98765432101234567890123456789012345678901234567890">
+    <xLocEmi>São Paulo</xLocEmi>
+    <xLocPrestacao>São Paulo</xLocPrestacao>
+    <nNFSe>9876543210123</nNFSe>
+    <xTribNac>0202 - Consultoria em TI</xTribNac>
+    <verAplic>2.0.0</verAplic>
+    <ambGer>2</ambGer>
+    <tpEmis>2</tpEmis>
+    <procEmi>2</procEmi>
+    <cStat>101</cStat>
+    <dhProc>2025-09-15T15:30:00-03:00</dhProc>
+    <nDFSe>1234567890123</nDFSe>
+    <emit>
+      <CNPJ>98765432000188</CNPJ>
+      <IM>7654321</IM>
+      <xNome>Teste Serviços Digitais S.A.</xNome>
+      <xFant>TesteDigital</xFant>
+      <enderNac>
+        <xLgr>Avenida Teste</xLgr>
+        <nro>456</nro>
+        <xBairro>Jardim Teste</xBairro>
+        <cMun>3550308</cMun>
+        <UF>SP</UF>
+        <CEP>01234000</CEP>
+      </enderNac>
+      <fone>11988887777</fone>
+    </emit>
+    <valores>
+      <vBC>2500.00</vBC>
+      <vISSQN>125.00</vISSQN>
+      <vLiq>2400.00</vLiq>
+    </valores>
+    <IBSCBS>
+      <cLocalidadeIncid>3550308</cLocalidadeIncid>
+      <xLocalidadeIncid>SAO PAULO</xLocalidadeIncid>
+      <pRedutor>0.00</pRedutor>
+      <valores>
+        <vBC>15000.00</vBC>
+        <vCalcReeRepRes>0.00</vCalcReeRepRes>
+        <uf>
+          <pIBSUF>1.00</pIBSUF>
+          <pRedAliqUF>0.00</pRedAliqUF>
+          <pAliqEfetUF>1.00</pAliqEfetUF>
+        </uf>
+        <mun>
+          <pIBSMun>1.00</pIBSMun>
+          <pRedAliqMun>0.00</pRedAliqMun>
+          <pAliqEfetMun>1.00</pAliqEfetMun>
+        </mun>
+        <fed>
+          <pCBS>9.25</pCBS>
+          <pRedAliqCBS>0.00</pRedAliqCBS>
+          <pAliqEfetCBS>9.25</pAliqEfetCBS>
+        </fed>
+      </valores>
+      <totCIBS>
+        <vTotNF>16537.50</vTotNF>
+        <gIBS>
+          <vIBSTot>300.00</vIBSTot>
+          <gIBSUFTot>
+            <vDifUF>0.00</vDifUF>
+            <vIBSUF>150.00</vIBSUF>
+          </gIBSUFTot>
+          <gIBSMunTot>
+            <vDifMun>0.00</vDifMun>
+            <vIBSMun>150.00</vIBSMun>
+          </gIBSMunTot>
+        </gIBS>
+        <gCBS>
+          <vDifCBS>0.00</vDifCBS>
+          <vCBS>1387.50</vCBS>
+        </gCBS>
+      </totCIBS>
+    </IBSCBS>
+    <DPS versao="1.01">
+      <infDPS Id="DPS000000000000000000000000000000000000000000">
+        <tpAmb>2</tpAmb>
+        <dhEmi>2025-09-15T15:30:00-03:00</dhEmi>
+        <verAplic>2.0.0</verAplic>
+        <serie>1</serie>
+        <nDPS>123456</nDPS>
+        <dCompet>2025-09-15</dCompet>
+        <tpEmit>1</tpEmit>
+        <cLocEmi>3550308</cLocEmi>
+        <prest>
+          <CNPJ>98765432000188</CNPJ>
+          <xNome>Teste Serviços Digitais S.A.</xNome>
+          <end>
+            <endNac>
+              <cMun>3550308</cMun>
+              <CEP>01234567</CEP>
+            </endNac>
+            <xLgr>RUA DA TECNOLOGIA, 1234</xLgr>
+            <nro>1234</nro>
+            <xCpl>SALA 1001 - ANDAR 10</xCpl>
+            <xBairro>CENTRO EMPRESARIAL</xBairro>
+          </end>
+          <fone>11988887777</fone>
+          <email>teste@exemplo.com</email>
+          <regTrib>
+            <opSimpNac>1</opSimpNac>
+            <regApTribSN>1</regApTribSN>
+            <regEspTrib>1</regEspTrib>
+          </regTrib>
+        </prest>
+        <serv>
+          <locPrest>
+            <cLocPrestacao>3550308</cLocPrestacao>
+          </locPrest>
+          <cServ>
+            <!-- 1º: Código tributário nacional (OBRIGATÓRIO) -->
+            <cTribNac>010104</cTribNac>
+            <!-- 2º: Código tributário municipal (OPCIONAL) -->
+            <cTribMun>111</cTribMun>
+            <!-- 3º: Descrição do serviço (OBRIGATÓRIO) -->
+            <xDescServ>Desenvolvimento de software customizado...</xDescServ>
+            <!-- 4º: Código NBS (OBRIGATÓRIO) -->
+            <cNBS>123456789</cNBS>
+            <!-- 5º: Código interno do contribuinte (OPCIONAL) -->
+            <cIntContrib>PROJ2025001</cIntContrib>
+          </cServ>
+        </serv>
+        <valores>
+          <vServPrest>
+            <vServ>2500.00</vServ>
+          </vServPrest>
+          <trib>
+            <tribMun>
+              <tribISSQN>1</tribISSQN>
+              <tpRetISSQN>1</tpRetISSQN>
+            </tribMun>
+            <totTrib>
+              <vTotTrib>
+                <vTotTribFed>0.00</vTotTribFed>
+                <vTotTribEst>0.00</vTotTribEst>
+                <vTotTribMun>0.00</vTotTribMun>
+              </vTotTrib>
+            </totTrib>
+          </trib>
+        </valores>
+        <!-- ESTRUTURA FINAL SIMPLIFICADA DO IBSCBS -->
+        <IBSCBS>
+          <finNFSe>0</finNFSe>
+          <indFinal>0</indFinal>
+          <cIndOp>123456</cIndOp>
+          <indDest>0</indDest>
+
+          <!-- Valores apenas com elementos simples (sem filhos) -->
+          <valores>
+            <!-- Primeiro: trib com gIBSCBS -->
+            <trib>
+              <gIBSCBS>
+                <CST>000</CST>
+                <cClassTrib>000000</cClassTrib>
+              </gIBSCBS>
+            </trib>
+          </valores>
+        </IBSCBS>
+      </infDPS>
+    </DPS>
+  </infNFSe>
+  <ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+    <ds:SignedInfo>
+      <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+      <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+      <ds:Reference URI="#NFS98765432101234567890123456789012345678901234567890">
+        <ds:Transforms>
+          <ds:Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+          <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+        </ds:Transforms>
+        <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+        <ds:DigestValue>
+          AAAAAA==
+        </ds:DigestValue>
+      </ds:Reference>
+    </ds:SignedInfo>
+    <ds:SignatureValue>
+      AAAAAA==
+    </ds:SignatureValue>
+    <ds:KeyInfo>
+      <ds:X509Data>
+        <ds:X509Certificate>
+          AAAAAA==
+        </ds:X509Certificate>
+      </ds:X509Data>
+    </ds:KeyInfo>
+  </ds:Signature>
+</NFSe>

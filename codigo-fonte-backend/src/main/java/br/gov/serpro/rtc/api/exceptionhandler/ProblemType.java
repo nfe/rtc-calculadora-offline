@@ -6,8 +6,39 @@ package br.gov.serpro.rtc.api.exceptionhandler;
 import java.net.URI;
 import java.util.stream.Stream;
 
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
 import br.gov.serpro.rtc.api.util.HttpUtils;
-import br.gov.serpro.rtc.domain.service.exception.*;
+import br.gov.serpro.rtc.domain.service.exception.AliquotaAdRemNaoEncontradaException;
+import br.gov.serpro.rtc.domain.service.exception.AliquotaReferenciaNaoEncontradaException;
+import br.gov.serpro.rtc.domain.service.exception.CampoInvalidoException;
+import br.gov.serpro.rtc.domain.service.exception.CaptchaException;
+import br.gov.serpro.rtc.domain.service.exception.ClassificacaoTributariaNaoEncontradaException;
+import br.gov.serpro.rtc.domain.service.exception.ClassificacaoTributariaNaoVinculadaSituacaoTributariaException;
+import br.gov.serpro.rtc.domain.service.exception.ErroFaltaImplementacaoException;
+import br.gov.serpro.rtc.domain.service.exception.ErroInternoSistemaException;
+import br.gov.serpro.rtc.domain.service.exception.ErroXmlException;
+import br.gov.serpro.rtc.domain.service.exception.FormaAplicacaoNaoDefinidaException;
+import br.gov.serpro.rtc.domain.service.exception.ImpostoSeletivoInformadoIndevidamenteException;
+import br.gov.serpro.rtc.domain.service.exception.ImpostoSeletivoNaoInformadoException;
+import br.gov.serpro.rtc.domain.service.exception.IncompatibilidadeSuspensaoException;
+import br.gov.serpro.rtc.domain.service.exception.ItemDuplicadoException;
+import br.gov.serpro.rtc.domain.service.exception.MunicipioNaoEncontradoException;
+import br.gov.serpro.rtc.domain.service.exception.MunicipioNaoPertencenteException;
+import br.gov.serpro.rtc.domain.service.exception.NbsCompletoNaoInformadoException;
+import br.gov.serpro.rtc.domain.service.exception.NbsNaoEncontradaException;
+import br.gov.serpro.rtc.domain.service.exception.NbsNaoVinculadaException;
+import br.gov.serpro.rtc.domain.service.exception.NcmCompletoNaoInformadoException;
+import br.gov.serpro.rtc.domain.service.exception.NcmNaoEncontradaException;
+import br.gov.serpro.rtc.domain.service.exception.NcmNaoVinculadaException;
+import br.gov.serpro.rtc.domain.service.exception.NcmNbsSimultaneasException;
+import br.gov.serpro.rtc.domain.service.exception.NegocioException;
+import br.gov.serpro.rtc.domain.service.exception.NomenclaturaException;
+import br.gov.serpro.rtc.domain.service.exception.SiglaDFeNaoEncontradaException;
+import br.gov.serpro.rtc.domain.service.exception.SituacaoTributariaNaoEncontradaException;
+import br.gov.serpro.rtc.domain.service.exception.TributacaoRegularInformadaIndevidamenteException;
+import br.gov.serpro.rtc.domain.service.exception.TributacaoRegularNaoInformadaException;
+import br.gov.serpro.rtc.domain.service.exception.UfNaoEncontradaException;
 import lombok.Getter;
 import lombok.NonNull;
 
@@ -33,11 +64,11 @@ public enum ProblemType {
     INCOMPATIBILIDADE_SUSPENSAO(IncompatibilidadeSuspensaoException.class,
             "Incompatibilidade com suspensão", "incompatibilidade-suspensao"),
 
-    GRUPO_DESONERACAO_NAO_INFORMADO(DesoneracaoNaoInformadaException.class,
-            "Grupo de desoneração não informado", "grupo-desoneracao-nao-informado"),
+    GRUPO_TRIBUTACAO_REGULAR_NAO_INFORMADO(TributacaoRegularNaoInformadaException.class,
+            "Grupo de tributação regular não informado", "grupo-tributacao-regular-nao-informado"),
 
-    GRUPO_DESONERACAO_INFORMADO_INDEVIDAMENTE(DesoneracaoInformadaIndevidamenteException.class,
-            "Grupo de desoneração informado indevidamente", "grupo-desoneracao-informado-indevidamente"),
+    GRUPO_TRIBUTACAO_REGULAR_INFORMADO_INDEVIDAMENTE(TributacaoRegularInformadaIndevidamenteException.class,
+            "Grupo de tributação regular informado indevidamente", "grupo-tributacao-regular-informado-indevidamente"),
 
     IMPOSTO_SELETIVO_NAO_INFORMADO(ImpostoSeletivoNaoInformadoException.class,
             "Dados do Imposto Seletivo não informados", "dados-imposto-seletivo-nao-informados"),
@@ -89,8 +120,12 @@ public enum ProblemType {
     
     ERRO_CAPTCHA(CaptchaException.class, "Erro de Captcha", "erro-captcha"),
 
-    ERRO_SISTEMA(Exception.class, "Erro de sistema não previsto", "erro-de-sistema-nao-previsto");
-
+    METHOD_ARGUMENT_TYPE_MISMATCH(MethodArgumentTypeMismatchException.class, "Tipo de argumento inválido", "tipo-argumento-invalido"),
+    
+    ERRO_SISTEMA(Exception.class, "Erro de sistema não previsto", "erro-de-sistema-nao-previsto"),
+    
+    SIGLA_DFE_NAO_ENCONTRADA(SiglaDFeNaoEncontradaException.class, "Sigla DFe não reconhecida", "sigla-dfe-nao-reconhecida");
+    
     private final Class<? extends Exception> classeErro;
     private final String titulo;
     private final String path;

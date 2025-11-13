@@ -10,8 +10,8 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.PositiveOrZero;
@@ -25,7 +25,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @NoArgsConstructor
-public final class ImpostoSeletivoInput {
+public final class ImpostoSeletivoInput implements SerializationVisibility {
 
     @NotNull
     @Pattern(regexp = "\\d+", message = "Informar somente dígitos")
@@ -45,12 +45,10 @@ public final class ImpostoSeletivoInput {
     @Schema(name = "baseCalculo", description = "Base de cálculo do imposto", example = "200.00")
     private BigDecimal baseCalculo;
 
-    @NotNull
     @PositiveOrZero
     @Schema(name = "quantidade", description = "Quantidade", example = "1")
     private BigDecimal quantidade;
 
-    @NotEmpty
     @Schema(name = "unidade", description = "Unidade de medida", example = "LT")
     private String unidade;
 

@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Luis Augusto, em 02/07/2025. -->
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    xmlns="http://www.portalfiscal.inf.br/cte"
+    targetNamespace="http://www.portalfiscal.inf.br/cte">
 
     <xs:include schemaLocation="./originais/DFeTiposBasicos_v1.00.xsd"/>
 
-    <xs:element name="infCTe">
+    <xs:element name="infCte">
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="imp">

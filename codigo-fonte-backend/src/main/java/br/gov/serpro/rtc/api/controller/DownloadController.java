@@ -1,5 +1,7 @@
 package br.gov.serpro.rtc.api.controller;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +15,10 @@ import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Hidden;
 
 @RestController
-@RequestMapping("calculadora/download")
+@RequestMapping(
+    value = "calculadora/download",
+    produces = APPLICATION_JSON_VALUE
+)
 @Hidden
 public class DownloadController {
 

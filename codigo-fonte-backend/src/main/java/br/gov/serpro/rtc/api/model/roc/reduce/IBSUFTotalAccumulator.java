@@ -5,8 +5,8 @@ import static java.util.Objects.requireNonNullElse;
 
 import java.math.BigDecimal;
 
-import br.gov.serpro.rtc.api.model.roc.IBSUF;
-import br.gov.serpro.rtc.api.model.roc.IBSUFTotal;
+import br.gov.serpro.rtc.api.model.roc.IBSUFDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSUFTotalDomain;
 
 public class IBSUFTotalAccumulator {
     private final BigDecimal vDif;
@@ -23,14 +23,14 @@ public class IBSUFTotalAccumulator {
         this.vIBSUF = requireNonNullElse(vIBSUF, ZERO);
     }
     
-    public static IBSUFTotalAccumulator from(IBSUF ibsUf) {
+    public static IBSUFTotalAccumulator from(IBSUFDomain ibsUf) {
         if (ibsUf == null) {
             return new IBSUFTotalAccumulator();
         }
         return new IBSUFTotalAccumulator(
                 ibsUf.getVDif(),
                 ibsUf.getVDevTrib(),
-                ibsUf.getValorImposto());
+                ibsUf.getVIBSUF());
     }
 
     public IBSUFTotalAccumulator add(IBSUFTotalAccumulator other) {
@@ -43,8 +43,8 @@ public class IBSUFTotalAccumulator {
             this.vIBSUF.add(other.vIBSUF));
     }
 
-    public IBSUFTotal toIBSUFTotal() {
-        IBSUFTotal total = new IBSUFTotal();
+    public IBSUFTotalDomain toIBSUFTotal() {
+        IBSUFTotalDomain total = new IBSUFTotalDomain();
         total.setVDif(this.vDif);
         total.setVDevTrib(this.vDevTrib);
         total.setVIBSUF(this.vIBSUF);

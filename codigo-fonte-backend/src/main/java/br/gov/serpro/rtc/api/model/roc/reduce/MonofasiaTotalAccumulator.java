@@ -5,8 +5,8 @@ import static java.util.Objects.requireNonNullElse;
 
 import java.math.BigDecimal;
 
-import br.gov.serpro.rtc.api.model.roc.Monofasia;
-import br.gov.serpro.rtc.api.model.roc.MonofasiaTotal;
+import br.gov.serpro.rtc.api.model.roc.MonofasiaDomain;
+import br.gov.serpro.rtc.api.model.roc.MonofasiaTotalDomain;
 
 public class MonofasiaTotalAccumulator {
     private final BigDecimal vIBSMono;
@@ -30,7 +30,7 @@ public class MonofasiaTotalAccumulator {
         this.vCBSMonoRet = requireNonNullElse(vCBSMonoRet, ZERO);
     }
 
-    public static MonofasiaTotalAccumulator from(Monofasia m) {
+    public static MonofasiaTotalAccumulator from(MonofasiaDomain m) {
         if (m == null) {
             return new MonofasiaTotalAccumulator();
         }
@@ -56,8 +56,8 @@ public class MonofasiaTotalAccumulator {
             this.vCBSMonoRet.add(other.vCBSMonoRet));
     }
 
-    public MonofasiaTotal toMonofasiaTotal() {
-        MonofasiaTotal total = new MonofasiaTotal();
+    public MonofasiaTotalDomain toMonofasiaTotal() {
+        MonofasiaTotalDomain total = new MonofasiaTotalDomain();
         total.setVIBSMono(this.vIBSMono);
         total.setVCBSMono(this.vCBSMono);
         total.setVIBSMonoReten(this.vIBSMonoReten);

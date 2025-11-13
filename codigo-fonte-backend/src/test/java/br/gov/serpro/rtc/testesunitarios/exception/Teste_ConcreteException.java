@@ -15,8 +15,8 @@ import br.gov.serpro.rtc.domain.service.exception.AliquotaReferenciaNaoEncontrad
 import br.gov.serpro.rtc.domain.service.exception.CampoInvalidoException;
 import br.gov.serpro.rtc.domain.service.exception.ClassificacaoTributariaNaoEncontradaException;
 import br.gov.serpro.rtc.domain.service.exception.ClassificacaoTributariaNaoVinculadaSituacaoTributariaException;
-import br.gov.serpro.rtc.domain.service.exception.DesoneracaoInformadaIndevidamenteException;
-import br.gov.serpro.rtc.domain.service.exception.DesoneracaoNaoInformadaException;
+import br.gov.serpro.rtc.domain.service.exception.TributacaoRegularInformadaIndevidamenteException;
+import br.gov.serpro.rtc.domain.service.exception.TributacaoRegularNaoInformadaException;
 import br.gov.serpro.rtc.domain.service.exception.ErroAvaliadorExpressaoAritmeticaException;
 import br.gov.serpro.rtc.domain.service.exception.ErroInternoSistemaException;
 import br.gov.serpro.rtc.domain.service.exception.FormaAplicacaoNaoDefinidaException;
@@ -190,7 +190,7 @@ class Teste_ConcreteException {
         LocalDate data = LocalDate.now();
         // executar e avaliar
         Exception exception = assertThrows(ImpostoSeletivoNaoInformadoException.class, () -> {
-            throw new ImpostoSeletivoNaoInformadoException(ncm, data);
+            throw new ImpostoSeletivoNaoInformadoException("NCM", ncm, data);
         });
         assertEquals(false, exception.getMessage().isEmpty(), "Mensagem de exceção não deve ser vazia");
     }
@@ -225,8 +225,8 @@ class Teste_ConcreteException {
         String cClassTrib = "550001";
         String cst = "550";
         // executar e avaliar
-        Exception exception = assertThrows(DesoneracaoNaoInformadaException.class, () -> {
-            throw new DesoneracaoNaoInformadaException(cClassTrib, cst);
+        Exception exception = assertThrows(TributacaoRegularNaoInformadaException.class, () -> {
+            throw new TributacaoRegularNaoInformadaException(cClassTrib, cst);
         });
         assertEquals(false, exception.getMessage().isEmpty(), "Mensagem de exceção não deve ser vazia");
     }
@@ -237,8 +237,8 @@ class Teste_ConcreteException {
         String cClassTrib = "000001";
         String cst = "000";
         // executar e avaliar
-        Exception exception = assertThrows(DesoneracaoInformadaIndevidamenteException.class, () -> {
-            throw new DesoneracaoInformadaIndevidamenteException(cClassTrib, cst);
+        Exception exception = assertThrows(TributacaoRegularInformadaIndevidamenteException.class, () -> {
+            throw new TributacaoRegularInformadaIndevidamenteException(cClassTrib, cst);
         });
         assertEquals(false, exception.getMessage().isEmpty(), "Mensagem de exceção não deve ser vazia");
     }

@@ -12,12 +12,12 @@
       "cClassTrib": "200002",
       "baseCalculo": 200,
       "quantidade": 1,
-      "unidade": "LT",
+      "unidade": "VN",
       "impostoSeletivo": {
         "cst": "000",
         "baseCalculo": 200,
         "quantidade": 1,
-        "unidade": "LT",
+        "unidade": "VN",
         "impostoInformado": 0,
         "cClassTrib": "000001"
       }

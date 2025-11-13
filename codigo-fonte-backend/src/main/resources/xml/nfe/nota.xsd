@@ -8,6 +8,7 @@
 
     <xs:include schemaLocation="./originais/leiauteNFe_v4.00.xsd"/>
 
+    <xs:element name="enviNFe" type="TEnviNFe"></xs:element>
     <xs:element name="nfeProc" type="TNfeProc"></xs:element>
     <xs:element name="NFe" type="TNFe"></xs:element>
 

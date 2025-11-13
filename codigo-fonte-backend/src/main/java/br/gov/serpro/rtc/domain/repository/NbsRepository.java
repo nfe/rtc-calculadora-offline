@@ -18,7 +18,7 @@ import br.gov.serpro.rtc.domain.model.entity.Nbs;
 public interface NbsRepository extends JpaRepository<Nbs, String> {
 
     @Query("""
-            SELECT n.descricao
+            SELECT LTRIM(RTRIM(n.descricao, ' '), ' -')
             FROM Nbs n
             WHERE n.codigo = SUBSTRING(:codigo, 1, :limite)
             AND :data BETWEEN n.inicioVigencia AND COALESCE(n.fimVigencia, :data)

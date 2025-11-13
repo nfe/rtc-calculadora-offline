@@ -24,7 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.gov.serpro.rtc.api.model.input.OperacaoInput;
-import br.gov.serpro.rtc.domain.service.CalculadoraService;
+// import br.gov.serpro.rtc.domain.service.CalculadoraService;
 import br.gov.serpro.rtc.util.JsonResourceObjectMapper;
 
 @SpringBootTest
@@ -44,8 +44,8 @@ class Teste_validacao_5_NcmNbsNaoInformadasException {
 
     private OperacaoInput operacao;
 
-    @Autowired
-    private CalculadoraService calculadoraService;
+    // @Autowired
+    // private CalculadoraService calculadoraService;
 
     @BeforeAll
     static void setup() {

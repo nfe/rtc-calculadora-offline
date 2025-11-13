@@ -18,7 +18,7 @@ import br.gov.serpro.rtc.domain.model.entity.Ncm;
 public interface NcmRepository extends JpaRepository<Ncm, String> {
 
     @Query("""
-            SELECT n.descricao
+            SELECT LTRIM(RTRIM(n.descricao, ' '), ' -')
             FROM Ncm n
             WHERE n.codigo = SUBSTRING(:codigo, 1, :limite)
             AND :data BETWEEN n.inicioVigencia AND COALESCE(n.fimVigencia, :data)

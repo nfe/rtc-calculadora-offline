@@ -5,8 +5,8 @@ import static java.util.Objects.requireNonNullElse;
 
 import java.math.BigDecimal;
 
-import br.gov.serpro.rtc.api.model.roc.IBSMun;
-import br.gov.serpro.rtc.api.model.roc.IBSMunTotal;
+import br.gov.serpro.rtc.api.model.roc.IBSMunDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSMunTotalDomain;
 
 public class IBSMunTotalAccumulator {
     private final BigDecimal vDif;
@@ -23,14 +23,14 @@ public class IBSMunTotalAccumulator {
         this.vIBSMun = requireNonNullElse(vIBSMun, ZERO);
     }
 
-    public static IBSMunTotalAccumulator from(IBSMun ibsMun) {
+    public static IBSMunTotalAccumulator from(IBSMunDomain ibsMun) {
         if (ibsMun == null) {
             return new IBSMunTotalAccumulator();
         }
         return new IBSMunTotalAccumulator(
             requireNonNullElse(ibsMun.getVDif(), ZERO),
             requireNonNullElse(ibsMun.getVDevTrib(), ZERO),
-            requireNonNullElse(ibsMun.getValorImposto(), ZERO));
+            requireNonNullElse(ibsMun.getVIBSMun(), ZERO));
     }
     
     public IBSMunTotalAccumulator add(IBSMunTotalAccumulator other) {
@@ -43,8 +43,8 @@ public class IBSMunTotalAccumulator {
             this.vIBSMun.add(other.vIBSMun));
     }
 
-    public IBSMunTotal toIBSMunTotal() {
-        IBSMunTotal total = new IBSMunTotal();
+    public IBSMunTotalDomain toIBSMunTotal() {
+        IBSMunTotalDomain total = new IBSMunTotalDomain();
         total.setVDif(this.vDif);
         total.setVDevTrib(this.vDevTrib);
         total.setVIBSMun(this.vIBSMun);

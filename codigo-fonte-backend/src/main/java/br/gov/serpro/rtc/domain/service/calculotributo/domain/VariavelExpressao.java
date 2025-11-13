@@ -21,7 +21,12 @@ public enum VariavelExpressao {
     ALIQUOTA("aliquota"),
     QUANTIDADE("quantidade"),
     TRIBUTO_CALCULADO("tributoCalculado"),
-    PERCENTUAL_DIFERIMENTO("percentualDiferimento");
+    PERCENTUAL_DIFERIMENTO("percentualDiferimento"),
+
+    ALIQUOTA_AD_REM_PRINCIPAL("aliquotaAdRemPrincipal"),
+    ALIQUOTA_AD_REM_SECUNDARIA("aliquotaAdRemSecundaria"),
+    VARIACAO_PONTO_PERCENTUAL("variacaoPontoPercentual"),
+    PERCENTUAL_BIOCOMBUSTIVEL("pBio");
     
     private final String nome;
 }

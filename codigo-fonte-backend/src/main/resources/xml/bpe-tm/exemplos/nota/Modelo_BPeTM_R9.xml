@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpeTMProc versao="1.00" xmlns="http://www.portalfiscal.inf.br/bpe" ipTransmissor="199.198.197.196" nPortaCon="99999" dhConexao="2025-08-19T12:07:18-03:00" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<BPeTM xmlns="http://www.portalfiscal.inf.br/bpe">
+		<infBPe Id="BPe99999999999999999999999999999999999999999999" versao="1.00">
+			<ide>
+				<cUF>23</cUF>
+				<tpAmb>2</tpAmb>
+				<mod>63</mod>
+				<serie>1</serie>
+				<nBP>9999</nBP>
+				<cBP>99999999</cBP>
+				<cDV>9</cDV>
+				<modal>1</modal>
+				<dhEmi>2025-08-19T12:07:16-03:00</dhEmi>
+				<dCompet>2025-08-19</dCompet>
+				<tpEmis>1</tpEmis>
+				<verProc>1.0.0.0</verProc>
+				<tpBPe>4</tpBPe>
+				<CFOP>5357</CFOP>
+			</ide>
+			<emit>
+				<CNPJ>99999999999999</CNPJ>
+				<IE>999999999</IE>
+				<xNome>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</xNome>
+				<xFant>aaaaaaaa</xFant>
+				<IM>999999</IM>
+				<CNAE>9999999</CNAE>
+				<CRT>3</CRT>
+				<enderEmit>
+					<xLgr>aaaaaaaaaaaa</xLgr>
+					<nro>999</nro>
+					<xBairro>aaaaaaaaaaa</xBairro>
+					<cMun>9999999</cMun>
+					<xMun>aaaaaaaaa</xMun>
+					<CEP>99999999</CEP>
+					<UF>RS</UF>
+					<fone>99999999</fone>
+					<email>aaaaaaaa@aaaaaaaa.com.br</email>
+				</enderEmit>
+				<TAR>21</TAR>
+			</emit>
+			<detBPeTM idEqpCont="1">
+				<UFIniViagem>RS</UFIniViagem>
+				<UFFimViagem>RS</UFFimViagem>
+				<placa>XYZ1234</placa>
+				<prefixo>123</prefixo>
+				<det nViagem="1">
+					<cMunIni>9999999</cMunIni>
+					<cMunFim>9999999</cMunFim>
+					<nContInicio>1</nContInicio>
+					<nContFim>10</nContFim>
+					<qPass>10</qPass>
+					<vBP>100.00</vBP>
+					<imp>
+						<ICMS>
+							<ICMS00>
+								<CST>00</CST>
+								<vBC>100.00</vBC>
+								<pICMS>18.00</pICMS>
+								<vICMS>18.00</vICMS>
+							</ICMS00>
+						</ICMS>
+						<IBSCBS>
+							<CST>000</CST>
+							<cClassTrib>000001</cClassTrib>
+							<gIBSCBS>
+								<vBC>100.00</vBC>
+								<gIBSUF>
+									<pIBSUF>0.1000</pIBSUF>
+									<vIBSUF>0.10</vIBSUF>
+								</gIBSUF>
+								<gIBSMun>
+									<pIBSMun>0.0000</pIBSMun>
+									<vIBSMun>0.00</vIBSMun>
+								</gIBSMun>
+								<vIBS>0.10</vIBS>
+								<gCBS>
+									<pCBS>0.9000</pCBS>
+									<vCBS>0.90</vCBS>
+								</gCBS>
+							</gIBSCBS>
+						</IBSCBS>
+					</imp>
+					<Comp>
+						<xNome>IDOSOS</xNome>
+						<qComp>00001</qComp>
+					</Comp>
+					<Comp>
+						<xNome>VT</xNome>
+						<qComp>00009</qComp>
+					</Comp>
+				</det>
+			</detBPeTM>
+			<total>
+				<qPass>10</qPass>
+				<vBP>100.00</vBP>
+				<ICMSTot>
+					<vBC>100.00</vBC>
+					<vICMS>18.00</vICMS>
+				</ICMSTot>
+				<IBSCBSTot>
+					<vBCIBSCBS>100.00</vBCIBSCBS>
+					<gIBS>
+						<gIBSUF>
+							<vDif>0.00</vDif>
+							<vDevTrib>0.00</vDevTrib>
+							<vIBSUF>0.10</vIBSUF>
+						</gIBSUF>
+						<gIBSMun>
+							<vDif>0.00</vDif>
+							<vDevTrib>0.00</vDevTrib>
+							<vIBSMun>0.00</vIBSMun>
+						</gIBSMun>
+						<vIBS>0.10</vIBS>
+					</gIBS>
+					<gCBS>
+						<vDif>0.00</vDif>
+						<vDevTrib>0.00</vDevTrib>
+						<vCBS>0.90</vCBS>
+					</gCBS>
+				</IBSCBSTot>
+				<vTotDFe>100.00</vTotDFe>
+			</total>
+			<infAdic>
+				<infCpl>Informacoes Complementares</infCpl>
+			</infAdic>
+		</infBPe>
+		<Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+			<SignedInfo>
+				<CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+				<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/>
+				<Reference URI="#BPe99999999999999999999999999999999999999999999">
+					<Transforms>
+						<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+						<Transform Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+				</Transforms>
+				<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/>
+				<DigestValue>AAECAwQFBgcICQoLDA0ODxAREhM=</DigestValue>
+			</Reference>
+		</SignedInfo>
+			<SignatureValue>QWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQWxhZGRpbjpPcGVuU2VzYW1lQT09</SignatureValue>
+			<KeyInfo>
+				<X509Data>
+					<X509Certificate>MIIH5DCCBdCgAwIBAgILAIEtqsaG0WpA01AwDQYJKoZIhvcNAQE0BQAwWzE0MAkGA1UEBhMCQlIxFjAUBgNVBAsMDUFDIFN5bmd1bGFySUQxEzARBgNVBAoMCklDUC1CcmFzaWwxHzAdBgNVBAMMFkFDIFN5bmd1bGFySUQgTXVsdGlwbGEwHhcNMjUwNjIzMTQzMDMyWhcNMjYwNjIzMTQzMDMyWjCB1jELMAkGA1UEBhMCQlIxEzARBgNVBAoMCklDUC1CcmFzaWwxHDAaBgNVBAsME0NFUlRJRklDQURPIERJR0lUQUwxIjAgBgNVBAsMGUNlcnRpZmljYWRvIERpZ2l0YWwgUEogQTExFzAVBgNVBAsMDjQ1NjE2MzA5MDAwMTQ5MR8wHQYDVQQLDBZBQyBTeW5ndWxhcklEIE11bHRpcGxhMTYwNAYDVQQDDC1BVVRPIFZJQUNBTyBNRVRST1BPTElUQU5BIExUREE6MDU4NzAyMDgwMDAxODUwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCfPBoq4pXRs0MVKQXnLtuZFTAHI61iGmSGDX6t/30MoFLlshtmSkd16tMhtQlt01qt7GYJMmp0SBss0sWCW6S6Hy+Il5JfXjyyDfBwobf2sTLx+2BvspoajsugXgtSr8C5P1D6G3V98S60dRTiDBjiGN7MfIuZt4VnjqK1rJpbitA7vQSkLNiMoTbArQULUD1astNTBKiyJu46KyhtCy0eJeYUslHdUONtkgSglsj3ViK4MPOvBb1sCl/tXAHuIt1p6rnAU+E1qTg8bJi+35Xwf0+0J5yT+vMovt1DypwCJvS5R8XKfkwjbf2fLXHf4jrGPxxpYgiZdK2x6e0DG1jPAgMBAAGjggMvMIIDKzAOBgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwQGCCsGAQUFBwMCMAkGA1UdEwQCMAAwHwYDVR0jBBgwFoAUk+H/fh3l9eRN4TliiyFpleavchYwHQYDVR0OBBYEFNJ9voct13yIEAWQOcJw+/hHRdm4MH8GCCsGAQUFBwEBBHMwcTBvBggrBgEFBQcwAoZjaHR0cDovL3N5bmd1bGFyaWQuY29tLmJyL3JlcG9zaXRvcmlvL2FjLXN5bmd1bGFyaWQtbXVsdGlwbGEvY2VydGlmaWNhZG9zL2FjLXN5bmd1bGFyaWQtbXVsdGlwbGEucDdiMIGCBgNVHSAEezB5MHcGB2BMAQIBgQUwbDBqBggrBgEFBQcCARZeaHR0cDovL3N5bmd1bGFyaWQuY29tLmJyL3JlcG9zaXRvcmlvL2FjLXN5bmd1bGFyaWQtbXVsdGlwbGEvZHBjL2RwYy1hYy1zeW5ndWxhcklELW11bHRpcGxhLnBkZjCBwwYDVR0RBIG7MIG4oCoGBWBMAQMCoCEEH0FuZHJlIEx1aXMgRXNraW5hemkgZGUgT2xpdmVpcmGgGQYFYEwBAwOgEAQOMDU4NzAyMDgwMDAxODWgQgYFYEwBAwSgOQQ3MTcwMjE5NzQ0MzQ2Mjk0NDMwNDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMKAXBgVgTAEDB6AOBAwwMDAwMDAwMDAwMDCBEnZpYW1ldHJvQGdtYWlsLmNvbTCB4gYDVR0fBIHaMIHXMG+gbaBrhmlodHRwOi8vaWNwLWJyYXNpbC5zeW5ndWxhcmlkLmNvbS5ici9yZXBvc2l0b3Jpby9hYy1zeW5ndWxhcmlkLW11bHRpcGxhL2xjci9sY3ItYWMtc3luZ3VsYXJpZC1tdWx0aXBsYS5jcmwwZKBioGCGXmh0dHA6Ly9zeW5ndWxhcmlkLmNvbS5ici9yZXBvc2l0b3Jpby9hYy1zeW5ndWxhcmlkLW11bHRpcGxhL2xjci9sY3ItYWMtc3luZ3VsYXJpZC1tdWx0aXBsYS5jcmwwDQYJKoZIhvcNAQE0BQADggIBAByRK+8sJlaxsX8bQ0RgySNvsuIH703TV+QgKyUM4d1ZegsF7AXESJH05NIzxaHMGb5dueN5QacmaAD+MecSG/JXD3JhcCK4fgrIItXetCoapv3A3HkXteROmlO+HFcGmra6JkECDqesPr66WtA264WW74xVBY37CQW5ZfYsmMIm0V8SgLuJ2IhbopYk3EreXCtTJKeE+sl3p3JBdwihShH+0QdVRidxTjQ0+uK83EW4Cj8RZOkcHNwmAPAsJEYfOEsydPLcmT1SkDENrEXHQXBfXf+VUeSCXy+MPx80HCTRHtctkIVKapZ5BJdITGFD87+s0fxADkVpwG2ySMYLY14KF3nboxPOdOKCehuu8sGSgOID/iHD3E086vh0SFP6bl3Y0YPvH/pJLZUXK2BySDhN4LVtOvDM0TsQG8At5LXpQ87YqMNqHqLNbnRp3kpEXMlZ/eR5RDJNaFlJfO2kFttKG7ytTEoRPpGZRqEDsnuMS/oPSbom1WmtvM8HQhfTdp1EBsnLdKyKjsGD04mMpGcYZ5O3A+o7ke7x0O2NLKJCe5WCrbHKUG404b5sSu1BFBYZGdaqFwDSo01ibTgX7jE3YP8AIwJt7RA4A3KN0nXFwUW4VFad/yPog3XJP0kKP423G3j8l5GBOQ5Zk3xpXihwct1+j/ewrD1w0DpypXsX</X509Certificate>
+				</X509Data>
+			</KeyInfo>
+		</Signature>
+	</BPeTM>
+	<protBPe versao="1.00" xmlns="http://www.portalfiscal.inf.br/bpe">
+		<infProt Id="BPe999999999999999">
+			<tpAmb>2</tpAmb>
+			<verAplic>RS20250808131714</verAplic>
+			<chBPe>99999999999999999999999999999999999999999999</chBPe>
+		<dhRecbto>2025-08-19T12:07:18-03:00</dhRecbto>
+		<nProt>999999999999999</nProt>
+		<digVal>AAECAwQFBgcICQoLDA0ODxAREhM=</digVal>
+		<cStat>100</cStat>
+		<xMotivo>Autorizado o uso do BP-e</xMotivo>
+		</infProt>
+	</protBPe>
+</bpeTMProc>

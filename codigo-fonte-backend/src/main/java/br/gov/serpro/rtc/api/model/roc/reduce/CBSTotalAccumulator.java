@@ -5,9 +5,9 @@ import static java.util.Objects.requireNonNullElse;
 
 import java.math.BigDecimal;
 
-import br.gov.serpro.rtc.api.model.roc.CBS;
-import br.gov.serpro.rtc.api.model.roc.CBSTotal;
-import br.gov.serpro.rtc.api.model.roc.CreditoPresumido;
+import br.gov.serpro.rtc.api.model.roc.CBSDomain;
+import br.gov.serpro.rtc.api.model.roc.CBSTotalDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSCBSCreditoPresumidoDomain;
 
 public class CBSTotalAccumulator {
     private final BigDecimal vDif;
@@ -29,11 +29,11 @@ public class CBSTotalAccumulator {
         this.vCredPresCondSus = requireNonNullElse(vCredPresCondSus, ZERO);
     }
 
-    public static CBSTotalAccumulator from(CBS cbs, CreditoPresumido cbsCredPres) {
+    public static CBSTotalAccumulator from(CBSDomain cbs, IBSCBSCreditoPresumidoDomain cbsCredPres) {
         return new CBSTotalAccumulator(
             cbs != null ? cbs.getVDif() : ZERO,
             cbs != null ? cbs.getVDevTrib() : ZERO,
-            cbs != null ? requireNonNullElse(cbs.getValorImposto(), ZERO) : ZERO,
+            cbs != null ? requireNonNullElse(cbs.getVCBS(), ZERO) : ZERO,
             cbsCredPres != null ? requireNonNullElse(cbsCredPres.getVCredPres(), ZERO) : ZERO,
             cbsCredPres != null ? requireNonNullElse(cbsCredPres.getVCredPresCondSus(), ZERO) : ZERO);
     }
@@ -50,8 +50,8 @@ public class CBSTotalAccumulator {
             this.vCredPresCondSus.add(other.vCredPresCondSus));
     }
 
-    public CBSTotal toCBSTotal() {
-        CBSTotal total = new CBSTotal();
+    public CBSTotalDomain toCBSTotal() {
+        CBSTotalDomain total = new CBSTotalDomain();
         total.setVDif(this.vDif);
         total.setVDevTrib(this.vDevTrib);
         total.setVCBS(this.vCBS);

@@ -3,6 +3,8 @@
  */
 package br.gov.serpro.rtc.api.controller;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -26,14 +28,22 @@ public class BaseCalculoController implements BaseCalculoControllerOpenApi {
     private final BaseCalculoService baseCalculoService;
 
     @Override
-    @PostMapping("is-mercadorias")
+    @PostMapping(
+        value = "is-mercadorias",
+        consumes = APPLICATION_JSON_VALUE,
+        produces = APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<BaseCalculoISMercadoriasModel> calcularISMercadorias(
             @RequestBody @Valid BaseCalculoISMercadoriasInput input) {
         return ResponseEntity.ok(baseCalculoService.calcularISMercadorias(input));
     }
 
     @Override
-    @PostMapping("cbs-ibs-mercadorias")
+    @PostMapping(
+        value = "cbs-ibs-mercadorias",
+        consumes = APPLICATION_JSON_VALUE,
+        produces = APPLICATION_JSON_VALUE
+    )
     public ResponseEntity<BaseCalculoCibsModel> calcularCibs(@RequestBody @Valid BaseCalculoCibsInput input) {
         return ResponseEntity.ok(baseCalculoService.calcularCibs(input));
     }

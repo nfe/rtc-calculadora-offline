@@ -3,12 +3,18 @@
  */
 package br.gov.serpro.rtc.api.model.output.pedagio;
 
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -21,9 +27,10 @@ import lombok.Setter;
 @Getter
 @Builder
 @JsonInclude(Include.NON_NULL)
-public final class PedagioOutput {
+public final class PedagioOutput implements SerializationVisibility {
 
     @Schema(name = "dataHoraEmissao", description = "Data e hora de emissão do documento no formato UTC", example = "2027-01-01T09:50:05-03:00")
+    @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     private OffsetDateTime dataHoraEmissao;
 
     @Schema(name = "municipioOrigem", description = "Código do Município (tabela IBGE)", example = "4314902")

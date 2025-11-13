@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @JsonInclude(Include.NON_NULL)
-public class NcmDadosAbertosOutput {
+public class NcmDadosAbertosOutput implements SerializationVisibility {
 
     @Schema(name = "tributadoPeloImpostoSeletivo", description = "Tributado pelo Imposto Seletivo", example = "")
     private final boolean tributadoPeloImpostoSeletivo;
@@ -42,5 +43,8 @@ public class NcmDadosAbertosOutput {
 
     @Schema(name = "subitem", description = "Subitem da NCM", example = "")
     private final String subitem;
+
+    @Schema(name = "unidade", description = "Unidade da NCM", example = "")
+    private final String unidade;
 
 }

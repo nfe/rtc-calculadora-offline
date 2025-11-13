@@ -12,7 +12,7 @@
       "cClassTrib": "550001",
       "baseCalculo": 200,
       "quantidade": 1,
-      "unidade": "LT",
+      "unidade": "UN",
       "tributacaoRegular": {
         "cst": "000",
         "cClassTrib": "000001"

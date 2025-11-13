@@ -33,6 +33,34 @@ public class SituacaoTributaria {
     private String descricao;
 
     @NotNull
+    @Column(name = "SITR_IND_GIBSCBS")
+    private Boolean inGrupoIbsCbs;
+
+    @NotNull
+    @Column(name = "SITR_IND_GIBSCBSMONO")
+    private Boolean inGrupoIbsCbsMono;
+
+    @NotNull
+    @Column(name = "SITR_IND_GRED")
+    private Boolean inGrupoReducao;
+
+    @NotNull
+    @Column(name = "SITR_IND_GDIF")
+    private Boolean inGrupoDiferimento;
+
+    @NotNull
+    @Column(name = "SITR_IND_GTRANSFCRED")
+    private Boolean inGrupoTranferenciaCredito;
+
+    @NotNull
+    @Column(name = "SITR_IND_GCREDPRESIBSZFM")
+    private Boolean inGrupoCreditoPresumidoIbsZfm;
+
+    @NotNull
+    @Column(name = "SITR_IND_GAJUSTECOMPET")
+    private Boolean inGrupoAjusteCompetencia;
+
+    @NotNull
     @Column(name = "SITR_INICIO_VIGENCIA")
     private LocalDate inicioVigencia;
 

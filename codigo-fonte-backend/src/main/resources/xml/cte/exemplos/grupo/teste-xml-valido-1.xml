@@ -1,4 +1,4 @@
-<infCTe>
+<infCte xmlns="http://www.portalfiscal.inf.br/cte">
     <imp>
       <IBSCBS>
         <CST>000</CST>
@@ -13,6 +13,7 @@
             <pIBSMun>0.05</pIBSMun>
             <vIBSMun>0.10</vIBSMun>
           </gIBSMun>
+          <vIBS>0.20</vIBS>
           <gCBS>
             <pCBS>0.90</pCBS>
             <vCBS>1.80</vCBS>
@@ -20,4 +21,4 @@
         </gIBSCBS>
       </IBSCBS>
     </imp>
-</infCTe>
+</infCte>

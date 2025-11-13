@@ -3,9 +3,14 @@
  */
 package br.gov.serpro.rtc.api.model.input;
 
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
+
 import java.time.OffsetDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -20,7 +25,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public final class OperacaoInput {
+public final class OperacaoInput implements SerializationVisibility {
     @NotNull
     @Schema(name = "id", description = "Identificador do ROC", example = "6194602ea71cbf9431c236de4409d920")
     private String id;
@@ -30,6 +35,7 @@ public final class OperacaoInput {
     private String versao;
 
     @NotNull
+    @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
     @Schema(name = "dataHoraEmissao", description = "Data e hora de emissão do documento no formato UTC", example = "2026-01-01T09:50:05-03:00")
     private OffsetDateTime dataHoraEmissao;
 
@@ -39,7 +45,6 @@ public final class OperacaoInput {
     @Schema(name = "municipio", description = "Código do Município (tabela IBGE)", example = "4314902")
     private Long municipio;
 
-    @NotNull
     @Size(min = 2, max = 2)
     @Schema(name = "uf", description = "Sigla da UF", example = "RS")
     private String uf;

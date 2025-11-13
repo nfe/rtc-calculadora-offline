@@ -14,8 +14,8 @@
       "quantidade": 1,
       "unidade": "LT",
       "tributacaoRegular": {
-        "cst": "620",
-        "cClassTrib": "620001"
+        "cst": "550",
+        "cClassTrib": "550001"
       }
     }
   ]

@@ -20,12 +20,12 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import br.gov.serpro.rtc.api.model.input.OperacaoInput;
-import br.gov.serpro.rtc.api.model.roc.CBS;
-import br.gov.serpro.rtc.api.model.roc.Objeto;
-import br.gov.serpro.rtc.api.model.roc.IBSMun;
-import br.gov.serpro.rtc.api.model.roc.IBSUF;
-import br.gov.serpro.rtc.api.model.roc.ImpostoSeletivo;
-import br.gov.serpro.rtc.api.model.roc.TributacaoRegular;
+import br.gov.serpro.rtc.api.model.roc.CBSDomain;
+import br.gov.serpro.rtc.api.model.roc.ObjetoDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSMunDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSUFDomain;
+import br.gov.serpro.rtc.api.model.roc.ImpostoSeletivoDomain;
+import br.gov.serpro.rtc.api.model.roc.TributacaoRegularDomain;
 import br.gov.serpro.rtc.domain.service.CalculadoraService;
 import br.gov.serpro.rtc.util.JsonResourceObjectMapper;
 
@@ -69,28 +69,28 @@ class Teste_200002_4 {
         assertImpostoSeletivo(item.getImpostoSeletivo());
     }
 
-    private void assertCbs(final CBS cbs) {
+    private void assertCbs(final CBSDomain cbs) {
         assertThat(cbs).isNotNull();
-        isEqualByComparingTo(cbs.getAliquota(), ZERO);
-        isEqualByComparingTo(cbs.getValorImposto(), ZERO);
+        isEqualByComparingTo(cbs.getPCBS(), new BigDecimal("8.40"));
+        isEqualByComparingTo(cbs.getVCBS(), ZERO);
         assertThat(cbs.getGRed()).isNull();
     }
 
-    private void assertIbsEstadual(final IBSUF ibsEstadual) {
+    private void assertIbsEstadual(final IBSUFDomain ibsEstadual) {
         assertThat(ibsEstadual).isNotNull();
-        isEqualByComparingTo(ibsEstadual.getAliquota(), ZERO);
-        isEqualByComparingTo(ibsEstadual.getValorImposto(), ZERO);
+        isEqualByComparingTo(ibsEstadual.getPIBSUF(), new BigDecimal("0.05"));
+        isEqualByComparingTo(ibsEstadual.getVIBSUF(), ZERO);
         assertThat(ibsEstadual.getGRed()).isNull();
     }
 
-    private void assertIbsMunicipal(final IBSMun ibsMunicipal) {
+    private void assertIbsMunicipal(final IBSMunDomain ibsMunicipal) {
         assertThat(ibsMunicipal).isNotNull();
-        isEqualByComparingTo(ibsMunicipal.getAliquota(), ZERO);
-        isEqualByComparingTo(ibsMunicipal.getValorImposto(), ZERO);
+        isEqualByComparingTo(ibsMunicipal.getPIBSMun(), new BigDecimal("0.05"));
+        isEqualByComparingTo(ibsMunicipal.getVIBSMun(), ZERO);
         assertThat(ibsMunicipal.getGRed()).isNull();
     }
 
-    private void assertImpostoSeletivo(final ImpostoSeletivo impostoSeletivo) {
+    private void assertImpostoSeletivo(final ImpostoSeletivoDomain impostoSeletivo) {
         assertThat(impostoSeletivo).isNotNull();
         isEqualByComparingTo(impostoSeletivo.getVBCIS(), "200.00");
         isEqualByComparingTo(impostoSeletivo.getPIS(), "13.00");
@@ -98,11 +98,11 @@ class Teste_200002_4 {
         isEqualByComparingTo(impostoSeletivo.getVIS(), ZERO);
     }
 
-    private void assertTributacaoRegular(final Objeto item, final BigDecimal aliquotaRegularCBS,
+    private void assertTributacaoRegular(final ObjetoDomain item, final BigDecimal aliquotaRegularCBS,
             final BigDecimal valorRegularCBS, final BigDecimal aliquotaRegularIBSUF, final BigDecimal valorRegularIBSUF,
             final BigDecimal aliquotaRegularIBSMun, final BigDecimal valorRegularIBSMun) {
         assertThat(item.possuiTributacaoRegular()).isTrue();
-        TributacaoRegular tr = item.getTributacaoRegular();
+        TributacaoRegularDomain tr = item.getTributacaoRegular();
         isEqualByComparingTo(tr.getPAliqEfetRegCBS(), aliquotaRegularCBS);
         isEqualByComparingTo(tr.getVTribRegCBS(), valorRegularCBS);
         isEqualByComparingTo(tr.getPAliqEfetRegIBSUF(), aliquotaRegularIBSUF);

@@ -3,6 +3,8 @@
  */
 package br.gov.serpro.rtc.api.controller;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,6 +25,7 @@ import br.gov.serpro.rtc.api.model.output.dadosabertos.NbsDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.NcmDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.SituacaoTributariaDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.UfDadosAbertosOutput;
+import br.gov.serpro.rtc.api.model.output.dadosabertos.ValidadeDfeClassificacaoTributariaDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.VersaoOutput;
 import br.gov.serpro.rtc.api.openapi.controller.DadosAbertosControllerOpenApi;
 import br.gov.serpro.rtc.domain.service.VersaoBaseDadosService;
@@ -31,7 +34,10 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("calculadora/dados-abertos")
+@RequestMapping(
+    value = "calculadora/dados-abertos",
+    produces = APPLICATION_JSON_VALUE
+)
 public class DadosAbertosController implements DadosAbertosControllerOpenApi {
 
     @Value("${info.app.version:unknown}")
@@ -135,6 +141,13 @@ public class DadosAbertosController implements DadosAbertosControllerOpenApi {
     public ResponseEntity<AliquotaDadosAbertosOutput> consultarAliquotaMunicipio(
         @RequestParam Long codigoMunicipio, @RequestParam LocalDate data) {
         return ResponseEntity.ok(dadosAbertosService.consultarAliquota(4L, null, codigoMunicipio, data));
+    }
+
+    @Override
+    @GetMapping("/classificacoes-tributarias/cbs-ibs/{siglaDfe}/{cClassTrib}")
+    public ResponseEntity<ValidadeDfeClassificacaoTributariaDadosAbertosOutput> consultarValidadeDfeClassificacaoTributaria(
+        @PathVariable String siglaDfe, @PathVariable String cClassTrib, @RequestParam LocalDate data) {
+        return ResponseEntity.ok(dadosAbertosService.consultarValidadeDfeClassificacaoTributaria(siglaDfe, cClassTrib, data));
     }
     
     @Override

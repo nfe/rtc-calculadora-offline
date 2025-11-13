@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +18,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @JsonInclude(Include.NON_NULL)
-public final class TributoPedagioOutput {
+public final class TributoPedagioOutput implements SerializationVisibility {
 
     @Schema(name = "aliquota", description = "Alíquota", example = "0.5")
     private BigDecimal aliquota;

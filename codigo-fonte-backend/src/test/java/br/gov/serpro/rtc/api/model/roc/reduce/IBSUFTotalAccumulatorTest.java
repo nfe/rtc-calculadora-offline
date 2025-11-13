@@ -8,18 +8,17 @@ import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 
-import br.gov.serpro.rtc.api.model.roc.DevolucaoTributos;
-import br.gov.serpro.rtc.api.model.roc.Diferimento;
-import br.gov.serpro.rtc.api.model.roc.IBSUF;
-import br.gov.serpro.rtc.api.model.roc.IBSUFTotal;
-import br.gov.serpro.rtc.api.model.roc.reduce.IBSUFTotalAccumulator;
+import br.gov.serpro.rtc.api.model.roc.DevolucaoTributosDomain;
+import br.gov.serpro.rtc.api.model.roc.DiferimentoDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSUFDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSUFTotalDomain;
 
 class IBSUFTotalAccumulatorTest {
 
     @Test
     void testDefaultConstructor() {
         IBSUFTotalAccumulator acc = new IBSUFTotalAccumulator();
-        IBSUFTotal total = acc.toIBSUFTotal();
+        IBSUFTotalDomain total = acc.toIBSUFTotal();
         isEqualByComparingTo(ZERO, total.getVDif());
         isEqualByComparingTo(ZERO, total.getVDevTrib());
         isEqualByComparingTo(ZERO, total.getVIBSUF());
@@ -29,7 +28,7 @@ class IBSUFTotalAccumulatorTest {
     void testParameterizedConstructor() {
         BigDecimal v1 = ONE;
         IBSUFTotalAccumulator acc = new IBSUFTotalAccumulator(v1, v1, v1);
-        IBSUFTotal total = acc.toIBSUFTotal();
+        IBSUFTotalDomain total = acc.toIBSUFTotal();
         isEqualByComparingTo(v1, total.getVDif());
         isEqualByComparingTo(v1, total.getVDevTrib());
         isEqualByComparingTo(v1, total.getVIBSUF());
@@ -38,7 +37,7 @@ class IBSUFTotalAccumulatorTest {
     @Test
     void testFromMethodWithNull() {
         IBSUFTotalAccumulator acc = IBSUFTotalAccumulator.from(null);
-        IBSUFTotal total = acc.toIBSUFTotal();
+        IBSUFTotalDomain total = acc.toIBSUFTotal();
         isEqualByComparingTo(ZERO, total.getVDif());
         isEqualByComparingTo(ZERO, total.getVDevTrib());
         isEqualByComparingTo(ZERO, total.getVIBSUF());
@@ -47,18 +46,18 @@ class IBSUFTotalAccumulatorTest {
     @Test
     void testFromMethodWithValues() {
         
-        Diferimento gDif = Diferimento.builder()
+        DiferimentoDomain gDif = DiferimentoDomain.builder()
                 .vDif(TEN)
                 .build();
-        DevolucaoTributos gDevTrib = DevolucaoTributos.builder()
+        DevolucaoTributosDomain gDevTrib = DevolucaoTributosDomain.builder()
                 .vDevTrib(ONE)
                 .build();
-        IBSUF ibsUf = new IBSUF();
+        IBSUFDomain ibsUf = new IBSUFDomain();
         ibsUf.setGDif(gDif);
         ibsUf.setGDevTrib(gDevTrib);
-        ibsUf.setValorImposto(BigDecimal.valueOf(5));
+        ibsUf.setVIBSUF(BigDecimal.valueOf(5));
         IBSUFTotalAccumulator acc = IBSUFTotalAccumulator.from(ibsUf);
-        IBSUFTotal total = acc.toIBSUFTotal();
+        IBSUFTotalDomain total = acc.toIBSUFTotal();
         isEqualByComparingTo(TEN, total.getVDif());
         isEqualByComparingTo(ONE, total.getVDevTrib());
         isEqualByComparingTo(BigDecimal.valueOf(5), total.getVIBSUF());
@@ -69,7 +68,7 @@ class IBSUFTotalAccumulatorTest {
         IBSUFTotalAccumulator acc1 = new IBSUFTotalAccumulator(ONE, ONE, ONE);
         IBSUFTotalAccumulator acc2 = new IBSUFTotalAccumulator(TEN, TEN, TEN);
         IBSUFTotalAccumulator result = acc1.add(acc2);
-        IBSUFTotal total = result.toIBSUFTotal();
+        IBSUFTotalDomain total = result.toIBSUFTotal();
         final var onze = new BigDecimal("11.00");
         isEqualByComparingTo(onze, total.getVDif());
         isEqualByComparingTo(onze, total.getVDevTrib());
@@ -80,7 +79,7 @@ class IBSUFTotalAccumulatorTest {
     void testAddWithNull() {
         IBSUFTotalAccumulator acc1 = new IBSUFTotalAccumulator(ONE, ONE, ONE);
         IBSUFTotalAccumulator result = acc1.add(null);
-        IBSUFTotal total = result.toIBSUFTotal();
+        IBSUFTotalDomain total = result.toIBSUFTotal();
         isEqualByComparingTo(ONE, total.getVDif());
         isEqualByComparingTo(ONE, total.getVDevTrib());
         isEqualByComparingTo(ONE, total.getVIBSUF());

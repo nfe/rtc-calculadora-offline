@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://www.portalfiscal.inf.br/bpe" 
+    targetNamespace="http://www.portalfiscal.inf.br/bpe"
+    elementFormDefault="qualified" 
+    attributeFormDefault="unqualified">
+    <xs:include schemaLocation="./originais/bpeTiposBasico_v1.00.xsd" />
+
+	<xs:element name="infBPe">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="detBPeTM" maxOccurs="99">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="det" maxOccurs="990">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="imp">
+											<xs:complexType>
+												<xs:sequence>
+													<xs:element name="IBSCBS" type="TTribBPe" minOccurs="0">
+													</xs:element>
+												</xs:sequence>
+											</xs:complexType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="nViagem" use="required">
+										<xs:simpleType>
+											<xs:restriction base="xs:string">
+												<xs:whiteSpace value="preserve" />
+												<xs:pattern
+													value="[1-9]{1}[0-9]{0,1}|[1-8]{1}[0-9]{2}|[9]{1}[0-8]{1}[0-9]{1}|[9]{1}[9]{1}[0]{1}" />
+											</xs:restriction>
+										</xs:simpleType>
+									</xs:attribute>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="total">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="IBSCBSTot" type="TIBSCBSTot" minOccurs="0">
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

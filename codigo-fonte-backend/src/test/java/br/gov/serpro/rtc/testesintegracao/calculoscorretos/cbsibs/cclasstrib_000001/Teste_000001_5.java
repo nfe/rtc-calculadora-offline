@@ -17,9 +17,9 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
 import br.gov.serpro.rtc.api.model.input.OperacaoInput;
-import br.gov.serpro.rtc.api.model.roc.CBS;
-import br.gov.serpro.rtc.api.model.roc.IBSMun;
-import br.gov.serpro.rtc.api.model.roc.IBSUF;
+import br.gov.serpro.rtc.api.model.roc.CBSDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSMunDomain;
+import br.gov.serpro.rtc.api.model.roc.IBSUFDomain;
 import br.gov.serpro.rtc.domain.service.CalculadoraService;
 import br.gov.serpro.rtc.util.JsonResourceObjectMapper;
 
@@ -59,21 +59,21 @@ class Teste_000001_5 {
         assertIbsMunicipal(item.getGIBSMun());
     }
 
-    private void assertCbs(final CBS cbs) {
+    private void assertCbs(final CBSDomain cbs) {
         assertThat(cbs).isNotNull();
-        isEqualByComparingTo(cbs.getAliquota(), "8.40");
-        isEqualByComparingTo(cbs.getValorImposto(), "16.80");
+        isEqualByComparingTo(cbs.getPCBS(), "8.40");
+        isEqualByComparingTo(cbs.getVCBS(), "16.80");
     }
 
-    private void assertIbsEstadual(final IBSUF ibsEstadual) {
+    private void assertIbsEstadual(final IBSUFDomain ibsEstadual) {
         assertThat(ibsEstadual).isNotNull();
-        isEqualByComparingTo(ibsEstadual.getAliquota(), "1.50");
-        isEqualByComparingTo(ibsEstadual.getValorImposto(), "3.00");
+        isEqualByComparingTo(ibsEstadual.getPIBSUF(), "1.50");
+        isEqualByComparingTo(ibsEstadual.getVIBSUF(), "3.00");
     }
 
-    private void assertIbsMunicipal(final IBSMun ibsMunicipal) {
+    private void assertIbsMunicipal(final IBSMunDomain ibsMunicipal) {
         assertThat(ibsMunicipal).isNotNull();
-        isEqualByComparingTo(ibsMunicipal.getAliquota(), "1.05");
-        isEqualByComparingTo(ibsMunicipal.getValorImposto(), "2.10");
+        isEqualByComparingTo(ibsMunicipal.getPIBSMun(), "1.05");
+        isEqualByComparingTo(ibsMunicipal.getVIBSMun(), "2.10");
     }
 }

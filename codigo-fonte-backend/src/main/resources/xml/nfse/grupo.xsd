@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Luis Augusto, em 23/09/2025. -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    elementFormDefault="qualified"
+    attributeFormDefault="unqualified"
+    targetNamespace="http://www.sped.fazenda.gov.br/nfse"
+    xmlns="http://www.sped.fazenda.gov.br/nfse"
+    >
+
+    <xs:include schemaLocation="./originais/tiposComplexos_v1.01.xsd" />
+
+    <xs:element name="infNFSe">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="IBSCBS" type="TCRTCIBSCBS"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

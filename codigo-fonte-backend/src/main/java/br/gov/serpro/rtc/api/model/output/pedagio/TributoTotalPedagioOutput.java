@@ -13,6 +13,7 @@ import java.util.function.Function;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,7 +21,7 @@ import lombok.Getter;
 @Getter
 @Builder
 @JsonInclude(Include.NON_NULL)
-public final class TributoTotalPedagioOutput {
+public final class TributoTotalPedagioOutput implements SerializationVisibility {
 
     @Schema(name = "baseCalculo", description = "Base de cálculo do imposto", example = "200.00")
     private final BigDecimal baseCalculo;

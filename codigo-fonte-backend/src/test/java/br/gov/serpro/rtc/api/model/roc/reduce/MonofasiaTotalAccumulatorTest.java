@@ -9,16 +9,18 @@ import java.math.BigDecimal;
 
 import org.junit.jupiter.api.Test;
 
-import br.gov.serpro.rtc.api.model.roc.Monofasia;
-import br.gov.serpro.rtc.api.model.roc.MonofasiaTotal;
-import br.gov.serpro.rtc.api.model.roc.reduce.MonofasiaTotalAccumulator;
+import br.gov.serpro.rtc.api.model.roc.MonofasiaDomain;
+import br.gov.serpro.rtc.api.model.roc.MonofasiaPadraoDomain;
+import br.gov.serpro.rtc.api.model.roc.MonofasiaRetidoAnteriormenteDomain;
+import br.gov.serpro.rtc.api.model.roc.MonofasiaRetencaoDomain;
+import br.gov.serpro.rtc.api.model.roc.MonofasiaTotalDomain;
 
 class MonofasiaTotalAccumulatorTest {
 
     @Test
     void testDefaultConstructor() {
         MonofasiaTotalAccumulator acc = new MonofasiaTotalAccumulator();
-        MonofasiaTotal total = acc.toMonofasiaTotal();
+        MonofasiaTotalDomain total = acc.toMonofasiaTotal();
         isEqualByComparingTo(ZERO, total.getVIBSMono());
         isEqualByComparingTo(ZERO, total.getVCBSMono());
         isEqualByComparingTo(ZERO, total.getVIBSMonoReten());
@@ -31,7 +33,7 @@ class MonofasiaTotalAccumulatorTest {
     void testParameterizedConstructor() {
         BigDecimal v = ONE;
         MonofasiaTotalAccumulator acc = new MonofasiaTotalAccumulator(v, v, v, v, v, v);
-        MonofasiaTotal total = acc.toMonofasiaTotal();
+        MonofasiaTotalDomain total = acc.toMonofasiaTotal();
         isEqualByComparingTo(v, total.getVIBSMono());
         isEqualByComparingTo(v, total.getVCBSMono());
         isEqualByComparingTo(v, total.getVIBSMonoReten());
@@ -43,7 +45,7 @@ class MonofasiaTotalAccumulatorTest {
     @Test
     void testFromMethodWithNull() {
         MonofasiaTotalAccumulator acc = MonofasiaTotalAccumulator.from(null);
-        MonofasiaTotal total = acc.toMonofasiaTotal();
+        MonofasiaTotalDomain total = acc.toMonofasiaTotal();
         isEqualByComparingTo(ZERO, total.getVIBSMono());
         isEqualByComparingTo(ZERO, total.getVCBSMono());
         isEqualByComparingTo(ZERO, total.getVIBSMonoReten());
@@ -54,16 +56,22 @@ class MonofasiaTotalAccumulatorTest {
 
     @Test
     void testFromMethodWithValues() {
-        Monofasia m = Monofasia.builder()
-                .vIBSMono(TEN)
-                .vCBSMono(ONE)
-                .vIBSMonoReten(BigDecimal.TWO)
-                .vCBSMonoReten(BigDecimal.valueOf(3))
-                .vIBSMonoRet(BigDecimal.valueOf(4))
-                .vCBSMonoRet(BigDecimal.valueOf(5))
+        MonofasiaDomain m = MonofasiaDomain.builder()
+                .gMonoPadrao(MonofasiaPadraoDomain.builder()
+                        .vIBSMono(TEN)
+                        .vCBSMono(ONE)
+                        .build())
+                .gMonoReten(MonofasiaRetencaoDomain.builder()
+                        .vIBSMonoReten(BigDecimal.TWO)
+                        .vCBSMonoReten(BigDecimal.valueOf(3))
+                        .build())
+                .gMonoRet(MonofasiaRetidoAnteriormenteDomain.builder()
+                        .vIBSMonoRet(BigDecimal.valueOf(4))
+                        .vCBSMonoRet(BigDecimal.valueOf(5))
+                        .build())
                 .build();
         MonofasiaTotalAccumulator acc = MonofasiaTotalAccumulator.from(m);
-        MonofasiaTotal total = acc.toMonofasiaTotal();
+        MonofasiaTotalDomain total = acc.toMonofasiaTotal();
         isEqualByComparingTo(TEN, total.getVIBSMono());
         isEqualByComparingTo(ONE, total.getVCBSMono());
         isEqualByComparingTo(BigDecimal.valueOf(2), total.getVIBSMonoReten());
@@ -77,7 +85,7 @@ class MonofasiaTotalAccumulatorTest {
         MonofasiaTotalAccumulator acc1 = new MonofasiaTotalAccumulator(ONE, ONE, ONE, ONE, ONE, ONE);
         MonofasiaTotalAccumulator acc2 = new MonofasiaTotalAccumulator(TEN, TEN, TEN, TEN, TEN, TEN);
         MonofasiaTotalAccumulator result = acc1.add(acc2);
-        MonofasiaTotal total = result.toMonofasiaTotal();
+        MonofasiaTotalDomain total = result.toMonofasiaTotal();
         final var onze = new BigDecimal("11.00");
         isEqualByComparingTo(onze, total.getVIBSMono());
         isEqualByComparingTo(onze, total.getVCBSMono());
@@ -91,7 +99,7 @@ class MonofasiaTotalAccumulatorTest {
     void testAddWithNull() {
         MonofasiaTotalAccumulator acc1 = new MonofasiaTotalAccumulator(ONE, ONE, ONE, ONE, ONE, ONE);
         MonofasiaTotalAccumulator result = acc1.add(null);
-        MonofasiaTotal total = result.toMonofasiaTotal();
+        MonofasiaTotalDomain total = result.toMonofasiaTotal();
         isEqualByComparingTo(ONE, total.getVIBSMono());
         isEqualByComparingTo(ONE, total.getVCBSMono());
         isEqualByComparingTo(ONE, total.getVIBSMonoReten());

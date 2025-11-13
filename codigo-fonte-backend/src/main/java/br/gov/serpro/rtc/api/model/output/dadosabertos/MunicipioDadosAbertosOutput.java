@@ -6,6 +6,7 @@ package br.gov.serpro.rtc.api.model.output.dadosabertos;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
+import br.gov.serpro.rtc.api.model.SerializationVisibility;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +16,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @JsonInclude(Include.NON_NULL)
-public class MunicipioDadosAbertosOutput {
+public class MunicipioDadosAbertosOutput implements SerializationVisibility {
 
     @Schema(name = "codigo", description = "Código IBGE do Município", example = "4314902")
     private final Long codigo;
