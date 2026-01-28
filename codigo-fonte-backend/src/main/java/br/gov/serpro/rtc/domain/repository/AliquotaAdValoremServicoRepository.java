@@ -5,7 +5,6 @@ package br.gov.serpro.rtc.domain.repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -45,7 +44,8 @@ public interface AliquotaAdValoremServicoRepository extends JpaRepository<Aliquo
             )
             ORDER BY LENGTH(a.nbs.codigo) DESC
             """)
-    List<BigDecimal> buscarAliquotaAdValorem(
+    // TODO verificar se existe uma forma de simplificar a consulta
+    BigDecimal buscarAliquotaAdValorem(
             @Param("nbs") String nbs,
             @Param("idTributo") Long idTributo,
             @Param("idClassificacaoTributaria") Long idClassificacaoTributaria,
@@ -58,7 +58,7 @@ public interface AliquotaAdValoremServicoRepository extends JpaRepository<Aliquo
             AND aadv.AADV_CLTR_ID = :idClassificacaoTributaria 
             AND :data BETWEEN aadv.AADV_INICIO_VIGENCIA AND COALESCE(aadv.AADV_FIM_VIGENCIA, :data)
             """, nativeQuery = true)
-    List<BigDecimal> buscarAliquotaAdValoremPorClassificacaoTributaria(
+    BigDecimal buscarAliquotaAdValoremPorClassificacaoTributaria(
             @Param("idTributo") Long idTributo,
             @Param("idClassificacaoTributaria") Long idClassificacaoTributaria,
             @Param("data") LocalDate data);

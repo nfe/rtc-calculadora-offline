@@ -4,7 +4,11 @@ info:
 
 application:
   module: ${MODULE_NAME:api-regime-geral}
+  db:
+    filename: calculadora-nonpro.db
   ibs:
+    enabled: true
+  memoriacalculo:
     enabled: true
 
 spring:
@@ -14,7 +18,7 @@ spring:
     activate:
       on-profile: offline
   datasource:
-    url: jdbc:sqlite:file:./calculadora/db/calculadora.db?date_class=TEXT&date_string_format=yyyy-MM-dd
+    url: jdbc:sqlite:file:./calculadora/db/${application.db.filename}?mode=ro&date_class=TEXT&date_string_format=yyyy-MM-dd
     username: sa
     password:
     driverClassName: org.sqlite.JDBC
@@ -108,87 +112,133 @@ springdoc:
 cache:
   specs:
     - name: AliquotaAdRemProdutoRepository.buscarAliquotaAdRem
-      expireAfterWrite: "P1D"
-      initialCapacity: 100
+      expireAfterAccess: "P1D"
+      initialCapacity: 84_000 # 16MB
+      maximumSize: 84_000
     - name: AliquotaAdValoremProdutoRepository.buscarAliquotaAdValorem
-      expireAfterWrite: "P1D"
-      initialCapacity: 100
-    - name: AliquotaPadraoRepository.buscarAliquotaUniao
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
-    - name: AliquotaPadraoRepository.buscarAliquotaUf
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
-    - name: AliquotaPadraoRepository.buscarAliquotaMunicipio
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
+      expireAfterAccess: "P1D"
+      initialCapacity: 84_000 # ~12.4 MB
+      maximumSize: 84_000
+    - name: AliquotaPadraoRepository.buscarAliquota
+      expireAfterAccess: "P1D"
+      initialCapacity: 50_000 # ~10MB
+      maximumSize: 50_000
     - name: AliquotaReferenciaRepository.buscar
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
-    - name: ClassificacaoTributariaRepository.buscarClassificacaoTributariaCbsIbs
-      expireAfterWrite: "P1D"
+      expireAfterAccess: "P1D"
       initialCapacity: 100
-    - name: ClassificacaoTributariaRepository.buscarClassificacaoTributariaImpostoSeletivo
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
-    - name: FundamentacaoClassificacaoRepository.buscar
-      expireAfterWrite: "P1D"
+      maximumSize: 100
+    - name: ClassificacaoTributariaRepository.buscarClassificacaoTributaria
+      expireAfterAccess: "P1D"
+      initialCapacity: 1_600 # ~400KB
+      maximumSize: 1_600
+    - name: ClassificacaoTributariaRepository.buscarClassificacaoTributariaCalculo
+      expireAfterAccess: "P1D"
       initialCapacity: 200
-    - name: NbsAplicavelRepository.temNbsAplicavel
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
-    - name: NbsAplicavelRepository.temExcecaoNbsAplicavel
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
-    - name: NbsAplicavelRepository.temNbsAplicavelSemExcecao
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
-    - name: NbsAplicavelRepository.tem
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
+      maximumSize: 200
+    - name: FundamentacaoClassificacaoRepository.buscar
+      expireAfterAccess: "P1D"
+      initialCapacity: 400 # ~600KB
+      maximumSize: 400
+    - name: NbsAplicavelService.validarNbsAplicavel
+      expireAfterAccess: "P1D"
+      initialCapacity: 100_000 # ~13MB
+      maximumSize: 100_000
+    - name: NbsAplicavelRepository.temNbsAplicavel # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< remover?
+      expireAfterAccess: "P1D"
+      initialCapacity: 10_000 # ~1.3MB
+      maximumSize: 10_000
+    - name: NbsAplicavelRepository.temExcecaoNbsAplicavel # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< remover?
+      expireAfterAccess: "P1D"
+      initialCapacity: 10_000 # ~1.3MB
+      maximumSize: 10_000
+    - name: NbsAplicavelRepository.temNbsAplicavelSemExcecao # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< remover?
+      expireAfterAccess: "P1D"
+      initialCapacity: 10_000 # ~1.3MB
+      maximumSize: 10_000
+    - name: NbsAplicavelRepository.tem # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< remover?
+      expireAfterAccess: "P1D"
+      initialCapacity: 400 # ~45KB
+      maximumSize: 400
     - name: NbsRepository.existeNbs
-      expireAfterWrite: "P1D"
-      initialCapacity: 500
-    - name: NcmAplicavelRepository.temNcmAplicavel
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
-    - name: NcmAplicavelRepository.temExcecaoNcmAplicavel
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
-    - name: NcmAplicavelRepository.temNcmAplicavelSemExcecao
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
-    - name: NcmAplicavelRepository.tem
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
+      expireAfterAccess: "P1D"
+      initialCapacity: 1_800 # ~220KB
+      maximumSize: 1_800
+    - name: NcmAplicavelService.validarNcmAplicavel
+      expireAfterAccess: "P1D"
+      initialCapacity: 100_000 # ~13MB
+      maximumSize: 100_000
+    - name: NcmAplicavelRepository.temNcmAplicavel # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< remover?
+      expireAfterAccess: "P1D"
+      initialCapacity: 10_000 # ~1.3MB
+      maximumSize: 10_000
+    - name: NcmAplicavelRepository.temExcecaoNcmAplicavel # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< remover?
+      expireAfterAccess: "P1D"
+      initialCapacity: 10_000 # ~1.3MB
+      maximumSize: 10_000
+    - name: NcmAplicavelRepository.temNcmAplicavelSemExcecao # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< remover?
+      expireAfterAccess: "P1D"
+      initialCapacity: 10_000 # ~1.3MB
+      maximumSize: 10_000
+    - name: NcmAplicavelRepository.tem # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< remover?
+      expireAfterAccess: "P1D"
+      initialCapacity: 400 # ~45KB
+      maximumSize: 400
     - name: NcmRepository.existeNcm
-      expireAfterWrite: "P1D"
-      initialCapacity: 500
+      expireAfterAccess: "P1D"
+      initialCapacity: 21_000 # ~2.5MB
+      maximumSize: 21_000
     - name: PercentualReducaoRepository.buscar
-      expireAfterWrite: "P1D"
+      expireAfterAccess: "P1D"
+      initialCapacity: 1_600 # ~216KB
+      maximumSize: 1_600
+    - name: TipoDfeClassificacaoRepository.buscar
+      expireAfterAccess: "P1D"
       initialCapacity: 50
+      maximumSize: 50
     - name: SituacaoTributariaRepository.existeCst
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
+      expireAfterAccess: "P1D"
+      initialCapacity: 240 # ~30KB
+      maximumSize: 240
     - name: TratamentoClassificacaoRepository.buscarTratamentoClassificacao
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
+      expireAfterAccess: "P1D"
+      initialCapacity: 400 # ~50KB
+      maximumSize: 400
+    - name: TratamentoTributarioService.buscar
+      expireAfterAccess: "P1D"
+      initialCapacity: 50 # ~90KB
+      maximumSize: 50
     - name: UfRepository.consultarPorSigla
-      expireAfterWrite: "P1D"
-      initialCapacity: 50
+      expireAfterAccess: "P30D"
+      initialCapacity: 50 # ~5KB
+      maximumSize: 50
     - name: UfRepository.existeUf
-      expireAfterWrite: "P1D"
-      initialCapacity: 30
+      expireAfterAccess: "P30D"
+      initialCapacity: 50 # ~5KB
+      maximumSize: 50
     - name: TemplateTokenizerService.tokenize
-      expireAfterWrite: "P1D"
+      expireAfterAccess: "P30D"
       initialCapacity: 100
+      maximumSize: 100
     - name: TokenCacheService.get
-      expireAfterWrite: "P1D"
+      expireAfterAccess: "P30D"
       initialCapacity: 100
+      maximumSize: 100
     - name: VersaoBaseDadosService.getUltimaVersao
-      expireAfterWrite: "PT1M"
+      expireAfterAccess: "P30D"
       initialCapacity: 1
-
+      maximumSize: 1
+    - name: TipoDfeClassificacaoService.buscar
+      expireAfterAccess: "P1D"
+      initialCapacity: 50
+      maximumSize: 50
+    - name: TratamentoClassificacaoRepository.consultarValidadeDfeClassificacaoTributaria
+      expireAfterAccess: "P1D"
+      initialCapacity: 50
+      maximumSize: 50
+    - name: XmlUtil.getSchema
+      expireAfterAccess: "P30D"
+      initialCapacity: 30
+      maximumSize: 30
 
 management:
   server:

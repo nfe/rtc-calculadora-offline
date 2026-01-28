@@ -24,6 +24,7 @@ import br.gov.serpro.rtc.api.model.output.dadosabertos.ValidadeDfeClassificacaoT
 import br.gov.serpro.rtc.api.model.output.dadosabertos.VersaoOutput;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -706,7 +707,16 @@ public interface DadosAbertosControllerOpenApi {
         description = "Obtém a lista das classificações tributárias (cClassTrib) para Imposto Seletivo"
     )
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso", content = {
+        @ApiResponse(
+            responseCode = "200",
+            description = "Consulta realizada com sucesso",
+            headers = @Header(
+                name = "x-warning-dados-simulados",
+                description = "Indica que os dados são simulados. Valores possíveis: " +
+                             "1 (alíquotas da CBS e do IBS ainda não definidas em lei).",
+                schema = @Schema(type = "integer", example = "1")
+            ),
+            content = {
             @Content(
                 mediaType = APPLICATION_JSON_VALUE,
                 schema = @Schema(implementation = ClassificacaoTributariaDadosAbertosOutput.class),
@@ -795,6 +805,12 @@ public interface DadosAbertosControllerOpenApi {
         @ApiResponse(
             responseCode = "200",
             description = "Consulta realizada com sucesso",
+            headers = @Header(
+                name = "x-warning-dados-simulados",
+                description = "Indica que os dados são simulados. Valores possíveis: " +
+                             "1 (Classificações Tributárias para o Imposto Seletivo ainda não foram estabelecidas em lei).",
+                schema = @Schema(type = "integer", example = "1")
+            ),
             content = @Content(
                 mediaType = APPLICATION_JSON_VALUE,
                 schema = @Schema(implementation = AliquotaDadosAbertosOutput.class),
@@ -861,6 +877,12 @@ public interface DadosAbertosControllerOpenApi {
         @ApiResponse(
             responseCode = "200",
             description = "Consulta realizada com sucesso",
+            headers = @Header(
+                name = "x-warning-dados-simulados",
+                description = "Indica que os dados são simulados. Valores possíveis: " +
+                             "1 (alíquotas da CBS ainda não definidas em lei).",
+                schema = @Schema(type = "integer", example = "1")
+            ),
             content = @Content(
                 mediaType = APPLICATION_JSON_VALUE,
                 schema = @Schema(implementation = AliquotaDadosAbertosOutput.class),
@@ -928,6 +950,12 @@ public interface DadosAbertosControllerOpenApi {
         @ApiResponse(
             responseCode = "200",
             description = "Consulta realizada com sucesso",
+            headers = @Header(
+                name = "x-warning-dados-simulados",
+                description = "Indica que os dados são simulados. Valores possíveis: " +
+                             "1 (alíquotas da CBS e do IBS ainda não definidas em lei).",
+                schema = @Schema(type = "integer", example = "1")
+            ),
             content = @Content(
                 mediaType = APPLICATION_JSON_VALUE,
                 schema = @Schema(implementation = AliquotaDadosAbertosOutput.class),

@@ -4,6 +4,7 @@
 package br.gov.serpro.rtc.domain.service.token;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.cache.annotation.Cacheable;
@@ -39,7 +40,7 @@ public class TemplateTokenizerService {
             tokens.add(tokenCacheService.get(null, key));
             last = close + 1;
         }
-        return tokens;
+        return Collections.unmodifiableList(tokens);
     }
 
 }

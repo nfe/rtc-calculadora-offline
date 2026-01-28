@@ -5,7 +5,6 @@ package br.gov.serpro.rtc.domain.repository;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -27,6 +26,7 @@ public interface AliquotaAdValoremProdutoRepository extends JpaRepository<Aliquo
                 WHERE n.codigo = :ncm
             )
             AND a.ncm.codigo = SUBSTRING(:ncm, 1, LENGTH(a.ncm.codigo))
+            AND a.aliquotaAdValorem.tributo.id = :idTributo
             AND :data BETWEEN a.inicioVigencia AND COALESCE(a.fimVigencia, :data)
             AND NOT EXISTS (
                 SELECT 1
@@ -46,7 +46,7 @@ public interface AliquotaAdValoremProdutoRepository extends JpaRepository<Aliquo
             LIMIT 1
             """)
     @Cacheable(cacheNames = "AliquotaAdValoremProdutoRepository.buscarAliquotaAdValorem")
-    Optional<BigDecimal> buscarAliquotaAdValorem(
+    BigDecimal buscarAliquotaAdValorem(
             @Param("ncm") String ncm,
             @Param("idTributo") Long idTributo,
             @Param("data") LocalDate data);

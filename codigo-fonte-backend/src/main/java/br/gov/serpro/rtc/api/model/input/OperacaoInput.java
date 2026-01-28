@@ -3,14 +3,12 @@
  */
 package br.gov.serpro.rtc.api.model.input;
 
-import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
-
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-
 import br.gov.serpro.rtc.api.model.SerializationVisibility;
+import br.gov.serpro.rtc.domain.service.exception.DataFatoGeradorNaoInformadaException;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Max;
@@ -33,10 +31,12 @@ public final class OperacaoInput implements SerializationVisibility {
     @NotNull
     @Schema(name = "versao", description = "Versão do ROC", example = "0.0.1")
     private String versao;
+    
+    @Schema(name = "dhFatoGerador", description = "Data e hora do fato gerador no formato UTC", example = "2026-01-01T09:50:05-03:00")
+    private OffsetDateTime dhFatoGerador;
 
-    @NotNull
-    @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-    @Schema(name = "dataHoraEmissao", description = "Data e hora de emissão do documento no formato UTC", example = "2026-01-01T09:50:05-03:00")
+    @Deprecated(forRemoval = true)
+    @Schema(name = "dataHoraEmissao", deprecated = true, description = "<u><<<<b>ATENÇÃO</b>>>><p>ESTE CAMPO SERÁ REMOVIDO EM FUTURO PRÓXIMO</p><p>Informar <b>dhFatoGerador</b></u></p><p>Data e hora de emissão do documento no formato UTC</p>", example = "2026-01-01T09:50:05-03:00")
     private OffsetDateTime dataHoraEmissao;
 
     @NotNull
@@ -53,4 +53,13 @@ public final class OperacaoInput implements SerializationVisibility {
     @NotEmpty
     @Schema(name = "itens", description = "Itens da Operação")
     private List<ItemOperacaoInput> itens;
+    
+    public LocalDate getFatoGeradorAplicavel() {
+        if (dhFatoGerador != null) {
+            return dhFatoGerador.toLocalDate();
+        } else if (dataHoraEmissao != null) {
+            return dataHoraEmissao.toLocalDate();
+        }
+        throw new DataFatoGeradorNaoInformadaException();
+    }
 }

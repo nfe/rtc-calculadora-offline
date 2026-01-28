@@ -28,13 +28,19 @@ public interface SituacaoTributariaRepository extends JpaRepository<SituacaoTrib
 			@Param("idTributo") Long idTributo,
 			@Param("data") LocalDate data);
 
+	/*
+	 * Entradas recomendadas na cache: 240
+	 * Memória estimada: ~28 KB
+	 */
 	@Query("""
-			SELECT COUNT(t) > 0
-			FROM TributoSituacaoTributaria t
-			WHERE t.tributo.id = :idTributo
-			AND t.situacaoTributaria.codigo = :cst
-			AND :data BETWEEN t.inicioVigencia AND COALESCE(t.fimVigencia, :data)
-			AND :data BETWEEN t.situacaoTributaria.inicioVigencia AND COALESCE(t.situacaoTributaria.fimVigencia, :data)
+	        SELECT EXISTS (
+    			SELECT 1
+    			FROM TributoSituacaoTributaria t
+    			WHERE t.tributo.id = :idTributo
+    			AND t.situacaoTributaria.codigo = :cst
+    			AND :data BETWEEN t.inicioVigencia AND COALESCE(t.fimVigencia, :data)
+    			AND :data BETWEEN t.situacaoTributaria.inicioVigencia AND COALESCE(t.situacaoTributaria.fimVigencia, :data)
+			)
 			""")
 	@Cacheable(cacheNames = "SituacaoTributariaRepository.existeCst")
 	boolean existeCst(

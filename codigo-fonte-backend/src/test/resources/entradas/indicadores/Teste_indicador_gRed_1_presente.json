@@ -1,0 +1,18 @@
+{
+  "id": "teste-indicador-gred-presente",
+  "versao": "0.0.1",
+  "dataHoraEmissao": "2026-01-01T10:00:00-03:00",
+  "municipio": 4314902,
+  "uf": "RS",
+  "itens": [
+    {
+      "numero": 1,
+      "ncm": "24021000",
+      "cst": "200",
+      "cClassTrib": "200002",
+      "baseCalculo": 1000,
+      "quantidade": 1,
+      "unidade": "VN"
+    }
+  ]
+}

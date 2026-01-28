@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.gov.serpro.rtc.api.model.input.pedagio.PedagioInput;
 import br.gov.serpro.rtc.api.model.output.pedagio.PedagioOutput;
 import br.gov.serpro.rtc.api.openapi.controller.PedagioControllerOpenApi;
+import br.gov.serpro.rtc.domain.model.enumeration.TipoWarningDadosSimulados;
 import br.gov.serpro.rtc.domain.service.pedagio.PedagioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,16 @@ public class PedagioController implements PedagioControllerOpenApi {
         produces = APPLICATION_JSON_VALUE
     )
     public ResponseEntity<PedagioOutput> calcularTributo(@RequestBody @Valid PedagioInput operacao) {
-        return ResponseEntity.ok(pedagioService.calcularCIBS(operacao));
+        PedagioOutput resultado = pedagioService.calcularCIBS(operacao);
+        
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.ok();
+        
+        TipoWarningDadosSimulados warning = pedagioService.getWarningDadosSimulados(operacao);
+        if (warning != null) {
+            responseBuilder.header("x-warning-dados-simulados", String.valueOf(warning.getValor()));
+        }
+        
+        return responseBuilder.body(resultado);
     }
 
 }

@@ -67,13 +67,13 @@ class Teste_000001_5 {
 
     private void assertIbsEstadual(final IBSUFDomain ibsEstadual) {
         assertThat(ibsEstadual).isNotNull();
-        isEqualByComparingTo(ibsEstadual.getPIBSUF(), "1.50");
-        isEqualByComparingTo(ibsEstadual.getVIBSUF(), "3.00");
+        isEqualByComparingTo(ibsEstadual.getPIBSUF(), "0.05");
+        isEqualByComparingTo(ibsEstadual.getVIBSUF(), "0.10");
     }
 
     private void assertIbsMunicipal(final IBSMunDomain ibsMunicipal) {
         assertThat(ibsMunicipal).isNotNull();
-        isEqualByComparingTo(ibsMunicipal.getPIBSMun(), "1.05");
-        isEqualByComparingTo(ibsMunicipal.getVIBSMun(), "2.10");
+        isEqualByComparingTo(ibsMunicipal.getPIBSMun(), "0.05");
+        isEqualByComparingTo(ibsMunicipal.getVIBSMun(), "0.10");
     }
 }

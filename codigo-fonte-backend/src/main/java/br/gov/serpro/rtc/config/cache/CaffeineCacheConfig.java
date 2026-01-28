@@ -28,8 +28,9 @@ public class CaffeineCacheConfig {
 
 	private static void buildCache(CaffeineCacheManager manager, CacheSpecs.CacheSpec cacheConfig) {
 		final Cache<Object, Object> cache = Caffeine.newBuilder()
-				.expireAfterWrite(cacheConfig.getExpireAfterWrite())
+				.expireAfterAccess(cacheConfig.getExpireAfterAccess())
 				.initialCapacity(cacheConfig.getInitialCapacity())
+				.maximumSize(cacheConfig.getMaximumSize())
 				.recordStats()
 				.build();
 		manager.registerCustomCache(cacheConfig.getName(), cache);

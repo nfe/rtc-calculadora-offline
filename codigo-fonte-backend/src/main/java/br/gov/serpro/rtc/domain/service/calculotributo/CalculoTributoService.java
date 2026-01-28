@@ -3,8 +3,14 @@
  */
 package br.gov.serpro.rtc.domain.service.calculotributo;
 
+import static br.gov.serpro.rtc.domain.model.enumeration.TributoEnum.CBS;
+import static br.gov.serpro.rtc.domain.model.enumeration.TributoEnum.IBS_ESTADUAL;
+import static br.gov.serpro.rtc.domain.model.enumeration.TributoEnum.IBS_MUNICIPAL;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -32,12 +38,15 @@ import br.gov.serpro.rtc.api.model.roc.TributacaoCompraGovernamentalDomain;
 import br.gov.serpro.rtc.api.model.roc.TributacaoRegularDomain;
 import br.gov.serpro.rtc.api.model.roc.TributacaoRegularDomain.TributacaoRegularDomainBuilder;
 import br.gov.serpro.rtc.api.model.roc.TributosDomain;
-import br.gov.serpro.rtc.domain.model.entity.TratamentoClassificacao;
+import br.gov.serpro.rtc.domain.model.dto.TratamentoClassificacaoDTO;
+import br.gov.serpro.rtc.domain.model.enumeration.TributoEnum;
 import br.gov.serpro.rtc.domain.service.MemoriaCalculoService;
 import br.gov.serpro.rtc.domain.service.calculotributo.model.AliquotaImpostoSeletivoModel;
 import br.gov.serpro.rtc.domain.service.calculotributo.model.OperacaoModel;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class CalculoTributoService {
@@ -51,103 +60,128 @@ public class CalculoTributoService {
 
 	public TributosDomain calcular(OperacaoModel operacao) {
 		ItemOperacaoInput item = operacao.getItem();
-		LocalDate data = operacao.getData().toLocalDate();
-		String ncm = item.getNcm();
+		LocalDate data = operacao.getData();
 		String nbs = item.getNbs();
 
-		TratamentoClassificacao tratamentoClassificacaoCbsIbs = operacao
+		TratamentoClassificacaoDTO tratamentoClassificacaoCbsIbs = operacao
 				.getTratamentoClassificacao().getTratamentoClassificacaoCbsIbs();
-		TratamentoClassificacao tratamentoClassificacaoImpostoSeletivo = operacao
+		TratamentoClassificacaoDTO tratamentoClassificacaoImpostoSeletivo = operacao
 				.getTratamentoClassificacao().getTratamentoClassificacaoImpostoSeletivo();
 
 		Boolean temDesoneracao = operacao.getTratamentoClassificacao().getTemDesoneracao();
 
-		TratamentoClassificacao tratamentoClassificacaoCbsIbsDesoneracao = null;
+		TratamentoClassificacaoDTO tratamentoClassificacaoCbsIbsDesoneracao = null;
 		if (temDesoneracao) {
 			tratamentoClassificacaoCbsIbsDesoneracao = operacao
 				.getTratamentoClassificacao().getTratamentoClassificacaoCbsIbsDesoneracao();
 		}
+		
+		TratamentoClassificacaoDTO tratamentoClassificacao = temDesoneracao ? tratamentoClassificacaoCbsIbsDesoneracao : tratamentoClassificacaoCbsIbs;
 
 		ImpostoSeletivoDomain impostoSeletivo = null;
-		CbsIbsOutput cbs = null;
-		CbsIbsOutput ibsEstadual = null;
-		CbsIbsOutput ibsMunicipal = null;
-
-		if (tratamentoClassificacaoImpostoSeletivo != null) {
-			AliquotaImpostoSeletivoModel aliquotaImpostoSeletivo = operacao
-					.getTratamentoClassificacao().getAliquotaImpostoSeletivo();
-
-			impostoSeletivo = calculoImpostoSeletivoService.calcularImpostoSeletivo(1L, item,
-					tratamentoClassificacaoImpostoSeletivo, aliquotaImpostoSeletivo, data);
-		}
-
-		if (tratamentoClassificacaoCbsIbs != null) {
-			BigDecimal impostoSeletivoCalculado = impostoSeletivo != null
-					? impostoSeletivo.getValorImpostoSeletivo()
-					: BigDecimal.ZERO;
-			cbs = calculoCbsIbsService.calcularCbsIbs(2L, operacao.getCodigoUf(), operacao.getCodigoMunicipio(), item, tratamentoClassificacaoCbsIbs,
-					impostoSeletivoCalculado, temDesoneracao, data);
-			if (calculoIbsHabilitado || nbs != null) {
-				ibsEstadual = calculoCbsIbsService.calcularCbsIbs(3L, operacao.getCodigoUf(),
-						operacao.getCodigoMunicipio(), item, tratamentoClassificacaoCbsIbs,
-						impostoSeletivoCalculado, temDesoneracao, data);
-				ibsMunicipal = calculoCbsIbsService.calcularCbsIbs(4L, operacao.getCodigoUf(),
-						operacao.getCodigoMunicipio(), item, tratamentoClassificacaoCbsIbs,
-						impostoSeletivoCalculado, temDesoneracao, data);
-			}
-		}
-
-		if (temDesoneracao && impostoSeletivo != null) {
-			impostoSeletivo.setVIS(BigDecimal.ZERO);
-		}
-
-		TratamentoClassificacao tratamentoClassificacao = null;
-
-		if (temDesoneracao) {
-			tratamentoClassificacao = tratamentoClassificacaoCbsIbsDesoneracao;
-		} else {
-			tratamentoClassificacao = tratamentoClassificacaoCbsIbs;
-		}
-
-		if (impostoSeletivo != null) {
-		    String memoriaCalculoImpostoSeletivo = memoriaCalculoService
-					.gerarMemoriaCalculoImpostoSeletivo(
-						tratamentoClassificacaoImpostoSeletivo,
-						impostoSeletivo,
-						item.getImpostoSeletivo().getQuantidade(),
-						item.getImpostoSeletivo().getUnidade(),
-						data);
-			impostoSeletivo.setMemoriaCalculo(memoriaCalculoImpostoSeletivo);
-		}
-
-        if (cbs != null) {
-            String memoriaCalculoCbs = memoriaCalculoService.gerarMemoriaCalculoCbsIbs(tratamentoClassificacao, cbs,
-                    item.getQuantidade(), item.getUnidade(), data);
-            cbs.setMemoriaCalculo(memoriaCalculoCbs);
+        if (tratamentoClassificacaoImpostoSeletivo != null) {
+            AliquotaImpostoSeletivoModel aliquotaImpostoSeletivo = operacao.getTratamentoClassificacao()
+                    .getAliquotaImpostoSeletivo();
+            impostoSeletivo = calculoImpostoSeletivoService.calcularImpostoSeletivo(1L, item,
+                    tratamentoClassificacaoImpostoSeletivo, aliquotaImpostoSeletivo, data);
+            memoriaCalculoService.gerarMemoriaCalculoImpostoSeletivo(tratamentoClassificacaoImpostoSeletivo,
+                    impostoSeletivo, item.getImpostoSeletivo().getQuantidade(), item.getImpostoSeletivo().getUnidade(),
+                    data);
         }
 
-		if (calculoIbsHabilitado || nbs != null) {
+        CbsIbsOutput cbs = null;
+        CbsIbsOutput ibsEstadual = null;
+        CbsIbsOutput ibsMunicipal = null;
+        if (tratamentoClassificacaoCbsIbs != null) {
+            final BigDecimal impostoSeletivoCalculado = impostoSeletivo != null
+                    ? impostoSeletivo.getValorImpostoSeletivo()
+                    : BigDecimal.ZERO;
+            
+            log.debug("Iniciando cálculo assíncrono de CBS/IBS...");
+            final CompletableFuture<CbsIbsOutput> cbsFuture = calcularCbsIbsAsync(CBS, null, null, item,
+                    tratamentoClassificacaoCbsIbs, impostoSeletivoCalculado, temDesoneracao, data,
+                    tratamentoClassificacao, true);
 
-		    String memoriaCalculoIbsEstadual = memoriaCalculoService
-					.gerarMemoriaCalculoCbsIbs(tratamentoClassificacao,
-							ibsEstadual, item.getQuantidade(), item.getUnidade(), data);
-			if (ibsEstadual != null) {
-				ibsEstadual.setMemoriaCalculo(memoriaCalculoIbsEstadual);
-			}
+            final var calcularIBS = calculoIbsHabilitado || nbs != null;
 
-			String memoriaCalculoIbsMunicipal = memoriaCalculoService
-					.gerarMemoriaCalculoCbsIbs(tratamentoClassificacao,
-							ibsMunicipal, item.getQuantidade(), item.getUnidade(), data);
-			if (ibsMunicipal != null) {
-				ibsMunicipal.setMemoriaCalculo(memoriaCalculoIbsMunicipal);
-			}
-		}
+            final CompletableFuture<CbsIbsOutput> ibsEstadualFuture = calcularCbsIbsAsync(IBS_ESTADUAL,
+                    operacao.getCodigoUf(), null, item, tratamentoClassificacaoCbsIbs, impostoSeletivoCalculado,
+                    temDesoneracao, data, tratamentoClassificacao, calcularIBS);
+
+            final CompletableFuture<CbsIbsOutput> ibsMunicipalFuture = calcularCbsIbsAsync(IBS_MUNICIPAL,
+                    null, operacao.getCodigoMunicipio(), item, tratamentoClassificacaoCbsIbs, impostoSeletivoCalculado,
+                    temDesoneracao, data, tratamentoClassificacao, calcularIBS);
+
+            // Sincroniza e obtém os resultados
+            try {
+                log.debug("Aguardando cálculo assíncrono de CBS/IBS...");
+                CompletableFuture
+                    .allOf(cbsFuture, ibsEstadualFuture, ibsMunicipalFuture)
+                    .join(); // aguarda a conclusão de todas as tarefas
+                log.debug("Cálculo assíncrono de CBS/IBS concluído.");
+                cbs = cbsFuture.get();
+                ibsEstadual = ibsEstadualFuture.get();
+                ibsMunicipal = ibsMunicipalFuture.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException("Erro ao calcular CBS/IBS", e);
+            }
+        }
+
+        if (temDesoneracao && impostoSeletivo != null) {
+            impostoSeletivo.setVIS(BigDecimal.ZERO);
+        }
 		
 		return TributosDomain
 				.builder()
 				.IS(impostoSeletivo)
 				.IBSCBS(getIBSCBS(item, cbs, ibsEstadual, ibsMunicipal))
 				.build();
+	}
+	
+	/**
+	 * Cálculo assíncrono de CBS/IBS
+	 * @param tributo
+	 * @param codigoUf
+	 * @param codigoMunicipio
+	 * @param item
+	 * @param tratamentoClassificacaoCbsIbs
+	 * @param impostoSeletivoCalculado
+	 * @param temDesoneracao
+	 * @param data
+	 * @param tratamentoClassificacao
+	 * @param calcularTributo
+	 * @return
+	 */
+	private CompletableFuture<CbsIbsOutput> calcularCbsIbsAsync(
+	        TributoEnum tributo,
+	        Long codigoUf,
+	        Long codigoMunicipio,
+	        ItemOperacaoInput item,
+	        TratamentoClassificacaoDTO tratamentoClassificacaoCbsIbs,
+	        BigDecimal impostoSeletivoCalculado,
+	        Boolean temDesoneracao,
+	        LocalDate data,
+	        TratamentoClassificacaoDTO tratamentoClassificacao,
+	        boolean calcularTributo
+	) {
+	    return CompletableFuture.supplyAsync(() -> {
+            final var descricao = tributo.getNome() + "(" + item.getNumero() + ")";
+	        if (!calcularTributo) {
+	            log.debug("> {} - Cálculo desabilitado", descricao);
+	            return null;
+	        }
+	        log.debug("> {} - Iniciando cálculo assíncrono", descricao);
+	        CbsIbsOutput output = calculoCbsIbsService.calcularCbsIbs(
+	                tributo, codigoUf, codigoMunicipio, item,
+	                tratamentoClassificacaoCbsIbs, impostoSeletivoCalculado, temDesoneracao, data);
+	        log.debug("> {} - Cálculo assíncrono finalizado", descricao);
+	        
+	        log.debug(">> {} - Iniciando memória de cálculo", descricao);
+	        memoriaCalculoService.gerarMemoriaCalculoCbsIbs(
+	                tratamentoClassificacao, output, item.getQuantidade(), item.getUnidade(), data);
+	        log.debug(">> {} - Memória de cálculo finalizada", descricao);
+	        return output;
+	    });
 	}
 
     private static IBSCBSDomain getIBSCBS(ItemOperacaoInput item, CbsIbsOutput cbs, CbsIbsOutput ibsEstadual,

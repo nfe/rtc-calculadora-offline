@@ -1,27 +1,19 @@
-{"properties": [
-  {
-    "name": "application.timezone",
-    "type": "java.lang.String",
-    "description": "Timezone da aplicação"
-  },
-  {
-    "name": "application.locale",
-    "type": "java.lang.String",
-    "description": "Locale da aplicação"
-  },
-  {
-    "name": "application.dateTimeFormat",
-    "type": "java.lang.String",
-    "description": "Formato da data na aplicação"
-  },
-  {
-    "name": "application.module",
-    "type": "java.lang.String",
-    "description": "Nome do módulo"
-  },
-  {
-    "name": "versao.url",
-    "type": "java.lang.String",
-    "description": "URL para verificação de versão na calculadora offline"
-  }
-]}
+{
+    "properties": [
+        {
+            "name": "application.module",
+            "type": "java.lang.String",
+            "description": "Nome do módulo"
+        },
+        {
+            "name": "versao.url",
+            "type": "java.lang.String",
+            "description": "URL para verificação de versão na calculadora offline"
+        },
+        {
+            "name": "application.db.filename",
+            "type": "java.lang.String",
+            "description": "nome do arquivo do banco de dados"
+        }
+    ]
+}

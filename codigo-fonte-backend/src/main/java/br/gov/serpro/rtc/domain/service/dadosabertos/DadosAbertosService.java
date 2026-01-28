@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import br.gov.serpro.rtc.api.model.output.dadosabertos.AliquotaDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.ClassificacaoTributariaDadosAbertosOutput;
-import br.gov.serpro.rtc.api.model.output.dadosabertos.ValidadeDfeClassificacaoTributariaDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.FundamentacaoClassificacaoDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.MunicipioDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.NbsDadosAbertosOutput;
@@ -19,14 +18,14 @@ import br.gov.serpro.rtc.api.model.output.dadosabertos.NcmDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.SituacaoTributariaDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.TipoDfeClassificacaoDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.UfDadosAbertosOutput;
-import br.gov.serpro.rtc.domain.model.entity.AliquotaAdRem;
-import br.gov.serpro.rtc.domain.model.entity.AliquotaPadrao;
-import br.gov.serpro.rtc.domain.model.entity.AliquotaReferencia;
+import br.gov.serpro.rtc.api.model.output.dadosabertos.ValidadeDfeClassificacaoTributariaDadosAbertosOutput;
+import br.gov.serpro.rtc.domain.model.dto.AliquotaAdRemDTO;
 import br.gov.serpro.rtc.domain.model.entity.ClassificacaoTributaria;
 import br.gov.serpro.rtc.domain.model.entity.FundamentacaoLegal;
 import br.gov.serpro.rtc.domain.model.entity.SituacaoTributaria;
 import br.gov.serpro.rtc.domain.model.entity.TipoDfeClassificacao;
 import br.gov.serpro.rtc.domain.model.enumeration.SiglasDFeEnum;
+import br.gov.serpro.rtc.domain.model.enumeration.TipoWarningDadosSimulados;
 import br.gov.serpro.rtc.domain.repository.NbsRepository;
 import br.gov.serpro.rtc.domain.repository.NcmRepository;
 import br.gov.serpro.rtc.domain.repository.SituacaoTributariaRepository;
@@ -35,7 +34,6 @@ import br.gov.serpro.rtc.domain.service.AliquotaAdRemProdutoService;
 import br.gov.serpro.rtc.domain.service.AliquotaAdValoremProdutoService;
 import br.gov.serpro.rtc.domain.service.AliquotaAdValoremServicoService;
 import br.gov.serpro.rtc.domain.service.AliquotaPadraoService;
-import br.gov.serpro.rtc.domain.service.AliquotaReferenciaService;
 import br.gov.serpro.rtc.domain.service.FundamentacaoClassificacaoService;
 import br.gov.serpro.rtc.domain.service.MunicipioService;
 import br.gov.serpro.rtc.domain.service.TipoDfeClassificacaoService;
@@ -63,7 +61,6 @@ public class DadosAbertosService {
     private final TributoSituacaoTributariaService tributoSituacaoTributariaService;
     private final TipoDfeClassificacaoService tipoDfeClassificacaoService;
 
-    private final AliquotaReferenciaService aliquotaReferenciaService;
     private final AliquotaPadraoService aliquotaPadraoService;
 
     // FIXME aqui retornar somente os dados necessarios para a consulta via service
@@ -138,19 +135,19 @@ public class DadosAbertosService {
         }
 
         BigDecimal aliquotaAdValorem = aliquotaAdValoremProdutoService.buscarAliquotaAdValorem(ncm, 1L, data);
-        AliquotaAdRem aliquotaAdRem = aliquotaAdRemProdutoService.buscarEntidadeAliquotaAdRem(ncm, 1L, data);
+        AliquotaAdRemDTO aliquotaAdRem = aliquotaAdRemProdutoService.buscarAliquotaAdRem(ncm, 1L, data);
 
         return NcmDadosAbertosOutput
                 .builder()
                 .tributadoPeloImpostoSeletivo(aliquotaAdValorem != null || aliquotaAdRem != null)
                 .aliquotaAdValorem(aliquotaAdValorem)
-                .aliquotaAdRem(aliquotaAdRem != null ? aliquotaAdRem.getValor() : null)
+                .aliquotaAdRem(aliquotaAdRem != null ? aliquotaAdRem.valor() : null)
                 .capitulo(ncmRepository.buscarDescricaoNcm(ncm, 2, data).orElse(null))
                 .posicao(ncmRepository.buscarDescricaoNcm(ncm, 4, data).orElse(null))
                 .subposicao(ncmRepository.buscarDescricaoNcm(ncm, 6, data).orElse(null))
                 .item(ncmRepository.buscarDescricaoNcm(ncm, 7, data).orElse(null))
                 .subitem(ncmRepository.buscarDescricaoNcm(ncm, 8, data).orElse(null))
-                .unidade(aliquotaAdRem != null ? aliquotaAdRem.getUnidadeMedida().getSigla() : null)
+                .unidade(aliquotaAdRem != null ? aliquotaAdRem.unidadeMedida() : null)
                 .build();
                 
     }
@@ -215,6 +212,12 @@ public class DadosAbertosService {
                     final Long idTributo = tributoSituacaoTributariaService
                             .consultarPorIdSituacaoTributaria(situacao.getId(), data);
                     final FundamentacaoLegal fundamentacao = x.getFundamentacaoLegal();
+
+                    // Remove as fundamentações do imposto seletivo
+                    if (idTributo == 1){
+                        return null;
+                    }
+
                     return FundamentacaoClassificacaoDadosAbertosOutput
                             .builder()
                             .codigoClassificacaoTributaria(classificacao.getCodigo())
@@ -227,6 +230,7 @@ public class DadosAbertosService {
                             .referenciaNormativa(fundamentacao.getReferenciaNormativa())
                             .build();
                 })
+                .filter(output -> output != null)
                 .toList();
     }
 
@@ -282,20 +286,12 @@ public class DadosAbertosService {
     }
 
     public AliquotaDadosAbertosOutput consultarAliquota(Long idTributo, Long codigoUf, Long codigoMunicipio, LocalDate data) {
-        AliquotaReferencia aliquotaReferencia = aliquotaReferenciaService.buscar(idTributo, data);
-        AliquotaPadrao aliquotaPadrao = null;
-        if (idTributo == 2) {
-            aliquotaPadrao = aliquotaPadraoService.buscarAliquotaUniao(aliquotaReferencia, data);
-        } else if (idTributo == 3) {
-            aliquotaPadrao = aliquotaPadraoService.buscarAliquotaUf(aliquotaReferencia, codigoUf, data);
-        } else if (idTributo == 4) {
-            aliquotaPadrao = aliquotaPadraoService.buscarAliquotaMunicipio(aliquotaReferencia, codigoMunicipio, data);
-        }
+        final var aliquota = aliquotaPadraoService.buscarAliquota(idTributo, codigoUf, codigoMunicipio, data);
         return AliquotaDadosAbertosOutput
                 .builder()
-                .aliquotaReferencia(aliquotaReferencia.getValor())
-                .aliquotaPropria(aliquotaPadrao != null ? aliquotaPadrao.getValorAplicavel() : null)
-                .formaAplicacao(aliquotaPadrao != null ? aliquotaPadrao.getFormaAplicacao() : null)
+                .aliquotaReferencia(aliquota.valorReferencia())
+                .aliquotaPropria(aliquota.getValorAplicavel())
+                .formaAplicacao(aliquota.formaAplicacao())
                 .build();
     }
 
@@ -383,5 +379,15 @@ public class DadosAbertosService {
                         .build())
                 .toList();
     }
-}
+    
 
+    public TipoWarningDadosSimulados getWarningDadosSimuladosPorData(LocalDate data) {
+        LocalDate dataLimite = LocalDate.of(2027, 1, 1);
+        
+        if (data.isBefore(dataLimite)) {
+            return null;
+        }
+        
+        return TipoWarningDadosSimulados.CASO_GERAL;
+    }
+}

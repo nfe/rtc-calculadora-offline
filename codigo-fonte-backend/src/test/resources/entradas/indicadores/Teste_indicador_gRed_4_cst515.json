@@ -1,0 +1,18 @@
+{
+  "id": "teste-indicador-gred-cst515",
+  "versao": "0.0.1",
+  "dataHoraEmissao": "2026-01-01T10:00:00-03:00",
+  "municipio": 4314902,
+  "uf": "RS",
+  "itens": [
+    {
+      "numero": 1,
+      "ncm": "31010000",
+      "cst": "515",
+      "cClassTrib": "515001",
+      "baseCalculo": 1000,
+      "quantidade": 1,
+      "unidade": "VN"
+    }
+  ]
+}

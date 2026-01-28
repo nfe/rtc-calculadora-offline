@@ -34,8 +34,9 @@ import org.springframework.stereotype.Service;
 
 import br.gov.serpro.rtc.api.model.input.ItemOperacaoInput;
 import br.gov.serpro.rtc.api.model.roc.ImpostoSeletivoDomain;
-import br.gov.serpro.rtc.domain.model.entity.TratamentoClassificacao;
+import br.gov.serpro.rtc.domain.model.dto.TratamentoClassificacaoDTO;
 import br.gov.serpro.rtc.domain.model.entity.TratamentoTributario;
+import br.gov.serpro.rtc.domain.service.TratamentoTributarioService;
 import br.gov.serpro.rtc.domain.service.calculotributo.domain.VariavelExpressao;
 import br.gov.serpro.rtc.domain.service.calculotributo.model.AliquotaImpostoSeletivoModel;
 import lombok.RequiredArgsConstructor;
@@ -45,16 +46,17 @@ import lombok.RequiredArgsConstructor;
 public class CalculoImpostoSeletivoService {
     
     private final AvaliadorExpressaoAritmetica avaliador;
+    private final TratamentoTributarioService tratamentoService;
 
     public ImpostoSeletivoDomain calcularImpostoSeletivo(
         Long idTributo,
         ItemOperacaoInput item,
-        TratamentoClassificacao tratamentoClassificacao,
+        TratamentoClassificacaoDTO tratamentoClassificacao,
         AliquotaImpostoSeletivoModel aliquotaImpostoSeletivo,
         LocalDate data) {
 
-        TratamentoTributario tratamentoTributario = tratamentoClassificacao
-                .getTratamentoTributario();
+        TratamentoTributario tratamentoTributario = tratamentoService
+                .buscar(tratamentoClassificacao.idTratamentoTributario());
 
         String expressaoAliquota = tratamentoTributario.getExpressaoAliquota();
         String expressaoBaseCalculo = tratamentoTributario.getExpressaoBaseCalculo();

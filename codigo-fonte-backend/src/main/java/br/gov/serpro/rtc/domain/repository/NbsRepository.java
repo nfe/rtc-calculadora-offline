@@ -28,11 +28,17 @@ public interface NbsRepository extends JpaRepository<Nbs, String> {
             @Param("limite") int limite,
             @Param("data") LocalDate data);
 
+    /*
+     * Entradas recomendadas na cache: 1.800
+     * Memória estimada: ~218 KB
+     */
     @Query("""
-            SELECT COUNT(n) > 0
-            FROM Nbs n
-            WHERE n.codigo = :codigo
-            AND :data BETWEEN n.inicioVigencia AND COALESCE(n.fimVigencia, :data)
+            SELECT EXISTS (
+                SELECT 1
+                FROM Nbs n
+                WHERE n.codigo = :codigo
+                AND :data BETWEEN n.inicioVigencia AND COALESCE(n.fimVigencia, :data)
+            )
             """)
     @Cacheable(cacheNames = "NbsRepository.existeNbs")
     boolean existeNbs(

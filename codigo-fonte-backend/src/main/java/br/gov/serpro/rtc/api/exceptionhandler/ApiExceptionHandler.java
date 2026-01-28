@@ -42,7 +42,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             log.error("Erro interno: ", ex);
         } else {
             // Erro de negócio/validação - log simples sem stacktrace
-            log.info("Erro cliente [{}]: {} | URI: {}", 
+            log.debug("Erro cliente [{}]: {} | URI: {}",
                      statusCode.value(), 
                      ex.getMessage(), 
                      request.getDescription(false));
@@ -65,7 +65,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus httpStatus = HttpStatus.BAD_REQUEST;
         
         // Log sucinto para validação - sem stacktrace
-        log.info("Validação falhou: {} campos inválidos | URI: {}", 
+        log.debug("Validação falhou: {} campos inválidos | URI: {}",
                  ex.getBindingResult().getErrorCount(),
                  request.getDescription(false));
         

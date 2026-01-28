@@ -11,18 +11,28 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import br.gov.serpro.rtc.domain.model.dto.TratamentoClassificacaoDTO;
 import br.gov.serpro.rtc.domain.model.entity.TratamentoClassificacao;
 
 @Repository
 public interface TratamentoClassificacaoRepository extends JpaRepository<TratamentoClassificacao, Long> {
 
+    /*
+     * Entradas recomendadas na cache: 400
+     * Memória estimada: ~49 KB
+     */
     @Query("""
-            FROM TratamentoClassificacao
-            WHERE classificacaoTributaria.id = :idClassificacaoTributaria
-                AND (inicioVigencia <= :data AND (fimVigencia IS NULL OR fimVigencia >= :data))
+            SELECT new br.gov.serpro.rtc.domain.model.dto.TratamentoClassificacaoDTO(
+                t.tratamentoTributario.id,
+                t.classificacaoTributaria.id,
+                t.tratamentoTributario.inIncompativelComSuspensao,
+                t.tratamentoTributario.inExigeGrupoDesoneracao)
+            FROM TratamentoClassificacao t
+            WHERE t.classificacaoTributaria.id = :idClassificacaoTributaria
+                AND (t.inicioVigencia <= :data AND (t.fimVigencia IS NULL OR t.fimVigencia >= :data))
             """)
     @Cacheable(cacheNames = "TratamentoClassificacaoRepository.buscarTratamentoClassificacao")
-    TratamentoClassificacao buscarTratamentoClassificacao(Long idClassificacaoTributaria, LocalDate data);
+    TratamentoClassificacaoDTO buscarTratamentoClassificacao(Long idClassificacaoTributaria, LocalDate data);
 
     @Query(value = """
             SELECT

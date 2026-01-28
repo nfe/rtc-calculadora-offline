@@ -44,9 +44,6 @@ public class RequestLogInterceptor implements HandlerInterceptor {
         MDC.put(MDC_HTTP_METHOD, request.getMethod());
         MDC.put(MDC_USER_AGENT, userAgent);
 
-        // Log de início da requisição
-        log.debug("Requisição iniciada");
-
         return true;
     }
 

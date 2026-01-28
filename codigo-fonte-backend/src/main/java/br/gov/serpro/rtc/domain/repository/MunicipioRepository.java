@@ -38,6 +38,7 @@ public interface MunicipioRepository extends JpaRepository<Municipio, Long> {
             FROM Municipio m
             WHERE m.codigo = :codigoMunicipio
             """)
+    // TODO - Cacheable? Ajustar a consulta para nao fazer join desnecessario com UF? usar exists? consultar se inicio do municipio corresponde ao código da uf ao inves da sigla?
     int validarMunicipio(
             @Param("codigoMunicipio") Long codigoMunicipio,
             @Param("siglaUf") String siglaUf);

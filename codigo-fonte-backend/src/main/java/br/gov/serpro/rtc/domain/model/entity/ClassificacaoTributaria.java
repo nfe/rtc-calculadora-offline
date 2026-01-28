@@ -5,15 +5,32 @@ package br.gov.serpro.rtc.domain.model.entity;
 
 import java.time.LocalDate;
 
+import br.gov.serpro.rtc.domain.model.dto.ClassificacaoTributariaDTO;
 import jakarta.persistence.Column;
+import jakarta.persistence.ColumnResult;
+import jakarta.persistence.ConstructorResult;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.SqlResultSetMapping;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+@SqlResultSetMapping(
+        name = "ClassificacaoTributariaDTOMapping",
+        classes = @ConstructorResult(
+            targetClass = ClassificacaoTributariaDTO.class,
+            columns = {
+                @ColumnResult(name = "id", type = Long.class),
+                @ColumnResult(name = "codigo", type = String.class),
+                @ColumnResult(name = "nomenclatura", type = String.class),
+                @ColumnResult(name = "cst", type = String.class)
+            }
+        )
+    )
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Data

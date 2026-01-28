@@ -4,6 +4,8 @@
 package br.gov.serpro.rtc.domain.service.pedagio;
 
 import static br.gov.serpro.rtc.api.model.output.pedagio.TotalPedagioOutput.getTotal;
+import static br.gov.serpro.rtc.core.util.CalculadoraUtils.CEM;
+import static java.math.RoundingMode.HALF_UP;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -16,13 +18,9 @@ import br.gov.serpro.rtc.api.model.input.pedagio.PedagioInput;
 import br.gov.serpro.rtc.api.model.output.pedagio.PedagioOutput;
 import br.gov.serpro.rtc.api.model.output.pedagio.TrechoPedagioOutput;
 import br.gov.serpro.rtc.api.model.output.pedagio.TributoPedagioOutput;
-import br.gov.serpro.rtc.core.util.CalculadoraUtils;
-import br.gov.serpro.rtc.domain.model.entity.AliquotaPadrao;
-import br.gov.serpro.rtc.domain.model.entity.AliquotaReferencia;
-import br.gov.serpro.rtc.domain.model.entity.Uf;
+import br.gov.serpro.rtc.domain.model.enumeration.TipoWarningDadosSimulados;
 import br.gov.serpro.rtc.domain.model.enumeration.TributoEnum;
 import br.gov.serpro.rtc.domain.service.AliquotaPadraoService;
-import br.gov.serpro.rtc.domain.service.AliquotaReferenciaService;
 import br.gov.serpro.rtc.domain.service.UfService;
 import br.gov.serpro.rtc.domain.service.exception.CampoInvalidoException;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 @Service
 public class PedagioService {
 
-    private final AliquotaReferenciaService aliquotaReferenciaService;
     private final AliquotaPadraoService aliquotaPadraoService;
 
     private final UfService ufService;
@@ -62,10 +59,10 @@ public class PedagioService {
 
             final LocalDate dataFatoGerador = operacao.getDataHoraEmissao().toLocalDate();
 
-            Uf uf = ufService.buscar(trecho.getUf());
+            Long codigoUf = ufService.buscar(trecho.getUf());
 
             BigDecimal valorAliquotaCbs = buscarAliquotaPadrao(TributoEnum.CBS, dataFatoGerador, null, null);
-            BigDecimal valorAliquotaIbsEstadual = buscarAliquotaPadrao(TributoEnum.IBS_ESTADUAL, dataFatoGerador, uf.getCodigo(), null);
+            BigDecimal valorAliquotaIbsEstadual = buscarAliquotaPadrao(TributoEnum.IBS_ESTADUAL, dataFatoGerador, codigoUf, null);
             BigDecimal valorAliquotaIbsMunicipal = buscarAliquotaPadrao(TributoEnum.IBS_MUNICIPAL, dataFatoGerador, null, trecho.getMunicipio());
 
             if (valorAliquotaCbs == null || valorAliquotaIbsEstadual == null || valorAliquotaIbsMunicipal == null) {
@@ -116,29 +113,20 @@ public class PedagioService {
     }
 
     public BigDecimal buscarAliquotaPadrao(TributoEnum tributo, LocalDate data, Long codigoUf, Long codigoMunicipio) {
-        AliquotaReferencia aliquotaReferencia = aliquotaReferenciaService.buscar(tributo.getCodigo(), data);
-        AliquotaPadrao aliquotaPadrao = null;
+        final var aliquota = aliquotaPadraoService.buscarAliquota(tributo.getCodigo(), codigoUf, codigoMunicipio, data);
+        return aliquota.getValorAplicavel().divide(CEM)
+                .setScale(8, HALF_UP);
+    }
 
-        if (tributo == TributoEnum.CBS) {
-            aliquotaPadrao = aliquotaPadraoService.buscarAliquotaUniao(aliquotaReferencia, data);
-        } else if (tributo == TributoEnum.IBS_ESTADUAL) {
-            aliquotaPadrao = aliquotaPadraoService.buscarAliquotaUf(aliquotaReferencia, codigoUf, data);
-        } else if (tributo == TributoEnum.IBS_MUNICIPAL) {
-            aliquotaPadrao = aliquotaPadraoService.buscarAliquotaMunicipio(aliquotaReferencia, codigoMunicipio, data);
+    public TipoWarningDadosSimulados getWarningDadosSimulados(PedagioInput operacao) {
+        LocalDate dataOperacao = operacao.getDataHoraEmissao().toLocalDate();
+        LocalDate dataLimite = LocalDate.of(2027, 1, 1);
+        
+        if (dataOperacao.isBefore(dataLimite)) {
+            return null;
         }
         
-        if (aliquotaPadrao != null) {
-            return aliquotaPadrao
-                    .getValorAplicavel()
-                    .divide(CalculadoraUtils.CEM)
-                    .setScale(8, RoundingMode.HALF_UP);
-        }
-
-        return aliquotaReferenciaService
-                .buscar(tributo.getCodigo(), data)
-                .getValor()
-                .divide(CalculadoraUtils.CEM)
-                .setScale(8, RoundingMode.HALF_UP);
+        return TipoWarningDadosSimulados.CASO_GERAL;
     }
 
 }

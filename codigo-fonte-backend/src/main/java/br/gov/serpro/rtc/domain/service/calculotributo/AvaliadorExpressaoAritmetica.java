@@ -3,9 +3,11 @@
  */
 package br.gov.serpro.rtc.domain.service.calculotributo;
 
+import static java.math.BigDecimal.ZERO;
+import static java.math.RoundingMode.HALF_UP;
+
 import java.math.BigDecimal;
 import java.math.MathContext;
-import java.math.RoundingMode;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +55,7 @@ public class AvaliadorExpressaoAritmetica {
             BigDecimal leftBD = toBigDecimal(left);
             BigDecimal rightBD = toBigDecimal(right);
             
-            if (rightBD.compareTo(BigDecimal.ZERO) == 0) {
+            if (rightBD.compareTo(ZERO) == 0) {
                 throw new ArithmeticException("Division by zero");
             }
             
@@ -74,11 +76,36 @@ public class AvaliadorExpressaoAritmetica {
     }
     
     public BigDecimal evaluate(String expression, Map<String, BigDecimal> variables, int scale) {
+        final var exprTrim = expression.trim();
+        // Caso 1: expressão é só o nome da variável
+        if (variables.containsKey(exprTrim)) {
+            // deve estar mapeado
+            final var valor = variables.get(exprTrim);
+            if (valor != null) {
+                return valor;
+            }
+            throw new RuntimeException("Valor não mapeado corretamente: " + exprTrim);
+        }
+
+        /*
+        // Caso 2: expressão é só um número
+        try {
+            if (exprTrim.matches("^\\d+(\\.\\d+)?$")) {
+                // É possivelmente um número positivo, pode criar BigDecimal
+                final var valor = new BigDecimal(exprTrim);
+                return valor.setScale(scale, HALF_UP);
+            }
+        } catch (NumberFormatException ignore) {
+            // Não é número, segue para JEXL
+        }
+        */
+    
+        // Caso geral: usa JEXL
         final JexlExpression jexp = expressionEngine.createExpression(expression);
         final Object evaluate = jexp.evaluate(new MapContextBigDecimal(variables));
         if (evaluate instanceof Number n) {
             BigDecimal result = NumberUtils.convertNumberToTargetClass(n, BigDecimal.class);
-            return result.setScale(scale, RoundingMode.HALF_UP);
+            return result.setScale(scale, HALF_UP);
         } else {
             throw new NumberFormatException("Erro ao avaliar expressão: " + evaluate);
         }

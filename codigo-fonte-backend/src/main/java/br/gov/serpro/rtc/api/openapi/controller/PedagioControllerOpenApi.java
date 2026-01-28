@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import br.gov.serpro.rtc.api.model.input.pedagio.PedagioInput;
 import br.gov.serpro.rtc.api.model.output.pedagio.PedagioOutput;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -24,7 +25,16 @@ public interface PedagioControllerOpenApi {
 
     @Operation(summary = "Cálculo do tributo", description = "Calculo do pedágio")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Cálculo realizado com sucesso", content = {
+            @ApiResponse(
+                responseCode = "200",
+                description = "Cálculo realizado com sucesso",
+                headers = @Header(
+                    name = "x-warning-dados-simulados",
+                    description = "Indica que os dados são simulados. Valores possíveis: " +
+                             "1 (alíquotas da CBS e do IBS ainda não definidas em lei).",
+                    schema = @Schema(type = "integer", example = "1")
+                ),
+                content = {
                     @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = PedagioOutput.class)) }),
             @ApiResponse(responseCode = "400", description = "Estrutura e/ou dados informados em formato não reconhecido", content = {
                     @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ProblemDetail.class)) }),

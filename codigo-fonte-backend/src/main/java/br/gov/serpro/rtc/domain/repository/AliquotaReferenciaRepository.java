@@ -3,8 +3,8 @@
  */
 package br.gov.serpro.rtc.domain.repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
 
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,12 +18,13 @@ import br.gov.serpro.rtc.domain.model.entity.AliquotaReferencia;
 public interface AliquotaReferenciaRepository extends JpaRepository<AliquotaReferencia, Long> {
 
     @Query("""
+        SELECT ar.valor
         FROM AliquotaReferencia ar
         WHERE ar.tributo.id = :idTributo
         AND :data BETWEEN ar.inicioVigencia AND COALESCE(ar.fimVigencia, :data)
     """)
     @Cacheable(cacheNames = "AliquotaReferenciaRepository.buscar")
-    Optional<AliquotaReferencia> buscar(
+    BigDecimal buscar(
         @Param("idTributo") Long idTributo,
         @Param("data") LocalDate data
     );

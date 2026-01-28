@@ -32,6 +32,8 @@ public class MunicipioService {
         }
     }
     
+    // FIXME - melhorar essa consulta para usar os dois primeiros digitos do codigo do municipio e retornar diretamente a sigla
+    // FIXME - cachear o resultado?
     public String buscarUfPorMunicipio(Long codigoMunicipio) {
         Municipio municipio = repository.findById(codigoMunicipio)
             .orElseThrow(() -> new MunicipioNaoEncontradoException(codigoMunicipio));

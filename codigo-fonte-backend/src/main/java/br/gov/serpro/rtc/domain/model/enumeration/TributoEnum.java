@@ -11,9 +11,10 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public enum TributoEnum {
-    IS(1), CBS(2), IBS_ESTADUAL(3), IBS_MUNICIPAL(4);
+    IS(1, "Imposto Seletivo"), CBS(2, "CBS"), IBS_ESTADUAL(3, "IBS Estadual"), IBS_MUNICIPAL(4, "IBS Municipal");
 
     private final long codigo;
+    private final String nome;
 
     public static TributoEnum get(long codigo) {
         return Stream.of(values()).filter(t -> t.getCodigo() == codigo).findFirst()

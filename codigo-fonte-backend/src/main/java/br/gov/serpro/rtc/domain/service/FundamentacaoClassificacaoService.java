@@ -8,6 +8,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import br.gov.serpro.rtc.domain.model.dto.FundamentacaoClassificacaoDTO;
 import br.gov.serpro.rtc.domain.model.entity.FundamentacaoClassificacao;
 import br.gov.serpro.rtc.domain.repository.FundamentacaoClassificacaoRepository;
 import br.gov.serpro.rtc.domain.service.exception.FundamentacaoClassificacaoNaoEncontradaException;
@@ -19,8 +20,8 @@ public class FundamentacaoClassificacaoService {
 
     private final FundamentacaoClassificacaoRepository repository;
 
-    public FundamentacaoClassificacao buscar(Long idClassificacaoTributaria, LocalDate data) {
-        FundamentacaoClassificacao fundamentacaoClassificacao = repository.buscar(idClassificacaoTributaria, data);
+    public FundamentacaoClassificacaoDTO buscar(Long idClassificacaoTributaria, LocalDate data) {
+        FundamentacaoClassificacaoDTO fundamentacaoClassificacao = repository.buscar(idClassificacaoTributaria, data);
         if (fundamentacaoClassificacao == null) {
             throw new FundamentacaoClassificacaoNaoEncontradaException(idClassificacaoTributaria, data);
         }

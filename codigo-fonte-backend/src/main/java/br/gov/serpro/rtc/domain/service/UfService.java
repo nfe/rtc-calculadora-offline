@@ -18,9 +18,12 @@ public class UfService {
 
     private final UfRepository ufRepository;
 
-    public Uf buscar(String sigla) {
-        return ufRepository.consultarPorSigla(sigla)
-                .orElseThrow(() -> new UfNaoEncontradaException(sigla));
+    public Long buscar(String sigla) {
+        final var codigo = ufRepository.consultarPorSigla(sigla);
+        if (codigo == null) {
+            throw new UfNaoEncontradaException(sigla);
+        }
+        return codigo;
     }
     
     public List<Uf> consultarTodos() {

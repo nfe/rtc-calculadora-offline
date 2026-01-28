@@ -28,11 +28,17 @@ public interface NcmRepository extends JpaRepository<Ncm, String> {
             @Param("limite") int limite,
             @Param("data") LocalDate data);
 
+    /*
+     * Entradas recomendadas na cache: 21.000
+     * Memória estimada: ~2,5 MB
+     */
     @Query("""
-            SELECT COUNT(n) > 0
-            FROM Ncm n
-            WHERE n.codigo = :codigo
-            AND :data BETWEEN n.inicioVigencia AND COALESCE(n.fimVigencia, :data)
+            SELECT EXISTS (
+                SELECT 1
+                FROM Ncm n
+                WHERE n.codigo = :codigo
+                AND :data BETWEEN n.inicioVigencia AND COALESCE(n.fimVigencia, :data)
+            )
             """)
     @Cacheable(cacheNames = "NcmRepository.existeNcm")
     boolean existeNcm(

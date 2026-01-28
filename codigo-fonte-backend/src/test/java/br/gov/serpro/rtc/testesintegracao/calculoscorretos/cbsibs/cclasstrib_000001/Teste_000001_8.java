@@ -64,7 +64,7 @@ class Teste_000001_8 {
         assertIbsEstadual(item.getGIBSUF());
         assertIbsMunicipal(item.getGIBSMun());
         
-        assertTributacaoRegular(item, "8.40", "17.69", "1.50", "3.16", "1.05", "2.21");
+        assertTributacaoRegular(item, "8.40", "17.69", "0.05", "0.11", "0.05", "0.11");
 
         assertImpostoSeletivo(item.getImpostoSeletivo());
     }
@@ -78,14 +78,14 @@ class Teste_000001_8 {
 
     private void assertIbsEstadual(final IBSUFDomain ibsEstadual) {
         assertThat(ibsEstadual).isNotNull();
-        isEqualByComparingTo(ibsEstadual.getPIBSUF(), "1.50");
+        isEqualByComparingTo(ibsEstadual.getPIBSUF(), "0.05");
         isEqualByComparingTo(ibsEstadual.getVIBSUF(), ZERO);
         assertThat(ibsEstadual.getGRed()).isNull();
     }
 
     private void assertIbsMunicipal(final IBSMunDomain ibsMunicipal) {
         assertThat(ibsMunicipal).isNotNull();
-        isEqualByComparingTo(ibsMunicipal.getPIBSMun(), "1.05");
+        isEqualByComparingTo(ibsMunicipal.getPIBSMun(), "0.05");
         isEqualByComparingTo(ibsMunicipal.getVIBSMun(), ZERO);
         assertThat(ibsMunicipal.getGRed()).isNull();
     }

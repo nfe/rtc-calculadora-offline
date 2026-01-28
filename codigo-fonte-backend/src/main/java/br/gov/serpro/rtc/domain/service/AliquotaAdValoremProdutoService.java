@@ -18,8 +18,7 @@ public class AliquotaAdValoremProdutoService {
     private final AliquotaAdValoremProdutoRepository repository;
 
     public BigDecimal buscarAliquotaAdValorem(String ncm, Long idTributo, LocalDate data) {
-        return repository.buscarAliquotaAdValorem(ncm, idTributo, data)
-                .orElse(null);
+        return repository.buscarAliquotaAdValorem(ncm, idTributo, data);
     }
 
 }

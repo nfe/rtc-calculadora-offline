@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.gov.serpro.rtc.api.model.input.OperacaoInput;
 import br.gov.serpro.rtc.api.model.roc.ROCDomain;
 import br.gov.serpro.rtc.api.openapi.controller.CalculadoraTributoControllerOpenApi;
+import br.gov.serpro.rtc.domain.model.enumeration.TipoWarningDadosSimulados;
 import br.gov.serpro.rtc.domain.service.CalculadoraService;
 import br.gov.serpro.rtc.domain.service.VersaoAplicacaoService;
 import jakarta.validation.Valid;
@@ -36,8 +37,19 @@ public class CalculadoraTributoController implements CalculadoraTributoControlle
         produces = APPLICATION_JSON_VALUE
     )
     public ResponseEntity<ROCDomain> calcularTributos(@RequestBody @Valid OperacaoInput operacao) {
+        
         log.debug("ROC ID {}", operacao.getId());
-        return ResponseEntity.ok().headers(versaoAplicacaoService.getHeaders()).body(calculadoraService.calcularTributos(operacao));
+        ROCDomain resultado = calculadoraService.calcularTributos(operacao);
+
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.ok()
+                .headers(versaoAplicacaoService.getHeaders());
+
+        TipoWarningDadosSimulados warningDadosSimulados = calculadoraService.getWarningDadosSimulados(operacao);
+        if (warningDadosSimulados != null) {
+            responseBuilder.header("x-warning-dados-simulados", String.valueOf(warningDadosSimulados.getValor()));
+        }
+        
+        return responseBuilder.body(resultado);
     }
 
 }

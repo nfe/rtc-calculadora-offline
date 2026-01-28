@@ -24,8 +24,9 @@ public class CacheSpecs {
 	@Setter
 	public static class CacheSpec {
 	    private String name;
-	    private Duration expireAfterWrite;
+	    private Duration expireAfterAccess;
 	    private int initialCapacity;
+	    private int maximumSize;
 	}
 
 }

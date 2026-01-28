@@ -28,6 +28,7 @@ import br.gov.serpro.rtc.api.model.output.dadosabertos.UfDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.ValidadeDfeClassificacaoTributariaDadosAbertosOutput;
 import br.gov.serpro.rtc.api.model.output.dadosabertos.VersaoOutput;
 import br.gov.serpro.rtc.api.openapi.controller.DadosAbertosControllerOpenApi;
+import br.gov.serpro.rtc.domain.model.enumeration.TipoWarningDadosSimulados;
 import br.gov.serpro.rtc.domain.service.VersaoBaseDadosService;
 import br.gov.serpro.rtc.domain.service.dadosabertos.DadosAbertosService;
 import lombok.RequiredArgsConstructor;
@@ -90,8 +91,16 @@ public class DadosAbertosController implements DadosAbertosControllerOpenApi {
     @GetMapping("/classificacoes-tributarias/imposto-seletivo")
     public ResponseEntity<List<ClassificacaoTributariaDadosAbertosOutput>> consultarClassificacoesTributariasImpostoSeletivo(
         @RequestParam LocalDate data) {
-        return ResponseEntity
-                .ok(dadosAbertosService.consultarClassificacoesTributariasImpostoSeletivo(data));
+        List<ClassificacaoTributariaDadosAbertosOutput> resultado = dadosAbertosService.consultarClassificacoesTributariasImpostoSeletivo(data);
+        
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.ok();
+        
+        TipoWarningDadosSimulados warning = dadosAbertosService.getWarningDadosSimuladosPorData(data);
+        if (warning != null) {
+            responseBuilder.header("x-warning-dados-simulados", String.valueOf(warning.getValor()));
+        }
+        
+        return responseBuilder.body(resultado);
     }
 
     @Override
@@ -126,21 +135,48 @@ public class DadosAbertosController implements DadosAbertosControllerOpenApi {
     @GetMapping("/aliquota-uniao")
     public ResponseEntity<AliquotaDadosAbertosOutput> consultarAliquotaUniao(
         @RequestParam LocalDate data) {
-        return ResponseEntity.ok(dadosAbertosService.consultarAliquota(2L, null, null, data));
+        AliquotaDadosAbertosOutput resultado = dadosAbertosService.consultarAliquota(2L, null, null, data);
+        
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.ok();
+        
+        TipoWarningDadosSimulados warning = dadosAbertosService.getWarningDadosSimuladosPorData(data);
+        if (warning != null) {
+            responseBuilder.header("x-warning-dados-simulados", String.valueOf(warning.getValor()));
+        }
+        
+        return responseBuilder.body(resultado);
     }
 
     @Override
     @GetMapping("/aliquota-uf")
     public ResponseEntity<AliquotaDadosAbertosOutput> consultarAliquotaUf(
         @RequestParam Long codigoUf, @RequestParam LocalDate data) {
-        return ResponseEntity.ok(dadosAbertosService.consultarAliquota(3L, codigoUf, null, data));
+        AliquotaDadosAbertosOutput resultado = dadosAbertosService.consultarAliquota(3L, codigoUf, null, data);
+        
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.ok();
+        
+        TipoWarningDadosSimulados warning = dadosAbertosService.getWarningDadosSimuladosPorData(data);
+        if (warning != null) {
+            responseBuilder.header("x-warning-dados-simulados", String.valueOf(warning.getValor()));
+        }
+        
+        return responseBuilder.body(resultado);
     }
 
     @Override
     @GetMapping("/aliquota-municipio")
     public ResponseEntity<AliquotaDadosAbertosOutput> consultarAliquotaMunicipio(
         @RequestParam Long codigoMunicipio, @RequestParam LocalDate data) {
-        return ResponseEntity.ok(dadosAbertosService.consultarAliquota(4L, null, codigoMunicipio, data));
+        AliquotaDadosAbertosOutput resultado = dadosAbertosService.consultarAliquota(4L, null, codigoMunicipio, data);
+        
+        ResponseEntity.BodyBuilder responseBuilder = ResponseEntity.ok();
+        
+        TipoWarningDadosSimulados warning = dadosAbertosService.getWarningDadosSimuladosPorData(data);
+        if (warning != null) {
+            responseBuilder.header("x-warning-dados-simulados", String.valueOf(warning.getValor()));
+        }
+        
+        return responseBuilder.body(resultado);
     }
 
     @Override
