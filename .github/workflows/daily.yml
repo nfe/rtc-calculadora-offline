@@ -20,8 +20,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Get download URL from API
+        id: get_url
+        run: |
+          DOWNLOAD_URL=$(curl -s "https://piloto-cbs.tributos.gov.br/servico/calculadora-consumo/api/calculadora/download/url?platform=default" | jq -r '.downloadUrl')
+          echo "download_url=$DOWNLOAD_URL" >> $GITHUB_OUTPUT
+
       - name: Download application
-        run: curl -L -o calculadora.zip https://storagegw.estaleiro.serpro.gov.br/rtccalc-repo-hom/calculadora.zip
+        run: curl -L -o calculadora.zip "${{ steps.get_url.outputs.download_url }}"
 
       - name: Unzip application and check for new version
         id: check_version
