@@ -36,13 +36,9 @@ public final class ItemOperacaoInput implements SerializationVisibility {
     @Schema(name = "numero", description = "Número do Item", example = "1")
     private Integer numero;
 
-    // @Pattern(regexp = "\\d+", message = "Informar somente dígitos")
-    // @Size(min = 8, max = 8)
     @Schema(name = "ncm", description = "Código NCM", example = "24021000")
     private String ncm;
 
-    // @Pattern(regexp = "\\d+", message = "Informar somente dígitos")
-    // @Size(min = 9, max = 9)
     @Schema(name = "nbs", description = "Código NBS", example = "109052100")
     private String nbs;
     
@@ -59,17 +55,14 @@ public final class ItemOperacaoInput implements SerializationVisibility {
     @JsonProperty("cClassTrib")
     private String cClassTrib;
 
-    @NotNull
+    // TODO Como validar se a base de cálculo deveria ter sido informada e não foi? ClassificacaoTributaria.inGrupoIbsCbs = true para o CST associado ao item? Default Zero?
     @PositiveOrZero
     @Schema(name = "baseCalculo", description = "Base de cálculo do imposto", example = "200.00")
     private BigDecimal baseCalculo;
 
-    // @NotNull
-    // @PositiveOrZero
     @Schema(name = "quantidade", description = "Quantidade", example = "1")
     private BigDecimal quantidade;
     
-    // @NotNull
     @Schema(name = "unidade", description = "Unidade de medida", example = "LT")
     private String unidade;
 

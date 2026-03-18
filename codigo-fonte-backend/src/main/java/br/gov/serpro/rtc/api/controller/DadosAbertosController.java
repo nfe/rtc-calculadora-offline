@@ -73,10 +73,31 @@ public class DadosAbertosController implements DadosAbertosControllerOpenApi {
 
     @Override
     @GetMapping("/classificacoes-tributarias/{idSituacaoTributaria}")
+    @Deprecated(since = "2026-01-13", forRemoval = true)
     public ResponseEntity<List<ClassificacaoTributariaDadosAbertosOutput>> consultarClassificacoesTributariasPorIdSituacaoTributaria(
         @PathVariable Long idSituacaoTributaria, @RequestParam LocalDate data) {
         return ResponseEntity
                 .ok(dadosAbertosService.consultarClassificacoesTributariasPorIdSituacaoTributaria(idSituacaoTributaria, data));
+    }
+
+    @Override
+    @GetMapping("/classificacoes-tributarias/imposto-seletivo/{cst}")
+    public ResponseEntity<List<ClassificacaoTributariaDadosAbertosOutput>> listarPorCstImpostoSeletivo(
+        @PathVariable String cst,
+        @RequestParam LocalDate data) {
+        List<ClassificacaoTributariaDadosAbertosOutput> result = dadosAbertosService
+            .consultarClassificacoesTributariasPorCstETributoTipo(cst, List.of("IS"), data);
+        return ResponseEntity.ok(result);
+    }
+
+    @Override
+    @GetMapping("/classificacoes-tributarias/cbs-ibs/{cst}")
+    public ResponseEntity<List<ClassificacaoTributariaDadosAbertosOutput>> listarPorCstCbsIbs(
+        @PathVariable String cst,
+        @RequestParam LocalDate data) {
+        List<ClassificacaoTributariaDadosAbertosOutput> result = dadosAbertosService
+            .consultarClassificacoesTributariasPorCstETributoTipo(cst, List.of("CBS", "IBSUF", "IBSMun"), data);
+        return ResponseEntity.ok(result);
     }
 
     @Override
@@ -102,7 +123,7 @@ public class DadosAbertosController implements DadosAbertosControllerOpenApi {
         
         return responseBuilder.body(resultado);
     }
-
+    
     @Override
     @GetMapping("/situacoes-tributarias/imposto-seletivo")
     public ResponseEntity<List<SituacaoTributariaDadosAbertosOutput>> consultarSituacoesTributariasImpostoSeletivo(

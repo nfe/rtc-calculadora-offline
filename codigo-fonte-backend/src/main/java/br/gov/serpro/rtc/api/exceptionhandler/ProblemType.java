@@ -15,6 +15,7 @@ import br.gov.serpro.rtc.domain.service.exception.CampoInvalidoException;
 import br.gov.serpro.rtc.domain.service.exception.CaptchaException;
 import br.gov.serpro.rtc.domain.service.exception.ClassificacaoTributariaNaoEncontradaException;
 import br.gov.serpro.rtc.domain.service.exception.ClassificacaoTributariaNaoVinculadaSituacaoTributariaException;
+import br.gov.serpro.rtc.domain.service.exception.DataFatoGeradorNaoInformadaException;
 import br.gov.serpro.rtc.domain.service.exception.ErroFaltaImplementacaoException;
 import br.gov.serpro.rtc.domain.service.exception.ErroInternoSistemaException;
 import br.gov.serpro.rtc.domain.service.exception.ErroXmlException;
@@ -124,7 +125,9 @@ public enum ProblemType {
     
     ERRO_SISTEMA(Exception.class, "Erro de sistema não previsto", "erro-de-sistema-nao-previsto"),
     
-    SIGLA_DFE_NAO_ENCONTRADA(SiglaDFeNaoEncontradaException.class, "Sigla DFe não reconhecida", "sigla-dfe-nao-reconhecida");
+    SIGLA_DFE_NAO_ENCONTRADA(SiglaDFeNaoEncontradaException.class, "Sigla DFe não reconhecida", "sigla-dfe-nao-reconhecida"),
+    
+    DATA_FATO_GERADOR_NAO_INFORMADA(DataFatoGeradorNaoInformadaException.class, "Data do fato gerador não informada", "fato-gerador-nao-informada");
     
     private final Class<? extends Exception> classeErro;
     private final String titulo;

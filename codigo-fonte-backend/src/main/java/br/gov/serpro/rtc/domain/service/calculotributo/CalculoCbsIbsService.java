@@ -79,7 +79,7 @@ public class CalculoCbsIbsService {
     private final AvaliadorExpressaoAritmetica avaliador;
     private final TratamentoTributarioService tratamentoService;
     private final ClassificacaoTributariaService classificacaoTributariaService;
-
+       
     public CbsIbsOutput calcularCbsIbs(
         TributoEnum tributo,
         Long codigoUf,
@@ -401,7 +401,7 @@ public class CalculoCbsIbsService {
                 .baseCalculo(resultadoBaseCalculo)
                 .quantidade(quantidade)
                 .build();
-
+        
     }
 
     private BigDecimal buscarAliquotaReferencia(Long idTributo, LocalDate data) {
@@ -411,9 +411,9 @@ public class CalculoCbsIbsService {
                 .setScale(8, HALF_UP);
     }
 
-    private BigDecimal buscarAliquotaPadrao(Long idTributo, Long codigoUf, Long codigoMunicipio, LocalDate data) {
+    protected BigDecimal buscarAliquotaPadrao(Long idTributo, Long codigoUf, Long codigoMunicipio, LocalDate data) {
         final var aliquota = aliquotaPadraoService.buscarAliquota(idTributo, codigoUf, codigoMunicipio, data);
-        return aliquota.getValorAplicavel().divide(CEM)
+        return aliquota.valorAplicavel().divide(CEM)
                 .setScale(8, HALF_UP);
     }
 

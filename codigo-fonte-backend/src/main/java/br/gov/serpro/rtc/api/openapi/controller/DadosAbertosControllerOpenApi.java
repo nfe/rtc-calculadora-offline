@@ -165,42 +165,24 @@ public interface DadosAbertosControllerOpenApi {
                     value = """
                     [
                         {
-                            "codigo": "000001",
-                            "descricao": "Situações tributadas integralmente pelo IBS e CBS.",
-                            "tipoAliquota": "Padrão",
-                            "nomenclatura": "NBS ou NCM",
-                            "descricaoTratamentoTributario": "Tributação integral",
-                            "incompativelComSuspensao": false,
-                            "exigeGrupoDesoneracao": false,
-                            "possuiPercentualReducao": true,
-                            "indicaApropriacaoCreditoAdquirenteCbs": true,
-                            "indicaApropriacaoCreditoAdquirenteIbs": true,
-                            "indicaCreditoPresumidoFornecedor": false,
-                            "indicaCreditoPresumidoAdquirente": false,
-                            "creditoOperacaoAntecedente": "Manutenção",
-                            "percentualReducaoCbs": 0,
-                            "percentualReducaoIbsUf": 0,
-                            "percentualReducaoIbsMun": 0,
-                            "tiposDfeClassificacao": []
+                            "id": 1,
+                            "codigo": "000",
+                            "descricao": "Tributação integral"
                         },
                         {
-                            "codigo": "000002",
-                            "descricao": "Exploração de via",
-                            "tipoAliquota": "Padrão",
-                            "nomenclatura": "NBS",
-                            "descricaoTratamentoTributario": "Tributação integral",
-                            "incompativelComSuspensao": false,
-                            "exigeGrupoDesoneracao": false,
-                            "possuiPercentualReducao": true,
-                            "indicaApropriacaoCreditoAdquirenteCbs": true,
-                            "indicaApropriacaoCreditoAdquirenteIbs": true,
-                            "indicaCreditoPresumidoFornecedor": false,
-                            "indicaCreditoPresumidoAdquirente": false,
-                            "creditoOperacaoAntecedente": "Manutenção",
-                            "percentualReducaoCbs": 0,
-                            "percentualReducaoIbsUf": 0,
-                            "percentualReducaoIbsMun": 0,
-                            "tiposDfeClassificacao": []
+                            "id": 2,
+                            "codigo": "010",
+                            "descricao": "Tributação com alíquotas uniformes"
+                        },
+                        {
+                            "id": 3,
+                            "codigo": "011",
+                            "descricao": "Tributação com alíquotas uniformes reduzidas"
+                        },
+                        {
+                            "id": 4,
+                            "codigo": "200",
+                            "descricao": "Alíquota reduzida"
                         }
                     ]
                     """
@@ -245,7 +227,14 @@ public interface DadosAbertosControllerOpenApi {
     ResponseEntity<List<SituacaoTributariaDadosAbertosOutput>> consultarSituacoesTributariasCbsIbs(
         @Parameter(description = "Data no padrão ISO 8601 (yyyy-MM-dd)", example = "2026-01-01", required = true) LocalDate data);
 
-    @Operation(summary = "Classificação Tributária (cClassTrib)", description = "Obtém a lista das classificações tributárias (cClassTrib) cadastradas com base no código CST")
+    @Deprecated(since = "2026-01-13", forRemoval = true)
+    @Operation(
+        summary = "Classificação Tributária (cClassTrib) - DEPRECATED", 
+        description = "Obtém a lista das classificações tributárias (cClassTrib) cadastradas com base no ID da situação tributária. " +
+        "DEPRECATED: Use os novos endpoints /classificacoes-tributarias/imposto-seletivo/{cst} ou " +
+        "/classificacoes-tributarias/cbs-ibs/{cst} que trabalham com CST ao invés de IDs.",
+        deprecated = true
+    )
     @ApiResponses(value = {
         @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso", content = {
             @Content(
@@ -256,10 +245,10 @@ public interface DadosAbertosControllerOpenApi {
                     value = """
                     [
                         {
-                            "codigo": "000001",
-                            "descricao": "Situações tributadas integralmente pelo IBS e CBS.",
+                            "codigo": "000003",
+                            "descricao": "Regime automotivo - projetos incentivados (art. 311)",
                             "tipoAliquota": "Padrão",
-                            "nomenclatura": "NBS ou NCM",
+                            "nomenclatura": "NCM",
                             "descricaoTratamentoTributario": "Tributação integral",
                             "incompativelComSuspensao": false,
                             "exigeGrupoDesoneracao": false,
@@ -268,13 +257,20 @@ public interface DadosAbertosControllerOpenApi {
                             "indicaApropriacaoCreditoAdquirenteIbs": false,
                             "indicaCreditoPresumidoFornecedor": false,
                             "indicaCreditoPresumidoAdquirente": false,
-                            "tiposDfeClassificacao": []
+                            "tiposDfeClassificacao": [
+                                {
+                                    "tipo": 55,
+                                    "sigla": "NFe",
+                                    "descricao": "Nota Fiscal Eletrônica"
+                                }
+                            ],
+                            "dataAtualizacao": "2025-12-15"
                         },
                         {
-                            "codigo": "000002",
-                            "descricao": "Exploração de via",
+                            "codigo": "000004",
+                            "descricao": "Regime automotivo - projetos incentivados (art. 312)",
                             "tipoAliquota": "Padrão",
-                            "nomenclatura": "NBS",
+                            "nomenclatura": "NCM",
                             "descricaoTratamentoTributario": "Tributação integral",
                             "incompativelComSuspensao": false,
                             "exigeGrupoDesoneracao": false,
@@ -283,7 +279,14 @@ public interface DadosAbertosControllerOpenApi {
                             "indicaApropriacaoCreditoAdquirenteIbs": false,
                             "indicaCreditoPresumidoFornecedor": false,
                             "indicaCreditoPresumidoAdquirente": false,
-                            "tiposDfeClassificacao": []
+                            "tiposDfeClassificacao": [
+                                {
+                                    "tipo": 55,
+                                    "sigla": "NFe",
+                                    "descricao": "Nota Fiscal Eletrônica"
+                                }
+                            ],
+                            "dataAtualizacao": "2025-12-15"
                         }
                     ]
                     """
@@ -328,6 +331,103 @@ public interface DadosAbertosControllerOpenApi {
     ResponseEntity<List<ClassificacaoTributariaDadosAbertosOutput>> consultarClassificacoesTributariasPorIdSituacaoTributaria(
         @Parameter(description = "Id da Situação Tributária (CST)", example = "1", required = true) Long idSituacaoTributaria,
         @Parameter(description = "Data no padrão ISO 8601 (yyyy-MM-dd)", example = "2026-01-01", required = true) LocalDate data);
+
+    @Operation(
+        summary = "Classificações Tributárias por CST - Imposto Seletivo",
+        description = "Obtém a lista das classificações tributárias por CST para Imposto Seletivo"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso", content = {
+            @Content(
+                mediaType = APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ClassificacaoTributariaDadosAbertosOutput.class),
+                examples = @ExampleObject(
+                    name = "Classificações IS Example",
+                    value = """
+                    [
+                      {
+                        "codigo": "000001",
+                        "descricao": "Primeiro fornecimento a qualquer título de bem",
+                        "tipoAliquota": "Alíquotas Combinadas (Ad Valorem e Ad Rem)",
+                        "nomenclatura": "NBS ou NCM",
+                        "descricaoTratamentoTributario": "Tributação pelo Imposto Seletivo - Com Cálculo",
+                        "incompativelComSuspensao": false,
+                        "exigeGrupoDesoneracao": false,
+                        "possuiPercentualReducao": true,
+                        "indicaApropriacaoCreditoAdquirenteCbs": false,
+                        "indicaApropriacaoCreditoAdquirenteIbs": false,
+                        "indicaCreditoPresumidoFornecedor": false,
+                        "indicaCreditoPresumidoAdquirente": false,
+                        "tiposDfeClassificacao": []
+                      }
+                    ]
+                    """
+                )
+            )
+        }),
+        @ApiResponse(responseCode = "400", description = "Requisição com problema",
+            content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                schema = @Schema(implementation = ProblemDetail.class)
+            )
+        ),
+        @ApiResponse(responseCode = "500", description = "Erro interno na API",
+            content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                schema = @Schema(implementation = ProblemDetail.class)
+            )
+        )
+    })
+    ResponseEntity<List<br.gov.serpro.rtc.api.model.output.dadosabertos.ClassificacaoTributariaDadosAbertosOutput>> listarPorCstImpostoSeletivo(
+        @Parameter(description = "Código da Situação Tributária (CST)", example = "000", required = true) String cst,
+        @Parameter(description = "Data no padrão ISO 8601 (yyyy-MM-dd)", example = "2027-01-01", required = true) LocalDate data);
+
+    @Operation(
+        summary = "Classificações Tributárias por CST - CBS/IBS", 
+        description = "Obtém a lista das classificações tributárias por CST para CBS/IBS"
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Consulta realizada com sucesso", content = {
+            @Content(
+                mediaType = APPLICATION_JSON_VALUE,
+                schema = @Schema(implementation = ClassificacaoTributariaDadosAbertosOutput.class),
+                examples = @ExampleObject(
+                    name = "Classificações CBS/IBS Example",
+                    value = """
+                    [
+                      {
+                        "codigo": "000001",
+                        "descricao": "Situações tributadas integralmente pelo IBS e CBS.",
+                        "tipoAliquota": "Padrão",
+                        "nomenclatura": "NBS ou NCM",
+                        "descricaoTratamentoTributario": "Tributação integral",
+                                                "dataAtualizacao": "2025-12-15",
+                        "incompativelComSuspensao": false,
+                        "exigeGrupoDesoneracao": false,
+                        "possuiPercentualReducao": true,
+                        "indicaApropriacaoCreditoAdquirenteCbs": true,
+                        "indicaApropriacaoCreditoAdquirenteIbs": true,
+                        "indicaCreditoPresumidoFornecedor": false,
+                        "indicaCreditoPresumidoAdquirente": false,
+                        "tiposDfeClassificacao": []
+                      }
+                    ]
+                    """
+                )
+            )
+        }),
+        @ApiResponse(responseCode = "400", description = "Requisição com problema",
+            content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                schema = @Schema(implementation = ProblemDetail.class)
+            )
+        ),
+        @ApiResponse(responseCode = "500", description = "Erro interno na API",
+            content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE,
+                schema = @Schema(implementation = ProblemDetail.class)
+            )
+        )
+    })
+    ResponseEntity<List<br.gov.serpro.rtc.api.model.output.dadosabertos.ClassificacaoTributariaDadosAbertosOutput>> listarPorCstCbsIbs(
+        @Parameter(description = "Código da Situação Tributária (CST)", example = "000", required = true) String cst,
+        @Parameter(description = "Data no padrão ISO 8601 (yyyy-MM-dd)", example = "2025-01-01", required = true) LocalDate data);
 
     @Operation(
         summary = "Situação Tributária (CST)",
@@ -406,10 +506,13 @@ public interface DadosAbertosControllerOpenApi {
                     name = "NCM Example",
                     value = """
                     {
-                        "tributadoPeloImpostoSeletivo": false,
+                        "tributadoPeloImpostoSeletivo": true,
+                        "aliquotaAdValorem": 13,
+                        "aliquotaAdRem": 21.3,
                         "capitulo": "Tabaco e seus sucedâneos manufaturados; produtos, mesmo com nicotina, destinados à inalação sem combustão; outros produtos que contenham nicotina destinados à absorção da nicotina pelo corpo humano.",
                         "posicao": "Charutos, cigarrilhas e cigarros, de tabaco ou dos seus sucedâneos.",
-                        "subitem": "Charutos e cigarrilhas, que contenham tabaco"
+                        "subitem": "Charutos e cigarrilhas, que contenham tabaco",
+                        "unidade": "VN"
                     }
                     """
                 )
@@ -515,7 +618,6 @@ public interface DadosAbertosControllerOpenApi {
     ResponseEntity<NbsDadosAbertosOutput> consultarNbs(
         @Parameter(description = "Código NBS sem formatação", example = "114052200", required = true) String nbs,
         @Parameter(description = "Data no padrão ISO 8601 (yyyy-MM-dd)", example = "2027-01-01", required = true) LocalDate data);
-
 
     @Operation(summary = "Fundamentação Legal", description = "Obtém informações sobre as fundamentações legais")
     @ApiResponses(value = {
@@ -720,41 +822,49 @@ public interface DadosAbertosControllerOpenApi {
             @Content(
                 mediaType = APPLICATION_JSON_VALUE,
                 schema = @Schema(implementation = ClassificacaoTributariaDadosAbertosOutput.class),
-                examples = @ExampleObject(
-                    name = "Classificações Tributárias Imposto Seletivo Example",
-                    value = """
-                    [
-                        {
-                        "codigo": "000001",
-                        "descricao": "Primeiro fornecimento a qualquer título de bem",
-                        "tipoAliquota": "Alíquotas Combinadas (Ad Valorem e Ad Rem)",
-                        "nomenclatura": "NBS ou NCM",
-                        "descricaoTratamentoTributario": "Tributação pelo Imposto Seletivo - Com Cálculo",
-                        "incompativelComSuspensao": false,
-                        "exigeGrupoDesoneracao": false,
-                        "possuiPercentualReducao": true,
-                        "indicaApropriacaoCreditoAdquirenteCbs": false,
-                        "indicaApropriacaoCreditoAdquirenteIbs": false,
-                        "indicaCreditoPresumidoFornecedor": false,
-                        "indicaCreditoPresumidoAdquirente": false
-                        },
-                        {
-                        "codigo": "000002",
-                        "descricao": "Arrematação em leilão público",
-                        "tipoAliquota": "Alíquotas Combinadas (Ad Valorem e Ad Rem)",
-                        "nomenclatura": "NBS ou NCM",
-                        "descricaoTratamentoTributario": "Tributação pelo Imposto Seletivo - Com Cálculo",
-                        "incompativelComSuspensao": false,
-                        "exigeGrupoDesoneracao": false,
-                        "possuiPercentualReducao": true,
-                        "indicaApropriacaoCreditoAdquirenteCbs": false,
-                        "indicaApropriacaoCreditoAdquirenteIbs": false,
-                        "indicaCreditoPresumidoFornecedor": false,
-                        "indicaCreditoPresumidoAdquirente": false
-                        }
-                    ]
-                    """
-                )
+                examples = {
+                    @ExampleObject(
+                        name = "Classificações Tributárias Imposto Seletivo Example",
+                        value = """
+                        [
+                            {
+                            "codigo": "000001",
+                            "descricao": "Primeiro fornecimento a qualquer título de bem",
+                            "tipoAliquota": "Alíquotas Combinadas (Ad Valorem e Ad Rem)",
+                            "nomenclatura": "NBS ou NCM",
+                            "descricaoTratamentoTributario": "Tributação pelo Imposto Seletivo - Com Cálculo",
+                            "incompativelComSuspensao": false,
+                            "exigeGrupoDesoneracao": false,
+                            "possuiPercentualReducao": true,
+                            "indicaApropriacaoCreditoAdquirenteCbs": false,
+                            "indicaApropriacaoCreditoAdquirenteIbs": false,
+                            "indicaCreditoPresumidoFornecedor": false,
+                            "indicaCreditoPresumidoAdquirente": false
+                            },
+                            {
+                            "codigo": "000002",
+                            "descricao": "Arrematação em leilão público",
+                            "tipoAliquota": "Alíquotas Combinadas (Ad Valorem e Ad Rem)",
+                            "nomenclatura": "NBS ou NCM",
+                            "descricaoTratamentoTributario": "Tributação pelo Imposto Seletivo - Com Cálculo",
+                            "incompativelComSuspensao": false,
+                            "exigeGrupoDesoneracao": false,
+                            "possuiPercentualReducao": true,
+                            "indicaApropriacaoCreditoAdquirenteCbs": false,
+                            "indicaApropriacaoCreditoAdquirenteIbs": false,
+                            "indicaCreditoPresumidoFornecedor": false,
+                            "indicaCreditoPresumidoAdquirente": false
+                            }
+                        ]
+                        """
+                    ),
+                    @ExampleObject(
+                        name = "Classificações Tributárias Imposto Seletivo Vazia Example",
+                        value = """
+                        []
+                        """
+                    )
+                }
             )
         }),
         @ApiResponse(responseCode = "400", description = "Requisição com problema",
@@ -795,7 +905,7 @@ public interface DadosAbertosControllerOpenApi {
         )
     })
     ResponseEntity<List<ClassificacaoTributariaDadosAbertosOutput>> consultarClassificacoesTributariasImpostoSeletivo(
-        @Parameter(description = "Data no padrão ISO 8601 (yyyy-MM-dd)", example = "2026-01-01", required = true) LocalDate data);
+        @Parameter(description = "Data no padrão ISO 8601 (yyyy-MM-dd)", example = "2027-01-01", required = true) LocalDate data);
 
     @Operation(
         summary = "Alíquota Padrão ou de Referência",
@@ -818,7 +928,8 @@ public interface DadosAbertosControllerOpenApi {
                     name = "Alíquota União Example",
                     value = """
                     {
-                        "aliquotaReferencia": 8.5
+                        "aliquotaReferencia": 0.9,
+                        "aliquotaPropria": 0.9
                     }
                     """
                 )
@@ -868,7 +979,6 @@ public interface DadosAbertosControllerOpenApi {
     ResponseEntity<AliquotaDadosAbertosOutput> consultarAliquotaUniao(
         @Parameter(description = "Data no padrão ISO 8601 (yyyy-MM-dd)", example = "2026-01-01", required = true) LocalDate data);
 
-
     @Operation(
         summary = "Alíquota Padrão ou de Referência para IBS Estadual",
         description = "Obtém a alíquota padrão ou de referência para IBS Estadual"
@@ -890,7 +1000,8 @@ public interface DadosAbertosControllerOpenApi {
                     name = "Alíquota UF Example",
                     value = """
                     {
-                      "aliquotaReferencia": 0.1
+                        "aliquotaReferencia": 0.9,
+                        "aliquotaPropria": 0.9
                     }
                     """
                 )
@@ -963,7 +1074,8 @@ public interface DadosAbertosControllerOpenApi {
                     name = "Alíquota Município Example",
                     value = """
                     {
-                      "aliquotaReferencia": 0.25
+                        "aliquotaReferencia": 0.9,
+                        "aliquotaPropria": 0.9
                     }
                     """
                 )
@@ -1130,5 +1242,5 @@ public interface DadosAbertosControllerOpenApi {
         })
     })
     ResponseEntity<VersaoOutput> consultarVersao();
-    
+
 }

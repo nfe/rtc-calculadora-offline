@@ -44,7 +44,8 @@ public interface TratamentoClassificacaoRepository extends JpaRepository<Tratame
                 tt.TRTR_IN_INCOMPATIVEL_COM_SUSPENSAO,
                 tt.TRTR_IN_EXIGE_GRUPO_DESONERACAO,
                 tt.TRTR_IN_POSSUI_PERCENTUAL_REDUCAO,
-                ct.CLTR_ID
+                ct.CLTR_ID,
+                ct.CLTR_DATA_ATUALIZACAO
             FROM TRATAMENTO_CLASSIFICACAO tc
             JOIN CLASSIFICACAO_TRIBUTARIA ct ON tc.TRCL_CLTR_ID = ct.CLTR_ID
             JOIN TRATAMENTO_TRIBUTARIO tt ON tt.TRTR_ID = tc.TRCL_TRTR_ID
@@ -76,7 +77,8 @@ public interface TratamentoClassificacaoRepository extends JpaRepository<Tratame
                 pr_ibsuf.PERE_VALOR AS PERCENTUAL_REDUCAO_IBSUF,
                 pr_ibsmun.PERE_VALOR AS PERCENTUAL_REDUCAO_IBSMUN,
                 -- Dados novos da situação tributária
-                st.SITR_IND_GDIF
+                st.SITR_IND_GDIF,
+                ct.CLTR_DATA_ATUALIZACAO
             FROM TRATAMENTO_CLASSIFICACAO tc
             JOIN CLASSIFICACAO_TRIBUTARIA ct ON tc.TRCL_CLTR_ID = ct.CLTR_ID
             JOIN SITUACAO_TRIBUTARIA st ON st.SITR_ID = ct.CLTR_SITR_ID
@@ -132,7 +134,8 @@ public interface TratamentoClassificacaoRepository extends JpaRepository<Tratame
                 tt.TRTR_DESCRICAO,
                 tt.TRTR_IN_INCOMPATIVEL_COM_SUSPENSAO,
                 tt.TRTR_IN_EXIGE_GRUPO_DESONERACAO,
-                tt.TRTR_IN_POSSUI_PERCENTUAL_REDUCAO
+                tt.TRTR_IN_POSSUI_PERCENTUAL_REDUCAO,
+                ct.CLTR_DATA_ATUALIZACAO
             FROM TRATAMENTO_CLASSIFICACAO tc
             JOIN CLASSIFICACAO_TRIBUTARIA ct ON tc.TRCL_CLTR_ID = ct.CLTR_ID
             JOIN TRATAMENTO_TRIBUTARIO tt ON tt.TRTR_ID = tc.TRCL_TRTR_ID
@@ -144,5 +147,42 @@ public interface TratamentoClassificacaoRepository extends JpaRepository<Tratame
               AND tst.TRST_TBTO_ID == 1
             """, nativeQuery = true)
     List<Object[]> consultarTratamentoClassificacaoImpostoSeletivo(LocalDate data);
+
+    @Query(value = """
+            SELECT
+                ct.CLTR_CD,
+                ct.CLTR_DESCRICAO,
+                ct.CLTR_TIPO_ALIQUOTA,
+                ct.CLTR_NOMENCLATURA,
+                tt.TRTR_DESCRICAO,
+                tt.TRTR_IN_INCOMPATIVEL_COM_SUSPENSAO,
+                tt.TRTR_IN_EXIGE_GRUPO_DESONERACAO,
+                tt.TRTR_IN_POSSUI_PERCENTUAL_REDUCAO,
+                ct.CLTR_ID,
+                ct.CLTR_DATA_ATUALIZACAO
+            FROM TRATAMENTO_CLASSIFICACAO tc
+            JOIN CLASSIFICACAO_TRIBUTARIA ct ON tc.TRCL_CLTR_ID = ct.CLTR_ID
+            JOIN SITUACAO_TRIBUTARIA st ON st.SITR_ID = ct.CLTR_SITR_ID
+            JOIN TRATAMENTO_TRIBUTARIO tt ON tt.TRTR_ID = tc.TRCL_TRTR_ID
+            WHERE st.SITR_CD = :cst
+              AND EXISTS (
+                  SELECT 1 FROM TRIBUTO_SITUACAO_TRIBUTARIA tst2 
+                  JOIN TRIBUTO tb2 ON tst2.TRST_TBTO_ID = tb2.TBTO_ID
+                  WHERE tst2.TRST_SITR_ID = st.SITR_ID
+                  AND tb2.TBTO_SIGLA IN (:tbtoSiglas)
+                  AND :data BETWEEN tst2.TRST_INICIO_VIGENCIA AND COALESCE(tst2.TRST_FIM_VIGENCIA, :data)
+                  AND :data BETWEEN tb2.TBTO_INICIO_VIGENCIA AND COALESCE(tb2.TBTO_FIM_VIGENCIA, :data)
+              )
+              AND :data BETWEEN tc.TRCL_INICIO_VIGENCIA AND COALESCE(tc.TRCL_FIM_VIGENCIA, :data)
+              AND :data BETWEEN ct.CLTR_INICIO_VIGENCIA AND COALESCE(ct.CLTR_FIM_VIGENCIA, :data)
+              AND :data BETWEEN tt.TRTR_INICIO_VIGENCIA AND COALESCE(tt.TRTR_FIM_VIGENCIA, :data)
+              AND :data BETWEEN st.SITR_INICIO_VIGENCIA AND COALESCE(st.SITR_FIM_VIGENCIA, :data)
+            ORDER BY ct.CLTR_CD
+            """, nativeQuery = true)
+    List<Object[]> consultarTratamentoClassificacaoPorCstETributoTipo(
+            String cst,
+            List<String> tbtoSiglas,
+            LocalDate data
+    );
 
 }

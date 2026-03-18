@@ -5,7 +5,7 @@ info:
 application:
   module: ${MODULE_NAME:api-regime-geral}
   db:
-    filename: calculadora-nonpro.db
+    filename: calculadora-pro.db
   ibs:
     enabled: true
   memoriacalculo:

@@ -4,6 +4,7 @@
 package br.gov.serpro.rtc.domain.service.dadosabertos;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -108,7 +109,7 @@ public class DadosAbertosService {
                             List<TipoDfeClassificacaoDadosAbertosOutput> tiposDfeClassificacaoOutput = 
                                     obterListaDfeClassificacaoTributaria(idClassificacaoTributaria, data);
 
-                            return ClassificacaoTributariaDadosAbertosOutput
+                return ClassificacaoTributariaDadosAbertosOutput
                                     .builder()
                                     .codigo((String) m[0])
                                     .descricao((String) m[1])
@@ -118,9 +119,37 @@ public class DadosAbertosService {
                                     .incompativelComSuspensao(m[5] != null && ((Integer) m[5]) != 0)
                                     .exigeGrupoDesoneracao(m[6] != null && ((Integer) m[6]) != 0)
                                     .possuiPercentualReducao(m[7] != null && ((Integer) m[7]) != 0)
-                                    .tiposDfeClassificacao(tiposDfeClassificacaoOutput)
+                    .tiposDfeClassificacao(tiposDfeClassificacaoOutput)
+                    .dataAtualizacao(parseToLocalDate(m, 9))
                                     .build();
                         })
+                .toList();
+    }
+
+    public List<ClassificacaoTributariaDadosAbertosOutput> consultarClassificacoesTributariasPorCstETributoTipo(
+            String cst, List<String> tributoTipos, LocalDate data) {
+        return tratamentoClassificacaoRepository
+                .consultarTratamentoClassificacaoPorCstETributoTipo(cst, tributoTipos, data).stream()
+                .map(m -> {
+                    Long idClassificacaoTributaria = ((Number) m[8]).longValue();
+
+                    List<TipoDfeClassificacaoDadosAbertosOutput> tiposDfeClassificacaoOutput = 
+                            obterListaDfeClassificacaoTributaria(idClassificacaoTributaria, data);
+
+            return ClassificacaoTributariaDadosAbertosOutput
+                            .builder()
+                            .codigo((String) m[0])
+                            .descricao((String) m[1])
+                            .tipoAliquota((String) m[2])
+                            .nomenclatura((String) m[3])
+                            .descricaoTratamentoTributario((String) m[4])
+                            .incompativelComSuspensao(m[5] != null && ((Integer) m[5]) != 0)
+                            .exigeGrupoDesoneracao(m[6] != null && ((Integer) m[6]) != 0)
+                            .possuiPercentualReducao(m[7] != null && ((Integer) m[7]) != 0)
+                .tiposDfeClassificacao(tiposDfeClassificacaoOutput)
+                .dataAtualizacao(parseToLocalDate(m, 9))
+                            .build();
+                })
                 .toList();
     }
 
@@ -263,6 +292,7 @@ public class DadosAbertosService {
                                     .percentualReducaoIbsUf(m[15] != null ? convertToBigDecimal(m[15]) : null)
                                     .percentualReducaoIbsMun(m[16] != null ? convertToBigDecimal(m[16]) : null)
                                     .tiposDfeClassificacao(tiposDfeClassificacaoOutput)
+                                    .dataAtualizacao(parseToLocalDate(m, 18))
                                     .build();
                         })
                 .toList();
@@ -281,8 +311,29 @@ public class DadosAbertosService {
                         .incompativelComSuspensao(m[5] != null && ((Integer) m[5]) != 0)
                         .exigeGrupoDesoneracao(m[6] != null && ((Integer) m[6]) != 0)
                         .possuiPercentualReducao(m[7] != null && ((Integer) m[7]) != 0)
+                        .dataAtualizacao(parseToLocalDate(m, 8))
                         .build())
                 .toList();
+    }
+
+    private LocalDate parseToLocalDate(Object[] m, int index) {
+        try {
+            if (m == null || index < 0 || index >= m.length) return null;
+            Object v = m[index];
+            if (v == null) return null;
+            if (v instanceof Date) {
+                return ((Date) v).toLocalDate();
+            }
+            if (v instanceof LocalDate) {
+                return (LocalDate) v;
+            }
+            
+            String s = v.toString();
+            if (s.isBlank()) return null;
+            return LocalDate.parse(s);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public AliquotaDadosAbertosOutput consultarAliquota(Long idTributo, Long codigoUf, Long codigoMunicipio, LocalDate data) {
@@ -290,7 +341,7 @@ public class DadosAbertosService {
         return AliquotaDadosAbertosOutput
                 .builder()
                 .aliquotaReferencia(aliquota.valorReferencia())
-                .aliquotaPropria(aliquota.getValorAplicavel())
+                .aliquotaPropria(aliquota.valorPadrao())
                 .formaAplicacao(aliquota.formaAplicacao())
                 .build();
     }
@@ -379,7 +430,6 @@ public class DadosAbertosService {
                         .build())
                 .toList();
     }
-    
 
     public TipoWarningDadosSimulados getWarningDadosSimuladosPorData(LocalDate data) {
         LocalDate dataLimite = LocalDate.of(2027, 1, 1);

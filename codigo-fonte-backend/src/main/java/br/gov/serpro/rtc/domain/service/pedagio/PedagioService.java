@@ -102,8 +102,8 @@ public class PedagioService {
             BigDecimal baseCalculo) {
         return TributoPedagioOutput
                 .builder()
-                .aliquota(aliquota)
-                .aliquotaEfetiva(aliquotaEfetiva)
+                .aliquota(aliquota != null ? aliquota.movePointRight(2) : null)
+                .aliquotaEfetiva(aliquotaEfetiva != null ? aliquotaEfetiva.movePointRight(2) : null)
                 .tributoCalculado(calcularTributo(baseCalculo, aliquotaEfetiva))
                 .build();
     }
@@ -114,7 +114,7 @@ public class PedagioService {
 
     public BigDecimal buscarAliquotaPadrao(TributoEnum tributo, LocalDate data, Long codigoUf, Long codigoMunicipio) {
         final var aliquota = aliquotaPadraoService.buscarAliquota(tributo.getCodigo(), codigoUf, codigoMunicipio, data);
-        return aliquota.getValorAplicavel().divide(CEM)
+        return aliquota.valorAplicavel().divide(CEM)
                 .setScale(8, HALF_UP);
     }
 

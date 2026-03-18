@@ -10,6 +10,7 @@ import static br.gov.serpro.rtc.domain.model.enumeration.TributoEnum.IBS_MUNICIP
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutionException;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -122,9 +123,18 @@ public class CalculoTributoService {
                 cbs = cbsFuture.get();
                 ibsEstadual = ibsEstadualFuture.get();
                 ibsMunicipal = ibsMunicipalFuture.get();
-            } catch (InterruptedException | ExecutionException e) {
-                throw new RuntimeException("Erro ao calcular CBS/IBS", e);
+            } catch (InterruptedException | ExecutionException | CompletionException e) {
+                if (e instanceof InterruptedException) {
+                    Thread.currentThread().interrupt();
+                }
+                // Se a causa for uma RuntimeException, relance-a diretamente
+                if (e.getCause() instanceof RuntimeException runtimeEx) {
+                    throw runtimeEx;
+                }
+                // Senão, relance como RuntimeException padrão
+                throw new RuntimeException("Erro ao calcular CBS/IBS", e.getCause());
             }
+
         }
 
         if (temDesoneracao && impostoSeletivo != null) {

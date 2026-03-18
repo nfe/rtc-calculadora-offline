@@ -24,11 +24,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 @Tag(name = "Base de Cálculo - VERSÃO BETA", description = "Serviço para Base de Cálculo")
 public interface BaseCalculoControllerOpenApi {
 
-    @Operation(summary = "Imposto Seletivo", description = "Afere a Base de Cálculo de uma operação de consumo")
+    @Operation(summary = "Imposto Seletivo", description = "Afere a Base de Cálculo do Imposto Seletivo de uma operação de consumo. "
+            + "ATENÇÃO: Os campos ICMS e ISS não podem ser informados a partir de 2033.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cálculo realizado com sucesso", content = {
                     @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = BaseCalculoISMercadoriasModel.class)) }),
-            @ApiResponse(responseCode = "400", description = "Estrutura e/ou dados informados em formato não reconhecido", content = {
+            @ApiResponse(responseCode = "400", description = "Estrutura e/ou dados informados em formato não reconhecido ou campos incompatíveis com o ano do fato gerador informado (ICMS e ISS a partir de 2033)", content = {
                     @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ProblemDetail.class)) }),
             @ApiResponse(responseCode = "404", description = "Erro na URL da requisição", content = {
                     @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ProblemDetail.class)) }),
@@ -45,11 +46,13 @@ public interface BaseCalculoControllerOpenApi {
                             schema = @Schema(implementation = BaseCalculoISMercadoriasInput.class))
                     ) BaseCalculoISMercadoriasInput baseCalculo);
 
-    @Operation(summary = "CIBS", description = "Afere a Base de Cálculo de uma operação de consumo")
+    @Operation(summary = "CIBS", description = "Afere a Base de Cálculo da CBS/IBS de uma operação de consumo. "
+            + "ATENÇÃO: Os campos PIS, COFINS, PIS Importação e COFINS Importação não podem ser informados a partir de 2027. "
+            + "Os campos ICMS e ISS não podem ser informados a partir de 2033.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Cálculo realizado com sucesso", content = {
                     @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = BaseCalculoISMercadoriasModel.class)) }),
-            @ApiResponse(responseCode = "400", description = "Estrutura e/ou dados informados em formato não reconhecido", content = {
+            @ApiResponse(responseCode = "400", description = "Estrutura e/ou dados informados em formato não reconhecido ou campos incompatíveis com o ano do fato gerador informado (PIS, COFINS, PIS Importação e COFINS a partir de 2027; ICMS e ISS a partir de 2033)", content = {
                     @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ProblemDetail.class)) }),
             @ApiResponse(responseCode = "404", description = "Erro na URL da requisição", content = {
                     @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = ProblemDetail.class)) }),

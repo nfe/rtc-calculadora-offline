@@ -3,8 +3,9 @@
 */
 package br.gov.serpro.rtc.testesintegracao.validacoes.negocio;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -24,13 +25,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import br.gov.serpro.rtc.api.model.input.OperacaoInput;
 import br.gov.serpro.rtc.domain.service.CalculadoraService;
+import br.gov.serpro.rtc.domain.service.exception.ErroFaltaImplementacaoException;
 import br.gov.serpro.rtc.util.JsonResourceObjectMapper;
 
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "classpath:application-testes.yml")
 @ActiveProfiles("testes")
-class Teste_validacao_99 {
+class Teste_validacao_22_ErroFaltaImplementacaoException {
 
     private static JsonResourceObjectMapper<OperacaoInput> mapper;
 
@@ -42,8 +44,8 @@ class Teste_validacao_99 {
 
     @Autowired
     private CalculadoraService calculadoraService;
-
-    private OperacaoInput operacao;
+    
+    private OperacaoInput operacao; 
 
     @BeforeAll
     static void setup() {
@@ -51,14 +53,16 @@ class Teste_validacao_99 {
     }
 
     @BeforeEach
-    void beforeEach(final @Value("classpath:entradas/validacoes/Teste_validacao_99.json") Resource resourceFile)
+    void beforeEach(
+            final @Value("classpath:entradas/validacoes/Teste_validacao_22_ErroFaltaImplementacaoException.json") Resource resourceFile)
             throws Exception {
         operacao = mapper.loadTestJson(resourceFile);
     }
 
     @Test
     void teste_service_CalcularTributos() {
-        assertThat(calculadoraService.calcularTributos(operacao)).isNotNull();
+        assertThatThrownBy(() -> calculadoraService.calcularTributos(operacao))
+                .isExactlyInstanceOf(ErroFaltaImplementacaoException.class);
     }
 
     @Test
@@ -67,8 +71,8 @@ class Teste_validacao_99 {
         mockMvc.perform(post("/calculadora/regime-geral")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonContent))
-                .andExpect(status().is2xxSuccessful());
-
+                .andExpect(status().is4xxClientError())
+                .andExpect(jsonPath("$.title").value("Classificação tributária em desenvolvimento"));
     }
 
 }

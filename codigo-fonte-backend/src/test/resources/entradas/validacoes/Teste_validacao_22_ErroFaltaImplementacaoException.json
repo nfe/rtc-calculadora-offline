@@ -1,0 +1,17 @@
+{
+  "id": "6194602ea71cbf9431c236de4409d920",
+  "versao": "0.0.1",
+  "municipio": 4314902,
+  "dhFatoGerador": "2026-01-01T23:59:59-03:00",
+  "uf": "RS",
+  "itens": [
+    {
+      "numero": 1,
+      "ncm": "29051100",
+      "cst": "620",
+      "cClassTrib": "620001",
+      "quantidade": 1,
+      "unidade": "LT"
+    }
+  ]
+}

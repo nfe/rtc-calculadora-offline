@@ -4,6 +4,7 @@
 package br.gov.serpro.rtc.api.model.output.dadosabertos;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -71,5 +72,8 @@ public class ClassificacaoTributariaDadosAbertosOutput implements SerializationV
 
     @Schema(name = "tiposDfeClassificacao", description = "", example = "")
     private List<TipoDfeClassificacaoDadosAbertosOutput> tiposDfeClassificacao;
+
+    @Schema(name = "dataAtualizacao", description = "Data de atualização da classificação tributária (YYYY-MM-DD)", example = "2025-12-15")
+    private LocalDate dataAtualizacao;
 
 }
