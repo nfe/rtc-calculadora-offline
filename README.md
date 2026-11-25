@@ -56,3 +56,19 @@ Este é um **robô automatizado** que verifica diariamente se saiu uma atualiza�
 2. Selecione o workflow **"Download and Update Código Fonte da Calculadora da Reforma Tributária"**
 3. Clique em **"Run workflow"**
 4. Selecione a branch `main` e confirme
+
+
+## Releases e imagem Docker
+
+Cada versão nova do pacote oficial vira uma release `pacote-AAAAMMDD-HHMMSS` com:
+`calculadora.tar.gz` (imagem Docker), os `codigo-fonte-*.zip`, `scripts-instalacao.zip`, `versoes.txt` e `SHA256SUMS.txt`.
+
+Baixar sempre a última imagem e subir:
+
+```bash
+gh release download --repo nfe/rtc-calculadora-offline --pattern calculadora.tar.gz --clobber
+docker import calculadora.tar.gz calculadora-image
+docker run -t -i --rm -p 8080:8080 -p 8081:8081 -p 8082:8082 -p 80:80 -w /calculadora calculadora-image bash start.sh
+```
+
+O workflow chama a API de ativação dele mesmo a cada execução, para o GitHub não desativar o agendamento após 60 dias sem atividade.

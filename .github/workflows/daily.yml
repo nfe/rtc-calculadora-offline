@@ -1,73 +1,109 @@
-# This is a basic workflow to help you get started with Actions
 name: Download and Update Código Fonte da Calculadora da Reforma Tributária
 
-# Controls when the workflow will run
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs every day at midnight UTC
-  workflow_dispatch: # Allows manual triggering of the workflow
+    - cron: '0 0 * * *' # todos os dias, 00:00 UTC
+  workflow_dispatch:
+    inputs:
+      force_release:
+        description: 'Recriar a release mesmo se a versão já existir'
+        type: boolean
+        default: false
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+concurrency:
+  group: daily-update
+  cancel-in-progress: false
+
+permissions:
+  contents: write   # commit do código-fonte e criação de releases
+  actions: write    # keepalive: evita a desativação do agendamento por inatividade
+
 jobs:
-  # This workflow contains a one job
   main:
     runs-on: ubuntu-latest
-    # Job-level permissions configuration starts here
-    permissions:                
-      contents: write           # 'write' access to repository contents
-
+    timeout-minutes: 60
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      API_URL: https://piloto-cbs.tributos.gov.br/servico/calculadora-consumo/api/calculadora/download/url?platform=default
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Get download URL from API
-        id: get_url
+      # O GitHub desativa workflows agendados após 60 dias sem atividade no repositório.
+      # Esta chamada mantém o agendamento ativo (causa do workflow parado desde mai/2026).
+      - name: Keepalive (mantém o agendamento ativo)
+        run: gh api -X PUT "repos/${{ github.repository }}/actions/workflows/daily.yml/enable" || true
+
+      - name: Obter URL e baixar o pacote
         run: |
-          DOWNLOAD_URL=$(curl -s "https://piloto-cbs.tributos.gov.br/servico/calculadora-consumo/api/calculadora/download/url?platform=default" | jq -r '.downloadUrl')
-          echo "download_url=$DOWNLOAD_URL" >> $GITHUB_OUTPUT
+          set -euo pipefail
+          URL=$(curl -fsS --retry 3 "$API_URL" | jq -er '.downloadUrl')
+          curl -fL --retry 3 --retry-delay 10 -o calculadora.zip "$URL"
+          mkdir pacote
+          unzip -q calculadora.zip -d pacote
+          test -f pacote/calculadora.tar.gz
+          test -f pacote/codigo-fonte-backend.zip
+          test -f pacote/versoes.txt
 
-      - name: Download application
-        run: curl -L -o calculadora.zip "${{ steps.get_url.outputs.download_url }}"
-
-      - name: Unzip application and check for new version
-        id: check_version
+      - name: Identificar versão
+        id: version
         run: |
-          unzip calculadora.zip
-          NEW_HASH=$(md5sum codigo-fonte-backend.zip | awk '{print $1}')
-          OLD_HASH=""
-          if [ -f codigo-fonte-backend.md5 ]; then
-            OLD_HASH=$(cat codigo-fonte-backend.md5)
-          fi
-          if [ "$NEW_HASH" != "$OLD_HASH" ]; then
-            echo "New version found. Updating files."
-            echo "is_new_version=true" >> $GITHUB_ENV
-            echo $NEW_HASH > codigo-fonte-backend.md5
+          set -euo pipefail
+          # 1ª linha de versoes.txt: "... pacote offline 20261119-212613"
+          VER=$(head -n1 pacote/versoes.txt | grep -oE '[0-9]{8}-[0-9]{6}' | head -n1)
+          [ -n "$VER" ] || { echo "Versão não encontrada em versoes.txt"; exit 1; }
+          echo "tag=pacote-$VER" >> "$GITHUB_OUTPUT"
+          NEW_HASH=$(md5sum pacote/codigo-fonte-backend.zip | awk '{print $1}')
+          OLD_HASH=$(cat codigo-fonte-backend.md5 2>/dev/null || true)
+          echo "new_hash=$NEW_HASH" >> "$GITHUB_OUTPUT"
+          if [ "$NEW_HASH" != "$OLD_HASH" ]; then echo "source_changed=true" >> "$GITHUB_OUTPUT"; else echo "source_changed=false" >> "$GITHUB_OUTPUT"; fi
+          if gh release view "pacote-$VER" >/dev/null 2>&1 && [ "${{ inputs.force_release }}" != "true" ]; then
+            echo "release_exists=true" >> "$GITHUB_OUTPUT"
           else
-            echo "No new version found."
-            echo "is_new_version=false" >> $GITHUB_ENV
+            echo "release_exists=false" >> "$GITHUB_OUTPUT"
           fi
+          cat pacote/versoes.txt
 
-      - name: Unzip and commit if new version
-        if: env.is_new_version == 'true'
+      - name: Extrair e commitar código-fonte (se mudou)
+        if: steps.version.outputs.source_changed == 'true'
         run: |
-          if [ ! -d "codigo-fonte-backend" ]; then mkdir codigo-fonte-backend; fi
-          unzip -o codigo-fonte-backend.zip -d codigo-fonte-backend
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add codigo-fonte-backend codigo-fonte-backend.md5
-          git commit -m "Update backend source code - $(date +'%Y-%m-%d')"
+          set -euo pipefail
+          rm -rf codigo-fonte-backend && mkdir codigo-fonte-backend
+          unzip -q -o pacote/codigo-fonte-backend.zip -d codigo-fonte-backend
+          echo "${{ steps.version.outputs.new_hash }}" > codigo-fonte-backend.md5
+          cp pacote/versoes.txt versoes.txt
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add -A codigo-fonte-backend codigo-fonte-backend.md5 versoes.txt
+          git commit -m "Update backend source code - $(date -u +'%Y-%m-%d')"
           git push
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create Release
-        id: create_release
-        if: env.is_new_version == 'true'
-        uses: marvinpinto/action-automatic-releases@latest
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          title: New version of the backend source code.
-          automatic_release_tag: "latest"
-          prerelease: false
-          files: |
-            codigo-fonte-backend.zip
+      - name: Publicar release com a imagem Docker e os pacotes
+        if: steps.version.outputs.release_exists == 'false'
+        run: |
+          set -euo pipefail
+          TAG="${{ steps.version.outputs.tag }}"
+          # scripts de instalação (Windows/Linux) em um zip único
+          (cd pacote && zip -qr scripts-instalacao.zip windows linux)
+          (cd pacote && sha256sum calculadora.tar.gz codigo-fonte-*.zip scripts-*.zip > SHA256SUMS.txt)
+          gh release delete "$TAG" --yes --cleanup-tag 2>/dev/null || true
+          gh release create "$TAG" \
+            --title "Calculadora offline $TAG" \
+            --notes-file pacote/versoes.txt \
+            --latest \
+            pacote/calculadora.tar.gz \
+            pacote/codigo-fonte-backend.zip \
+            pacote/codigo-fonte-danfse.zip \
+            pacote/codigo-fonte-simples-nacional.zip \
+            pacote/scripts-python-exemplo.zip \
+            pacote/scripts-instalacao.zip \
+            pacote/versoes.txt \
+            pacote/SHA256SUMS.txt
+
+      - name: Resumo
+        run: |
+          {
+            echo "### Versão: ${{ steps.version.outputs.tag }}"
+            echo "- Código-fonte mudou: ${{ steps.version.outputs.source_changed }}"
+            echo "- Release já existia: ${{ steps.version.outputs.release_exists }}"
+          } >> "$GITHUB_STEP_SUMMARY"
