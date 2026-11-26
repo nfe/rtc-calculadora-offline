@@ -1,0 +1,16 @@
+rtc-calculadora-offline
+Distribuição não oficial, mantida pela NFE.io.
+
+Este repositório contém uma cópia não oficial de código publicado pela
+Receita Federal do Brasil sob licença MIT, conforme a Portaria Cotec
+nº 342/2026. O aviso de copyright e a licença originais estão em LICENSE.
+
+Origem oficial:
+- https://github.com/ReceitaFederal/calculadora-rtc-regime-regular
+- https://github.com/ReceitaFederal/calculadora-rtc-simples-nacional
+- https://github.com/ReceitaFederal/calculadora-rtc-gerador-danfse
+
+Esta distribuição não tem vínculo com a Receita Federal do Brasil nem com
+o Serpro, e não é endossada por eles.
+
+Dependências de terceiros mantêm suas próprias licenças.
