@@ -1,4 +1,8 @@
-# Calculadora de Tributos da Receita Federal
+# rtc-calculadora-offline: cópia não oficial da Calculadora de Tributos (RTC)
+
+> **Aviso:** esta é uma distribuição não oficial, mantida pela NFE.io. Não tem vínculo com a Receita Federal do Brasil nem com o Serpro, e não é endossada por eles. Para a versão oficial, use os repositórios da Receita Federal listados em [NOTICE](NOTICE). Licença: [MIT](LICENSE). Segurança: [SECURITY.md](SECURITY.md).
+>
+> **Status:** o workflow diário (`daily.yml`) está pausado desde 26/11/2026, até a revisão de segurança e de licenciamento. Ele não publica novas releases.
 
 A Receita Federal do Brasil lançou a versão beta de sua Calculadora de Tributos oficial para os novos impostos sobre o consumo (CBS, IBS e Imposto Seletivo), como parte da reforma tributária do país. Esta ferramenta de código aberto visa padronizar os cálculos e promover uma relação mais cooperativa entre os contribuintes e a autoridade fiscal.
 
