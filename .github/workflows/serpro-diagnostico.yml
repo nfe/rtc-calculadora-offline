@@ -1,0 +1,67 @@
+# DESCARTÁVEL (NFE-212): diagnóstico do download Serpro no runner do GitHub.
+# Não publica nada, não faz commit, não faz checkout. Remover após o resultado.
+# O log é público: nunca imprimir o IP nem a credencial do proxy.
+name: serpro-diagnostico
+
+on: workflow_dispatch
+
+permissions: {}
+
+env:
+  API_URL: https://piloto-cbs.tributos.gov.br/servico/calculadora-consumo/api/calculadora/download/url?platform=default
+  UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36
+
+jobs:
+  sem-proxy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: IP de saída do runner
+        run: (curl -fsS https://ipinfo.io/json | jq -c '{ip,country,org}' || echo 'ipinfo falhou') | tee -a "$GITHUB_STEP_SUMMARY"
+
+      - name: (a) curl padrão e (b) curl com User-Agent de navegador e HTTP/1.1
+        run: |
+          teste() { # $1 = nome; demais = opções extras do curl
+            local nome=$1; shift
+            local api; api=$(curl -sS --max-time 30 "$@" -o api.json -w '%{http_code} %{time_total}s %{http_version}' "$API_URL" 2>err.txt) || api="falha: $(tail -c 200 err.txt)"
+            local pac="-"
+            if url=$(jq -er '.downloadUrl' api.json 2>/dev/null); then
+              pac=$(curl -sS --max-time 600 "$@" -o pacote.zip -w '%{http_code} %{time_total}s %{size_download}B' "$url" 2>err.txt) && pac="$pac sha256=$(sha256sum pacote.zip | cut -c1-16)" || pac="falha: $(tail -c 200 err.txt)"
+            fi
+            echo "| $nome | $api | $pac |" | tee -a "$GITHUB_STEP_SUMMARY"
+            rm -f api.json pacote.zip err.txt
+          }
+          echo "| teste | API | pacote |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|---|---|---|" >> "$GITHUB_STEP_SUMMARY"
+          teste "(a) curl" 
+          teste "(b) curl+UA http1.1" --http1.1 -A "$UA" -H 'Accept: application/json, text/plain, */*' -H 'Accept-Language: pt-BR,pt;q=0.9'
+
+      - name: TLS/ALPN do curl padrão (handshake)
+        run: curl -sv --max-time 30 -o /dev/null "$API_URL" 2>&1 | grep -E 'SSL connection|ALPN|^< HTTP|Recv failure|reset' || true
+
+      - name: (d) navegador real (Chrome headless, pré-instalado no runner)
+        run: |
+          out=$(timeout 60 google-chrome --headless=new --disable-gpu --no-sandbox --dump-dom "$API_URL" 2>/dev/null || true)
+          if grep -q downloadUrl <<<"$out"; then r="ok (resposta com downloadUrl)"; else r="falha: $(head -c 200 <<<"$out")"; fi
+          echo "| (d) Chrome headless | $r | - |" | tee -a "$GITHUB_STEP_SUMMARY"
+
+  com-proxy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: serpro-download  # aprovador obrigatório; só na branch main
+    steps:
+      - name: (c) curl pelo proxy BR
+        env:
+          SERPRO_PROXY: ${{ secrets.SERPRO_PROXY }}
+        run: |
+          P=$(printf %s "$SERPRO_PROXY" | tr -d '\r\n')
+          echo "::add-mask::$P"
+          # erros do curl podem citar o host do proxy: nunca vão para o log
+          pais=$(curl -sS --max-time 30 --proxy "$P" https://ipinfo.io/json 2>/dev/null | jq -c '{country,org}') || pais="falha"
+          api=$(curl -sS --max-time 30 --proxy "$P" -o api.json -w '%{http_code} %{time_total}s' "$API_URL" 2>/dev/null) || api="falha (exit $?)"
+          pac="-"
+          if url=$(jq -er '.downloadUrl' api.json 2>/dev/null); then
+            pac=$(curl -sS --max-time 600 --proxy "$P" -o pacote.zip -w '%{http_code} %{time_total}s %{size_download}B' "$url" 2>/dev/null) && pac="$pac sha256=$(sha256sum pacote.zip | cut -c1-16)" || pac="falha (exit $?)"
+          fi
+          echo "| (c) curl via proxy $pais | $api | $pac |" | tee -a "$GITHUB_STEP_SUMMARY"
+          rm -f api.json pacote.zip
