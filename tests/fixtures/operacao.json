@@ -1,0 +1,71 @@
+{
+ "id": "6194602ea71cbf9431c236de4409d920",
+ "versao": "1.0.0",
+ "dhFatoGerador": "2027-03-10T10:00:00-03:00",
+ "municipio": 4314902,
+ "uf": "RS",
+ "itens": [
+  {
+   "numero": 1,
+   "ncm": "10063021",
+   "cst": "200",
+   "cClassTrib": "200003",
+   "baseCalculo": 100.0,
+   "quantidade": 20,
+   "unidade": "KG",
+   "aliquotasNominais": {
+    "cbs": 8.8,
+    "ibsEstadual": 0.05,
+    "ibsMunicipal": 0.05
+   }
+  },
+  {
+   "numero": 2,
+   "ncm": "22030000",
+   "cst": "000",
+   "cClassTrib": "000001",
+   "quantidade": 12,
+   "unidade": "LT",
+   "impostoSeletivo": {
+    "cst": "000",
+    "cClassTrib": "000001",
+    "baseCalculo": 150.0,
+    "quantidade": 12,
+    "unidade": "LT",
+    "impostoInformado": 15.0
+   },
+   "aliquotasNominais": {
+    "cbs": 8.8,
+    "ibsEstadual": 0.05,
+    "ibsMunicipal": 0.05,
+    "impostoSeletivo": {
+     "adValorem": 10.0
+    }
+   }
+  },
+  {
+   "numero": 3,
+   "nbs": "122011200",
+   "cst": "200",
+   "cClassTrib": "200028",
+   "baseCalculo": 1200.0,
+   "aliquotasNominais": {
+    "cbs": 8.8,
+    "ibsEstadual": 0.05,
+    "ibsMunicipal": 0.05
+   }
+  },
+  {
+   "numero": 4,
+   "ncm": "02013000",
+   "cst": "200",
+   "cClassTrib": "200035",
+   "baseCalculo": 80.0,
+   "aliquotasNominais": {
+    "cbs": 8.8,
+    "ibsEstadual": 0.05,
+    "ibsMunicipal": 0.05
+   }
+  }
+ ]
+}

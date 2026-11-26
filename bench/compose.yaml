@@ -1,0 +1,28 @@
+# Local benchmark only. Run through bench/run.sh (project name nfe-<n>-devops, down -v at the end).
+x-api: &api
+  image: ${RG_IMAGE:-rg:1.7.2-local}
+  read_only: true
+  tmpfs: [/tmp]
+  cap_drop: [ALL]
+services:
+  api1: *api
+  api2: *api
+  nginx:
+    profiles: [nginx]
+    image: nginx:1.28-alpine@sha256:a8b39bd9cf0f83869a2162827a0caf6137ddf759d50a171451b335cecc87d236
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    cap_add: [CHOWN, SETUID, SETGID]  # the nginx master drops to uid 101
+    volumes: ["./nginx.conf:/etc/nginx/nginx.conf:ro"]
+    ports: ["${PROXY_PORT:-18090}:8080"]
+    depends_on: [api1, api2]
+  envoy:
+    profiles: [envoy]
+    image: envoyproxy/envoy:distroless-v1.36.2@sha256:322a7ea9c30080873a2f7d41f43d0b7a392455a92fe3d2a3db9a760c839f547f
+    read_only: true
+    cap_drop: [ALL]
+    command: ["-c", "/etc/envoy/envoy.yaml", "--concurrency", "0"]
+    volumes: ["./envoy.yaml:/etc/envoy/envoy.yaml:ro"]
+    ports: ["${PROXY_PORT:-18090}:8080"]
+    depends_on: [api1, api2]

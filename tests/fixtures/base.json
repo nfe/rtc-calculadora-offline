@@ -1,0 +1,15 @@
+{
+ "anoFatoGerador": 2027,
+ "tipoDocumento": 55,
+ "natureza": "bem",
+ "vProd": 1000.0,
+ "vFrete": 50.0,
+ "vSeg": 20.0,
+ "vOutro": 10.0,
+ "vDesc": 50.0,
+ "vIS": 30.0,
+ "vPIS": 9.25,
+ "vCOFINS": 46.25,
+ "vICMS": 180.0,
+ "vFCP": 10.0
+}
